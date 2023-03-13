@@ -18,13 +18,35 @@
       repo: 'https://github.com/CheneyYin/cheneyyin.github.io',
       coverpage: true,
       loadSidebar: true,
+      loadNavbar: true,
     }
   </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//unpkg.com/mermaid/dist/mermaid.js"></script>
   <script src="//unpkg.com/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
   <script src="//unpkg.com/docsify-plantuml/dist/docsify-plantuml.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/emoji.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css" />
+
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+  <script>
+    const gitalk = new Gitalk({
+      clientID: 'e7f5276a5f4a31575af7',
+      clientSecret: '7d1ca18957769db98905ed886736a1f3ac562f42',
+      repo: 'https://github.com/CheneyYin/HomePageGitalk.git',
+      owner: 'CheneyYin',
+      admin: [
+        'CheneyYin'
+      ],
+      // facebook-like distraction free mode
+      distractionFreeMode: false,
+    });
+  </script>
 </body>
 
 </html>
