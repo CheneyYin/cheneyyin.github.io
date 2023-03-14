@@ -18,8 +18,8 @@
     <meta property="og:description"
         content="「To explore or to exploite is a question.」">
     
-    <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/">
+    <meta property="og:image" content="http://localhost:4000/img/cheney.jpg">
+    <meta property="og:url" content="http://localhost:4000/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
     <title>Cheney.Yin的博客 | Cheney Blog</title>
@@ -31,7 +31,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/">
+    <link rel="canonical" href="http://localhost:4000/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -240,6 +240,40 @@
     <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
       col-xs-12 postlist-container">
       
+<div class="post-preview">
+    <a href="/2023/03/14/cfssl/">
+        <h2 class="post-title">
+            数字证书与cfssl工具链
+        </h2>
+        
+        <h3 class="post-subtitle">
+            分析数字证书原理，记录cfssl常用命令。
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                1 什么是根证书？
+
+参考
+
+根证书是证书颁发机构(CA)的公钥证书，是在公开密钥基础建设中，信任链的起点。根证书没有上层机构再为其本身作数字签名，所以都是自签证书。
+
+2 X.509证书规范
+
+参考
+
+一般的，一个数字证书内容可能包括基本数据（版本、序列号）、所签名对象信息（签名算法类型、签发者信息、有效期、被签发人、签发的公开密钥）、CA 的数字签名等等。
+
+目前使用最广泛的标准为 IT...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on March 14, 2023
+    </p>
+</div>
+<hr>
+
 
 <!-- Pager -->
 

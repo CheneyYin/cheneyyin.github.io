@@ -3,11 +3,533 @@
   <channel>
     <title>Cheney.Yin Blog</title>
     <description>这里是 Cheney.Yin 的个人博客</description>
-    <link>https://cheneyyin.github.io/</link>
-    <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 14 Mar 2023 15:24:32 +0800</pubDate>
-    <lastBuildDate>Tue, 14 Mar 2023 15:24:32 +0800</lastBuildDate>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Tue, 14 Mar 2023 15:43:31 +0800</pubDate>
+    <lastBuildDate>Tue, 14 Mar 2023 15:43:31 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
+    
+      <item>
+        <title>数字证书与cfssl工具链</title>
+        <description>&lt;h1 id=&quot;1-什么是根证书&quot;&gt;1 什么是根证书？&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://zh.wikipedia.org/zh-cn/%E6%A0%B9%E8%AF%81%E4%B9%A6&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;根证书是证书颁发机构(&lt;strong&gt;CA&lt;/strong&gt;)的&lt;strong&gt;公钥证书&lt;/strong&gt;，是在公开密钥基础建设中，信任链的起点。根证书没有上层机构再为其本身作数字签名，所以都是&lt;strong&gt;自签证书&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-x509证书规范&quot;&gt;2 X.509证书规范&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://shunliz.gitbooks.io/blockchain-guide/content/crypto/cert.html&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;一般的，一个数字证书内容可能包括基本数据（版本、序列号）、所签名对象信息（签名算法类型、签发者信息、有效期、被签发人、签发的公开密钥）、&lt;strong&gt;CA&lt;/strong&gt; 的数字签名等等。&lt;/p&gt;
+
+&lt;p&gt;目前使用最广泛的标准为 &lt;strong&gt;ITU&lt;/strong&gt; 和 &lt;strong&gt;ISO&lt;/strong&gt; 联合制定的 &lt;strong&gt;X.509&lt;/strong&gt; 的 v3 版本规范（&lt;strong&gt;&lt;em&gt;RFC 5280&lt;/em&gt;&lt;/strong&gt;），其中定义了如下证书信息域：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;版本号（&lt;strong&gt;Version Number&lt;/strong&gt;）：规范的版本号，目前为版本 3，值为 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;0x2&lt;/code&gt;；&lt;/li&gt;
+  &lt;li&gt;序列号（&lt;strong&gt;Serial Number&lt;/strong&gt;）：由 &lt;strong&gt;CA&lt;/strong&gt; 维护的为它所颁发的每个证书分配的唯一的序列号，用来追踪和撤销证书。只要拥有签发者信息和序列号，就可以唯一标识一个证书。最大不能超过 20 个字节；
+签名算法（&lt;strong&gt;Signature Algorithm&lt;/strong&gt;）：数字签名所采用的算法，如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sha256WithRSAEncryption&lt;/code&gt; 或 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ecdsa-with-SHA256&lt;/code&gt;；&lt;/li&gt;
+  &lt;li&gt;颁发者（&lt;strong&gt;Issuer&lt;/strong&gt;）：颁发证书单位的标识信息，如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;C=CN, ST=Beijing, L=Beijing, O=org.example.com, CN=ca.org.example.com&lt;/code&gt;；&lt;/li&gt;
+  &lt;li&gt;有效期（&lt;strong&gt;Validity&lt;/strong&gt;）：证书的有效期限，包括起止时间；&lt;/li&gt;
+  &lt;li&gt;主体（&lt;strong&gt;Subject&lt;/strong&gt;）：证书拥有者的标识信息（&lt;strong&gt;Distinguished Name&lt;/strong&gt;），如 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;C=CN, ST=Beijing, L=Beijing, CN=person.org.example.com&lt;/code&gt;；&lt;/li&gt;
+  &lt;li&gt;主体的公钥信息（&lt;strong&gt;Subject Public Key Info&lt;/strong&gt;）：所保护的公钥相关的信息；
+    &lt;ul&gt;
+      &lt;li&gt;公钥算法（&lt;strong&gt;Public Key Algorithm&lt;/strong&gt;）：公钥采用的算法；&lt;/li&gt;
+      &lt;li&gt;主体公钥（&lt;strong&gt;Subject Public Key&lt;/strong&gt;）：公钥的内容；&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;颁发者唯一号（&lt;strong&gt;Issuer Unique Identifier&lt;/strong&gt;）：代表颁发者的唯一信息，仅 2、3 版本支持，可选；&lt;/li&gt;
+  &lt;li&gt;主体唯一号（&lt;strong&gt;Subject Unique Identifier&lt;/strong&gt;）：代表拥有证书实体的唯一信息，仅 2、3 版本支持，可选；&lt;/li&gt;
+  &lt;li&gt;扩展（&lt;strong&gt;Extensions&lt;/strong&gt;，可选）：可选的一些扩展。v3 中可能包括：
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;Subject Key Identifier&lt;/strong&gt;：实体的密钥标识符，区分实体的多对密钥；&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;Basic Constraints&lt;/strong&gt;：一般指明是否属于 &lt;strong&gt;CA&lt;/strong&gt;；&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;Authority Key Identifier&lt;/strong&gt;：颁发这个证书的颁发者的公钥标识符；&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;CRL Distribution Points&lt;/strong&gt;：撤销文件的发布地址；&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;Key Usage&lt;/strong&gt;: 证书的用途或功能信息。
+此外，证书的颁发者还需要对证书内容利用自己的私钥进行签名，以防止他人篡改证书内容。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;3-ca签发证书原理&quot;&gt;3 CA签发证书原理&lt;/h1&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/ca.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图1 数字证书认证中心签发证书
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;hr /&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/ca-validate.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图2 服务端认证
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&quot;4-实例步骤&quot;&gt;4 实例步骤&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://segmentfault.com/a/1190000038276488&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;41-创建ca证书即根证书及其私钥&quot;&gt;4.1 创建CA证书（即根证书）及其私钥&lt;/h2&gt;
+
+&lt;p&gt;首先创建证书请求签名文件（&lt;strong&gt;CSR&lt;/strong&gt;, CERTIFICATE SIGNING REQUEST）&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt; cfssl print-defaults csr &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ca-csr.json
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;文件&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca-csr.json&lt;/code&gt;为证书签名请求配置文件，其内容大致如下:&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;CN&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;example.net&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;hosts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;example.net&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;www.example.net&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;algo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;ecdsa&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;size&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;256&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;names&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;US&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;ST&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;CA&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;L&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;San Francisco&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;CN&lt;/strong&gt;：Common Name，所有csr文件都&lt;strong&gt;必须&lt;/strong&gt;有字段。&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;对于 &lt;strong&gt;SSL&lt;/strong&gt; 证书，一般为网站域名。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;而对于代码签名证书则为申请单位名称。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;而对于客户端证书则为证书申请者的姓名。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;hosts&lt;/strong&gt;：网络请求url中的合法主机名或域名集合。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;key&lt;/strong&gt;：key字段是&lt;strong&gt;必须&lt;/strong&gt;有的字段，其内容一般也比较固定就是：&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{&quot;algo&quot;:&quot;rsa”,&quot;size&quot;:2048}&lt;/code&gt;，表示使用的加密算法&lt;strong&gt;rsa&lt;/strong&gt;，密文长度2048。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;names&lt;/strong&gt;：也是&lt;strong&gt;必须&lt;/strong&gt;有字段，是证书对外公开显示的一些字段，常见如下：
+    &lt;ul&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;C&lt;/strong&gt;：即Country的简写，表示国家，例如中国为&lt;strong&gt;CN&lt;/strong&gt;。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;L&lt;/strong&gt;：即Locality的简写，表示所在地区或城市。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;ST&lt;/strong&gt;：表示所在州或省份。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;O&lt;/strong&gt;：表示所在单位或组织。&lt;/p&gt;
+      &lt;/li&gt;
+      &lt;li&gt;
+        &lt;p&gt;&lt;strong&gt;OU&lt;/strong&gt;：显示其它内容。&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;参照如上规范，CSR配置如下：&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;err&quot;&gt;❯&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;cat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;./ca-csr.json&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;CN&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;cheney.site&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;hosts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;cheney.site&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;192.168.100.1&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;algo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rsa&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;size&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2048&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;names&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;CN&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;ST&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;JS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;L&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Wu Xi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	    	&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;O&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;cheney&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;通过如下命令，依据&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca-csr.json&lt;/code&gt;生成&lt;strong&gt;CA&lt;/strong&gt;证书（或根证书）。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;cfssl gencert &lt;span class=&quot;nt&quot;&gt;--initca&lt;/span&gt; ./ca-csr.json | cfssljson &lt;span class=&quot;nt&quot;&gt;-bare&lt;/span&gt; ca
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;命令执行完毕后，目录下会得到3个文件，分别为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.pem&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca-key.pem&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.csr&lt;/code&gt;。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;文件&lt;/th&gt;
+      &lt;th&gt;说明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.pem&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;CA&lt;/strong&gt;证书文件，包含认证中心的&lt;strong&gt;公钥&lt;/strong&gt;。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca-key.pem&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;CA&lt;/strong&gt;证书的&lt;strong&gt;私钥&lt;/strong&gt;文件。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.csr&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;CA&lt;/strong&gt;证书的认证请求文件。&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;CA&lt;/strong&gt;证书用于签发其它证书，需要为&lt;strong&gt;CA&lt;/strong&gt;认证中心配置其功能项。通过如下命令可以获取&lt;strong&gt;CA&lt;/strong&gt;配置模板。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;cfssl print-defaults config &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ca.config
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;CA&lt;/strong&gt;配置的基本内容如下：&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;signing&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;default&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;expiry&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;168h&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;profiles&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;www&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;expiry&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;8760h&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;usages&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;signing&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;key encipherment&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;server auth&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;client&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;expiry&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;8760h&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;usages&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;signing&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;key encipherment&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;client auth&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;expiry&lt;/code&gt;：表示签发过期时间。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;profiles&lt;/code&gt;：配置各类使用场景，每类使用场景有&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;expiry&lt;/code&gt;（过期时间）和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;usages&lt;/code&gt;（功能用途）组成。&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;usages&lt;/code&gt;：可选功能包括签名（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;signing&lt;/code&gt;）、加密（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;key encipherment&lt;/code&gt;）、服务端认证（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server auth&lt;/code&gt;）、客户端认证（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;client auth&lt;/code&gt;）等。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;参照上述规范，&lt;strong&gt;CA&lt;/strong&gt;配置实例如下：&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;signing&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;default&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;expiry&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;43800h&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;profiles&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;server&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;expiry&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;43800h&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;usages&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;signing&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;key encipherment&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;server auth&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这里，过期时间为5年，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt;场景下签发证书可用于签名、加密以及服务端认证。&lt;/p&gt;
+
+&lt;h2 id=&quot;42-签发证书&quot;&gt;4.2 签发证书&lt;/h2&gt;
+
+&lt;p&gt;接下来，为一组服务器（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IP：192.168.100.120～122&lt;/code&gt;）签发&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt;证书。&lt;/p&gt;
+
+&lt;p&gt;首先，准备一份证书签名请求文件&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server-csr.json&lt;/code&gt;，其内容规范同&lt;strong&gt;步骤1&lt;/strong&gt;中&lt;strong&gt;CSR&lt;/strong&gt;一致。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;CN&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;cheney.server&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;hosts&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;192.168.100.120&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;192.168.100.121&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+		&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;192.168.100.122&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;algo&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rsa&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;size&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2048&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;names&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;CN&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;ST&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;JS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+            &lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;L&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Wu Xi&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+	    	&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;&quot;O&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;cheney&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;然后，由认证中心使用根证书（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.pem&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca-key.pem&lt;/code&gt;）和场景配置（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca-config.json&lt;/code&gt;）生成&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt;证书。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;cfssl gencert &lt;span class=&quot;nt&quot;&gt;-ca&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ca.pem &lt;span class=&quot;nt&quot;&gt;-ca-key&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ca-key.pem &lt;span class=&quot;nt&quot;&gt;--config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ca-config.json &lt;span class=&quot;nt&quot;&gt;--profile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;server server-csr.json | cfssljson &lt;span class=&quot;nt&quot;&gt;-bare&lt;/span&gt; server
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;命令执行完毕后，执行目录下会生成3个文件（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server.pem&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server-key.pem&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server.csr&lt;/code&gt;）。&lt;/p&gt;
+
+&lt;h2 id=&quot;43-验证&quot;&gt;4.3 验证&lt;/h2&gt;
+
+&lt;p&gt;常用的验证工具有&lt;strong&gt;openssl&lt;/strong&gt;、&lt;strong&gt;cfssl-certinfo&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;openssl&lt;/strong&gt;命令如下：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;openssl x509 &lt;span class=&quot;nt&quot;&gt;-in&lt;/span&gt; server.pem &lt;span class=&quot;nt&quot;&gt;-text&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-noout&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;校验要注意以下内容：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;Issuer: C &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; CN, ST &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; JS, L &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Wu Xi, O &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cheney, CN &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cheney.site
+...
+Subject: C &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; CN, ST &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; JS, L &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Wu Xi, O &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cheney, CN &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cheney.server
+...
+X509v3 Key Usage: critical
+	Digital Signature, Key Encipherment
+X509v3 Extended Key Usage:
+	TLS Web Server Authentication
+            ...
+            ...
+X509v3 Subject Alternative Name:
+	IP Address:192.168.100.120, IP Address:192.168.100.121, IP Address:192.168.100.122
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Issuer&lt;/code&gt;要与&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca-csr.json&lt;/code&gt;的定义一致。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Subject&lt;/code&gt;要与&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server-csr.json&lt;/code&gt;的定义一致。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;x509v3 Key Usage&lt;/code&gt;和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;x509v3 Extended Key Usage&lt;/code&gt;要与&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca-config.json&lt;/code&gt;中&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt;场景一致。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;X509v3 Subject Alternative Name&lt;/code&gt;要与&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server-csr.json&lt;/code&gt;的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hosts&lt;/code&gt;一致。
+&lt;strong&gt;cfssl-certinfo&lt;/strong&gt;命令如下：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;cfssl-certinfo &lt;span class=&quot;nt&quot;&gt;-cert&lt;/span&gt; server.pem
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;其校验主要关注&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;subject&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;issuer&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sans&lt;/code&gt;即可。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;openssl&lt;/code&gt;命令提供了链式校验，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;openssl verify &lt;span class=&quot;nt&quot;&gt;-verbose&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-show_chain&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--CAfile&lt;/span&gt; ../ca.pem  ./server.pem
+./server.pem: OK
+Chain:
+&lt;span class=&quot;nv&quot;&gt;depth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0: C &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; CN, ST &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; JS, L &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Wu Xi, CN &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; registry.cheney.io &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;untrusted&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;depth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1: C &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; CN, ST &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; JS, L &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Wu Xi, CN &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; cheney.io
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;返回&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OK&lt;/code&gt;，则表示验证成功，说明&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server.pem&lt;/code&gt;是由&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.pem&lt;/code&gt;签发的。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意，在认证链上证书的CN要唯一，否则认证失败。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;44-本地安装ca根证书&quot;&gt;4.4 本地安装CA根证书&lt;/h2&gt;
+
+&lt;p&gt;在ssl认证过程中，需要判定证书是否可信，即证书是否为可信的&lt;strong&gt;CA&lt;/strong&gt;机构签发的。ssl需要在本地按照证书提供的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Issuer&lt;/code&gt;检索本地是否存在可信的&lt;strong&gt;CA根证书&lt;/strong&gt;。可以通过如下方式手动安装&lt;strong&gt;CA证书&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;将&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.pem&lt;/code&gt;转为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.crt&lt;/code&gt;（二进制），&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;openssl x509 &lt;span class=&quot;nt&quot;&gt;-outform&lt;/span&gt; DER &lt;span class=&quot;nt&quot;&gt;-in&lt;/span&gt; ./ca.pem &lt;span class=&quot;nt&quot;&gt;-out&lt;/span&gt; ./ca.crt
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;把&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.crt&lt;/code&gt;拷贝到&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/ca-certificates/trust-source/anchors/&lt;/code&gt;目录下，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo cp&lt;/span&gt; ./ca.crt /etc/ca-certificates/trust-source/anchors/ca.crt
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;最后执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;update-ca-trust&lt;/code&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;update-ca-trust
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;命令执行成功后，可以从&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/ssl/cert.pem&lt;/code&gt;文件中找到&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ca.crt&lt;/code&gt;的内容，也可以从&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/ssl/certs/&lt;/code&gt;找到相关文件。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;注意，更新可信CA后，只有执行命令的当前进程和新的进程生效。&lt;/strong&gt;&lt;/p&gt;
+</description>
+        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2023/03/14/cfssl/</link>
+        <guid isPermaLink="true">http://localhost:4000/2023/03/14/cfssl/</guid>
+        
+        <category>数字证书</category>
+        
+        <category>cfssl</category>
+        
+        <category>CA</category>
+        
+        <category>公开密钥认证</category>
+        
+        
+      </item>
     
   </channel>
 </rss>
