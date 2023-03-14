@@ -1,0 +1,359 @@
+---
+layout: post
+title: "数字证书与cfssl工具链"
+subtitle: "分析数字证书原理，记录cfssl常用命令。"
+author: "Cheney.Yin"
+header-style: text
+tags:
+  - 数字证书
+  - cfssl
+  - CA
+  - 公开密钥认证
+---
+
+# 1 什么是根证书？
+
+[参考](https://zh.wikipedia.org/zh-cn/%E6%A0%B9%E8%AF%81%E4%B9%A6)
+
+根证书是证书颁发机构(**CA**)的**公钥证书**，是在公开密钥基础建设中，信任链的起点。根证书没有上层机构再为其本身作数字签名，所以都是**自签证书**。
+
+# 2 X.509证书规范
+
+[参考](https://shunliz.gitbooks.io/blockchain-guide/content/crypto/cert.html)
+
+一般的，一个数字证书内容可能包括基本数据（版本、序列号）、所签名对象信息（签名算法类型、签发者信息、有效期、被签发人、签发的公开密钥）、**CA** 的数字签名等等。
+
+目前使用最广泛的标准为 **ITU** 和 **ISO** 联合制定的 **X.509** 的 v3 版本规范（***RFC 5280***），其中定义了如下证书信息域：
+
+- 版本号（**Version Number**）：规范的版本号，目前为版本 3，值为 `0x2`；
+- 序列号（**Serial Number**）：由 **CA** 维护的为它所颁发的每个证书分配的唯一的序列号，用来追踪和撤销证书。只要拥有签发者信息和序列号，就可以唯一标识一个证书。最大不能超过 20 个字节；
+  签名算法（**Signature Algorithm**）：数字签名所采用的算法，如 `sha256WithRSAEncryption` 或 `ecdsa-with-SHA256`；
+- 颁发者（**Issuer**）：颁发证书单位的标识信息，如 `C=CN, ST=Beijing, L=Beijing, O=org.example.com, CN=ca.org.example.com`；
+- 有效期（**Validity**）：证书的有效期限，包括起止时间；
+- 主体（**Subject**）：证书拥有者的标识信息（**Distinguished Name**），如 `C=CN, ST=Beijing, L=Beijing, CN=person.org.example.com`；
+- 主体的公钥信息（**Subject Public Key Info**）：所保护的公钥相关的信息；
+  - 公钥算法（**Public Key Algorithm**）：公钥采用的算法；
+  - 主体公钥（**Subject Public Key**）：公钥的内容；
+- 颁发者唯一号（**Issuer Unique Identifier**）：代表颁发者的唯一信息，仅 2、3 版本支持，可选；
+- 主体唯一号（**Subject Unique Identifier**）：代表拥有证书实体的唯一信息，仅 2、3 版本支持，可选；
+- 扩展（**Extensions**，可选）：可选的一些扩展。v3 中可能包括：
+  - **Subject Key Identifier**：实体的密钥标识符，区分实体的多对密钥；
+
+  - **Basic Constraints**：一般指明是否属于 **CA**；
+
+  - **Authority Key Identifier**：颁发这个证书的颁发者的公钥标识符；
+
+  - **CRL Distribution Points**：撤销文件的发布地址；
+
+  - **Key Usage**: 证书的用途或功能信息。
+    此外，证书的颁发者还需要对证书内容利用自己的私钥进行签名，以防止他人篡改证书内容。
+
+# 3 CA签发证书原理
+
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="./resources/ca.svg" width = "75%" alt=""/>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">
+      图1 数字证书认证中心签发证书
+  	</div>
+</center>
+
+------
+
+
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
+    src="./resources/ca-validate.svg" width = "75%" alt=""/>
+    <br>
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">
+      图2 服务端认证
+  	</div>
+</center>
+
+------
+
+
+
+# 4 实例步骤
+
+[参考](https://segmentfault.com/a/1190000038276488)
+
+## 4.1 创建CA证书（即根证书）及其私钥
+
+首先创建证书请求签名文件（**CSR**, CERTIFICATE SIGNING REQUEST）
+
+```shell
+ cfssl print-defaults csr > ca-csr.json
+```
+
+文件`ca-csr.json`为证书签名请求配置文件，其内容大致如下:
+
+```json
+{
+    "CN": "example.net",
+    "hosts": [
+        "example.net",
+        "www.example.net"
+    ],
+    "key": {
+        "algo": "ecdsa",
+        "size": 256
+    },
+    "names": [
+        {
+            "C": "US",
+            "ST": "CA",
+            "L": "San Francisco"
+        }
+    ]
+}
+```
+
+- **CN**：Common Name，所有csr文件都**必须**有字段。
+- 对于 **SSL** 证书，一般为网站域名。
+
+- 而对于代码签名证书则为申请单位名称。
+
+- 而对于客户端证书则为证书申请者的姓名。
+- **hosts**：网络请求url中的合法主机名或域名集合。
+- **key**：key字段是**必须**有的字段，其内容一般也比较固定就是：`{"algo":"rsa”,"size":2048}`，表示使用的加密算法**rsa**，密文长度2048。
+- **names**：也是**必须**有字段，是证书对外公开显示的一些字段，常见如下：
+  - **C**：即Country的简写，表示国家，例如中国为**CN**。
+
+  - **L**：即Locality的简写，表示所在地区或城市。
+
+  - **ST**：表示所在州或省份。
+
+  - **O**：表示所在单位或组织。
+
+  - **OU**：显示其它内容。
+
+参照如上规范，CSR配置如下：
+
+```json
+❯ cat ./ca-csr.json
+{
+    "CN": "cheney.site",
+    "hosts": [
+        "cheney.site",
+        "192.168.100.1"
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "CN",
+            "ST": "JS",
+            "L": "Wu Xi",
+	    	"O": "cheney"
+        }
+    ]
+}
+```
+
+通过如下命令，依据`ca-csr.json`生成**CA**证书（或根证书）。
+
+```shell
+cfssl gencert --initca ./ca-csr.json | cfssljson -bare ca
+```
+
+命令执行完毕后，目录下会得到3个文件，分别为`ca.pem`、`ca-key.pem`、`ca.csr`。
+
+| 文件         | 说明                                     |
+| ------------ | ---------------------------------------- |
+| `ca.pem`     | **CA**证书文件，包含认证中心的**公钥**。 |
+| `ca-key.pem` | **CA**证书的**私钥**文件。               |
+| `ca.csr`     | **CA**证书的认证请求文件。               |
+
+**CA**证书用于签发其它证书，需要为**CA**认证中心配置其功能项。通过如下命令可以获取**CA**配置模板。
+
+```shell
+cfssl print-defaults config > ca.config
+```
+
+**CA**配置的基本内容如下：
+
+```json
+{
+    "signing": {
+        "default": {
+            "expiry": "168h"
+        },
+        "profiles": {
+            "www": {
+                "expiry": "8760h",
+                "usages": [
+                    "signing",
+                    "key encipherment",
+                    "server auth"
+                ]
+            },
+            "client": {
+                "expiry": "8760h",
+                "usages": [
+                    "signing",
+                    "key encipherment",
+                    "client auth"
+                ]
+            }
+        }
+    }
+}
+```
+
+- `expiry`：表示签发过期时间。
+
+- `profiles`：配置各类使用场景，每类使用场景有`expiry`（过期时间）和`usages`（功能用途）组成。
+
+  - `usages`：可选功能包括签名（`signing`）、加密（`key encipherment`）、服务端认证（`server auth`）、客户端认证（`client auth`）等。
+
+参照上述规范，**CA**配置实例如下：
+
+```json
+{
+    "signing": {
+        "default": {
+            "expiry": "43800h"
+        },
+        "profiles": {
+            "server": {
+                "expiry": "43800h",
+                "usages": [
+                    "signing",
+                    "key encipherment",
+                    "server auth"
+                ]
+            }
+        }
+    }
+}
+```
+
+这里，过期时间为5年，`server`场景下签发证书可用于签名、加密以及服务端认证。
+
+## 4.2 签发证书
+
+接下来，为一组服务器（`IP：192.168.100.120～122`）签发`server`证书。
+
+首先，准备一份证书签名请求文件`server-csr.json`，其内容规范同**步骤1**中**CSR**一致。
+
+```json
+{
+    "CN": "cheney.server",
+    "hosts": [
+        "192.168.100.120",
+		"192.168.100.121",
+		"192.168.100.122"
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "CN",
+            "ST": "JS",
+            "L": "Wu Xi",
+	    	"O": "cheney"
+        }
+    ]
+}
+```
+
+然后，由认证中心使用根证书（`ca.pem`、`ca-key.pem`）和场景配置（`ca-config.json`）生成`server`证书。
+
+```shell
+cfssl gencert -ca=ca.pem -ca-key=ca-key.pem --config=ca-config.json --profile=server server-csr.json | cfssljson -bare server
+```
+
+命令执行完毕后，执行目录下会生成3个文件（`server.pem`、`server-key.pem`、`server.csr`）。
+
+## 4.3 验证
+
+常用的验证工具有**openssl**、**cfssl-certinfo**。
+
+**openssl**命令如下：
+
+```shell
+openssl x509 -in server.pem -text -noout
+```
+
+校验要注意以下内容：
+
+```shell
+Issuer: C = CN, ST = JS, L = Wu Xi, O = cheney, CN = cheney.site
+...
+Subject: C = CN, ST = JS, L = Wu Xi, O = cheney, CN = cheney.server
+...
+X509v3 Key Usage: critical
+	Digital Signature, Key Encipherment
+X509v3 Extended Key Usage:
+	TLS Web Server Authentication
+            ...
+            ...
+X509v3 Subject Alternative Name:
+	IP Address:192.168.100.120, IP Address:192.168.100.121, IP Address:192.168.100.122
+```
+
+- `Issuer`要与`ca-csr.json`的定义一致。
+- `Subject`要与`server-csr.json`的定义一致。
+- `x509v3 Key Usage`和`x509v3 Extended Key Usage`要与`ca-config.json`中`server`场景一致。
+- `X509v3 Subject Alternative Name`要与`server-csr.json`的`hosts`一致。
+  **cfssl-certinfo**命令如下：
+
+```shell
+cfssl-certinfo -cert server.pem
+```
+
+其校验主要关注`subject`、`issuer`、`sans`即可。 
+
+`openssl`命令提供了链式校验，
+
+```shell
+openssl verify -verbose -show_chain --CAfile ../ca.pem  ./server.pem
+./server.pem: OK
+Chain:
+depth=0: C = CN, ST = JS, L = Wu Xi, CN = registry.cheney.io (untrusted)
+depth=1: C = CN, ST = JS, L = Wu Xi, CN = cheney.io
+```
+
+返回`OK`，则表示验证成功，说明`server.pem`是由`ca.pem`签发的。
+
+**注意，在认证链上证书的CN要唯一，否则认证失败。**
+
+## 4.4 本地安装CA根证书
+
+在ssl认证过程中，需要判定证书是否可信，即证书是否为可信的**CA**机构签发的。ssl需要在本地按照证书提供的`Issuer`检索本地是否存在可信的**CA根证书**。可以通过如下方式手动安装**CA证书**。
+
+将`ca.pem`转为`ca.crt`（二进制），
+
+```shell
+openssl x509 -outform DER -in ./ca.pem -out ./ca.crt
+```
+
+把`ca.crt`拷贝到`/etc/ca-certificates/trust-source/anchors/`目录下，
+
+```shell
+sudo cp ./ca.crt /etc/ca-certificates/trust-source/anchors/ca.crt
+```
+
+最后执行`update-ca-trust`。
+
+```shell
+sudo update-ca-trust
+```
+
+命令执行成功后，可以从`/etc/ssl/cert.pem`文件中找到`ca.crt`的内容，也可以从`/etc/ssl/certs/`找到相关文件。
+
+**注意，更新可信CA后，只有执行命令的当前进程和新的进程生效。**
