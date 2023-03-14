@@ -65,8 +65,8 @@ netease_comment: false
 # ba_track_id: [your track id]
 
 # Google Analytics
-ga_track_id: "G-KMZ19PZE4D" # Format: UA-xxxxxx-xx
-ga_domain: cheneyyin.github.io
+ga_track_id: "G-KMZ19PZE4D"
+
 
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.

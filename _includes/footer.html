@@ -115,7 +115,7 @@
 </script>
 
 
-<!-- Google Analytics -->
+<!-- Google Analytics
 {% if site.ga_track_id %}
 <script>
     // dynamic User by Hux
@@ -132,6 +132,19 @@
 
     ga('create', _gaId, _gaDomain);
     ga('send', 'pageview');
+</script>
+{% endif %} -->
+
+<!-- Google Analytics -->
+{% if site.ga_track_id %}
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{ site.ga_track_id }}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', '{{ site.ga_track_id }}');
 </script>
 {% endif %}
 
