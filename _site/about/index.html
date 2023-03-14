@@ -18,8 +18,8 @@
     <meta property="og:description"
         content="「To explore or to exploite is a question.」">
     
-    <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/about/">
+    <meta property="og:image" content="http://localhost:4000/img/cheney.jpg">
+    <meta property="og:url" content="http://localhost:4000/about/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
     <title>About - Cheney.Yin的博客 | Cheney Blog</title>
@@ -31,7 +31,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/about/">
+    <link rel="canonical" href="http://localhost:4000/about/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -262,22 +262,18 @@
 </div>
 <!-- disqus 评论框 end -->
 
-<script>
-    var disqus_config = function () {
-        this.page.url = 'https://cheneyyin.github.io/about/';  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = 'cheneyyin//about/'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-    };
-    
-    (function() {  // REQUIRED CONFIGURATION VARIABLE: EDIT THE SHORTNAME BELOW
-        var d = document, s = d.createElement('script');
-        
-        s.src = 'https://cheneyyin.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "cheneyyin";
+    var disqus_identifier = "cheneyyin//about/";
+    var disqus_url = "http://localhost:4000/about/";
+
+    (function () {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
 </script>
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-
 
 
     </div>
@@ -501,27 +497,6 @@
         if ($nav) FastClick.attach($nav);
     })
 </script>
-
-
-<!-- Google Analytics
-
-<script>
-    // dynamic User by Hux
-    var _gaId = 'G-KMZ19PZE4D';
-    var _gaDomain = '';
-
-    // Originial
-    (function (i, s, o, g, r, a, m) {
-        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-            (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date(); a = s.createElement(o),
-            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-    ga('create', _gaId, _gaDomain);
-    ga('send', 'pageview');
-</script>
- -->
 
 <!-- Google Analytics -->
 

@@ -30,6 +30,10 @@ const PRECACHE_LIST = [
 ]
 const HOSTNAME_WHITELIST = [
   self.location.hostname,
+  "disqus.com",
+  "googletagmanager.com",
+  "google.com",
+  "github.com",
   "cheneyyin.github.io",
   "cdnjs.cloudflare.com"
 ]
