@@ -1,3 +1,0 @@
-- [:link: Project](project.md)
-- [:book: Blog](_sidebar.md)
-- [:information_source: About](about.md)

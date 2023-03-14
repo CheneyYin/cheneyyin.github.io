@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cheney.Yin Blog</title>
+    <description>这里是 Cheney.Yin 的个人博客</description>
+    <link>https://cheneyyin.github.io/</link>
+    <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Tue, 14 Mar 2023 12:00:41 +0800</pubDate>
+    <lastBuildDate>Tue, 14 Mar 2023 12:00:41 +0800</lastBuildDate>
+    <generator>Jekyll v4.3.2</generator>
+    
+  </channel>
+</rss>
