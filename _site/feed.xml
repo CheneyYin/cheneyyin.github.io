@@ -5,9 +5,1443 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 14 Mar 2023 15:43:31 +0800</pubDate>
-    <lastBuildDate>Tue, 14 Mar 2023 15:43:31 +0800</lastBuildDate>
+    <pubDate>Tue, 14 Mar 2023 16:49:17 +0800</pubDate>
+    <lastBuildDate>Tue, 14 Mar 2023 16:49:17 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
+    
+      <item>
+        <title>Linux Namespace</title>
+        <description>&lt;h1 id=&quot;概况&quot;&gt;概况&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;名称&lt;/th&gt;
+      &lt;th&gt;作用&lt;/th&gt;
+      &lt;th&gt;版本&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Mount (mnt)&lt;/td&gt;
+      &lt;td&gt;隔离挂载点&lt;/td&gt;
+      &lt;td&gt;2.4.19&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Process ID (pid)&lt;/td&gt;
+      &lt;td&gt;隔离进程ID&lt;/td&gt;
+      &lt;td&gt;2.6.24&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Network (net)&lt;/td&gt;
+      &lt;td&gt;隔离网络设备、端口号等&lt;/td&gt;
+      &lt;td&gt;2.6.29&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Interprocess Communication (ipc)&lt;/td&gt;
+      &lt;td&gt;隔离System V IPC和POSIX message queues&lt;/td&gt;
+      &lt;td&gt;2.6.19&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;UTS Namespace (uts)&lt;/td&gt;
+      &lt;td&gt;隔离主机名和域名&lt;/td&gt;
+      &lt;td&gt;2.6.19&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;User Namespace (user)&lt;/td&gt;
+      &lt;td&gt;隔离用户和用户组&lt;/td&gt;
+      &lt;td&gt;3.8&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Control Group (Cgroup)&lt;/td&gt;
+      &lt;td&gt;隔离Cgroups根目录&lt;/td&gt;
+      &lt;td&gt;4.6&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Time Namespace&lt;/td&gt;
+      &lt;td&gt;隔离系统时间&lt;/td&gt;
+      &lt;td&gt;5.6&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h1 id=&quot;mount-namespace&quot;&gt;Mount Namespace&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;Mount Namespace&lt;/strong&gt;是Linux内核实现的第一个namespace，自&lt;strong&gt;2.4.19&lt;/strong&gt;版本开始加入。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Mount Namespace&lt;/strong&gt;可以用来隔离不同的进程或进程组看到的挂载点。可以实现在不同的进程中看到不同的挂载目录。因此，&lt;strong&gt;Mount Namespace&lt;/strong&gt;可以使容器内只能看到自己的挂载信息，在容器内的挂载操作不会影响主机的挂在目录。&lt;/p&gt;
+
+&lt;h2 id=&quot;实例演示&quot;&gt;实例演示&lt;/h2&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unshare&lt;/code&gt;命令演示实例。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unshare &lt;span class=&quot;nt&quot;&gt;--mount&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--mount&lt;/code&gt;表示启用&lt;strong&gt;mount namespace&lt;/strong&gt;，不从父进程继承挂载命名空间。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--fork&lt;/code&gt;表示在执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/bash&lt;/code&gt;前进行fork 出子进程。使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--fork&lt;/code&gt;和不使用的区别可以反映在进程树上，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;pstree &lt;span class=&quot;nt&quot;&gt;-ps&lt;/span&gt; 10883 &lt;span class=&quot;c&quot;&gt;#10883进程是通过--fork&lt;/span&gt;
+systemd&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;───alacritty&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;9378&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;───zsh&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;9380&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;───sudo&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;10881&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;───unshare&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;10882&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;───zsh&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;10883&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+pstree &lt;span class=&quot;nt&quot;&gt;-ps&lt;/span&gt; 17378 &lt;span class=&quot;c&quot;&gt;#17378进程没有通过--fork&lt;/span&gt;
+systemd&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;───alacritty&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;9378&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;───zsh&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;9380&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;───sudo&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;17377&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;───zsh&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;17378&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;接下来，在挂载点隔离的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/bash&lt;/code&gt;进程中，执行挂载操作。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; tmpfs &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;20m tmpfs /tmp/tmpfs
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;挂在成功后，在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/tmp/tmpfs&lt;/code&gt;目录下创建&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hello&lt;/code&gt;文件。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;touch&lt;/span&gt; /tmp/tmpfs/hello
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在挂载点隔离进程下查看已经挂载的目录信息，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;df&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt;
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda2       903G   23G  835G   3% /
+dev             5.8G     0  5.8G   0% /dev
+tmpfs           5.8G   40M  5.8G   1% /dev/shm
+run             5.8G  1.5M  5.8G   1% /run
+tmpfs           1.2G   76K  1.2G   1% /run/user/1000
+/dev/sda1       300M  288K  300M   1% /boot/efi
+tmpfs           5.8G  3.8M  5.8G   1% /tmp
+tmpfs            20M     0   20M   0% /tmp/tmpfs
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;最后一行为刚刚创建的&lt;strong&gt;20M&lt;/strong&gt;大小的tmpfs。&lt;/p&gt;
+
+&lt;p&gt;查看该目录&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/tmp/tmpfs&lt;/code&gt;，目录下存在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hello&lt;/code&gt;文件。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; /tmp/tmpfs
+hello
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;查看进程下的&lt;strong&gt;namespace&lt;/strong&gt;信息。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ll /proc/self/ns
+total 0
+95041 0 dr-x--x--x 2 root root 0 11月 17 10:55 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+95040 0 dr-xr-xr-x 9 root root 0 11月 17 10:55 ..
+95053 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 cgroup -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;cgroup:[4026531835]&apos;&lt;/span&gt;
+95048 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 ipc -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;ipc:[4026531839]&apos;&lt;/span&gt;
+95052 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 mnt -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;mnt:[4026532506]&apos;&lt;/span&gt;
+95046 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 net -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;net:[4026531992]&apos;&lt;/span&gt;
+95049 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 pid -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;pid:[4026531836]&apos;&lt;/span&gt;
+95050 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 pid_for_children -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;pid:[4026531836]&apos;&lt;/span&gt;
+95054 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt; -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;time:[4026531834]&apos;&lt;/span&gt;
+95055 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 time_for_children -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;time:[4026531834]&apos;&lt;/span&gt;
+95051 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 user -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;user:[4026531837]&apos;&lt;/span&gt;
+95047 0 lrwxrwxrwx 1 root root 0 11月 17 10:55 uts -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;uts:[4026531838]&apos;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;其中挂载命名空间编号为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mnt:[4026532506]&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;在主机下查看目录&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/tmp/tmpfs&lt;/code&gt;、挂载目录信息、主机&lt;strong&gt;Namespace&lt;/strong&gt;信息。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ll /tmp/tmpfs
+total 0
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo df&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt;
+Filesystem      Size  Used Avail Use% Mounted on
+dev             5.8G     0  5.8G   0% /dev
+run             5.8G  1.5M  5.8G   1% /run
+/dev/sda2       903G   23G  835G   3% /
+tmpfs           5.8G   34M  5.8G   1% /dev/shm
+/dev/sda1       300M  288K  300M   1% /boot/efi
+tmpfs           5.8G  3.5M  5.8G   1% /tmp
+tmpfs           1.2G   76K  1.2G   1% /run/user/1000
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ll /proc/self/ns
+total 0
+102923 0 dr-x--x--x 2 cheney cheney 0 11月 17 11:02 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+102922 0 dr-xr-xr-x 9 cheney cheney 0 11月 17 11:02 ..
+102935 0 lrwxrwxrwx 1 cheney cheney 0 11月 17 11:02 cgroup -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;cgroup:[4026531835]&apos;&lt;/span&gt;
+102930 0 lrwxrwxrwx 1 cheney cheney 0 11月 17 11:02 ipc -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;ipc:[4026531839]&apos;&lt;/span&gt;
+102934 0 lrwxrwxrwx 1 cheney cheney 0 11月 17 11:02 mnt -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;mnt:[4026531840]&apos;&lt;/span&gt;
+102928 0 lrwxrwxrwx 1 chene y cheney 0 11月 17 11:02 net -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;net:[4026531992]&apos;&lt;/span&gt;
+102931 0 lrwxrwxrwx 1 cheney cheney 0 11月 17 11:02 pid -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;pid:[4026531836]&apos;&lt;/span&gt;
+102932 0 lrwxrwxrwx 1 cheney cheney 0 11月 17 11:02 pid_for_children -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;pid:[4026531836]&apos;&lt;/span&gt;
+102936 0 lrwxrwxrwx 1 cheney cheney 0 11月 17 11:02 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt; -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;time:[4026531834]&apos;&lt;/span&gt;
+102937 0 lrwxrwxrwx 1 cheney cheney 0 11月 17 11:02 time_for_children -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;time:[4026531834]&apos;&lt;/span&gt;
+102933 0 lrwxrwxrwx 1 cheney cheney 0 11月 17 11:02 user -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;user:[4026531837]&apos;&lt;/span&gt;
+102929 0 lrwxrwxrwx 1 cheney cheney 0 11月 17 11:02 uts -&amp;gt; &lt;span class=&quot;s1&quot;&gt;&apos;uts:[4026531838]&apos;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;由上可知，主机&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/tmp/tmpfs&lt;/code&gt;目录下不存在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hello&lt;/code&gt;文件，挂载目录信息下不存在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/tmp/tmpfs&lt;/code&gt;，并且挂载隔离命名空间编号为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;&apos;mnt:[4026531840]&apos;&lt;/code&gt;，这与挂载隔离进程下的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mnt:[4026532506]&lt;/code&gt;不同。所以，新建的&lt;strong&gt;Mount Namespace&lt;/strong&gt;内挂载点是和外部完全隔离的。&lt;/p&gt;
+
+&lt;h1 id=&quot;pid-namespace&quot;&gt;PID Namespace&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;PID Namespace&lt;/strong&gt;用于隔离进程的PID，不同&lt;strong&gt;PID Namespace&lt;/strong&gt;下的进程可以拥有相同的PID。如下，使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unshare&lt;/code&gt;命令在新的&lt;strong&gt;PID Namespace&lt;/strong&gt;下启动&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/bash&lt;/code&gt;，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unshare &lt;span class=&quot;nt&quot;&gt;--pid&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps&lt;/code&gt;命令查看进程PID，&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ps 
+PID TTY          TIME CMD
+10198 pts/0    00:00:00 &lt;span class=&quot;nb&quot;&gt;sudo
+&lt;/span&gt;10199 pts/0    00:00:00 unshare
+10200 pts/0    00:00:00 bash
+10204 pts/0    00:00:00 ps
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;发现进程&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/bash&lt;/code&gt;的PID不为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1&lt;/code&gt;。这是因为，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps&lt;/code&gt;命令会从&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/proc&lt;/code&gt;目录下读取进程信息，所以在新的进程下需要启动挂载隔离并重新挂载&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/proc&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unshare &lt;span class=&quot;nt&quot;&gt;--pid&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--mount-proc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+ps
+PID TTY          TIME CMD
+  1 pts/0    00:00:00 bash
+  5 pts/0    00:00:00 ps
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;可以，看到&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/bash&lt;/code&gt;的进程PID为1。&lt;/p&gt;
+
+&lt;h1 id=&quot;uts-namespace&quot;&gt;UTS Namespace&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;UTS Namespace&lt;/strong&gt;是主机名隔离，使得每个&lt;strong&gt;UTS Namespace&lt;/strong&gt;下可以拥有独立的主机名。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;hostname
+&lt;/span&gt;cheney-hp
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unshare&lt;/code&gt;命令为新的进程开启&lt;strong&gt;UTS Namespace&lt;/strong&gt;，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unshare &lt;span class=&quot;nt&quot;&gt;--uts&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;新启动的进程内查看主机名并且修改，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;cheney-hp uts]# &lt;span class=&quot;nb&quot;&gt;hostname
+&lt;/span&gt;cheney-hp
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;cheney-hp uts]# &lt;span class=&quot;nb&quot;&gt;hostname &lt;/span&gt;yan
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;cheney-hp uts]# &lt;span class=&quot;nb&quot;&gt;hostname
+&lt;/span&gt;yan
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;可以看出，新启动的进程内，主机名已经更改为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yan&lt;/code&gt;，此时原命名空间内进程主机名仍为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cheney-hp&lt;/code&gt;，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;hostname
+&lt;/span&gt;cheney-hp
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;ipc-namespace&quot;&gt;IPC Namespace&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;IPC Namespace&lt;/strong&gt;用于进程通讯隔离。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ipcs &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;------&lt;/span&gt; Message Queues &lt;span class=&quot;nt&quot;&gt;--------&lt;/span&gt;
+key        msqid      owner      perms      used-bytes   messages
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;创建消息队列，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ipcmk &lt;span class=&quot;nt&quot;&gt;-Q&lt;/span&gt;
+Message queue &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;: 2
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ipcs &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;------&lt;/span&gt; Message Queues &lt;span class=&quot;nt&quot;&gt;--------&lt;/span&gt;
+key        msqid      owner      perms      used-bytes   messages
+0x13e408aa 2          cheney     644        0            0
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unshare&lt;/code&gt;为新启动的进程开启进程通信隔离，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unshare &lt;span class=&quot;nt&quot;&gt;--ipc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在新进程中查看队列，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ipcs &lt;span class=&quot;nt&quot;&gt;-q&lt;/span&gt;
+
+&lt;span class=&quot;nt&quot;&gt;------&lt;/span&gt; Message Queues &lt;span class=&quot;nt&quot;&gt;--------&lt;/span&gt;
+key        msqid      owner      perms      used-bytes   messages
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;未发现编号为2的消息队列。&lt;/p&gt;
+
+&lt;h1 id=&quot;user-namespace&quot;&gt;User Namespace&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;User Namespace&lt;/strong&gt;可以用来隔离用户和用户组，&lt;/p&gt;
+
+&lt;p&gt;分别以用户&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cheney&lt;/code&gt;和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt;身份创建文件，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;39718892    0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt; 1 cheney cheney    0 11月 22 11:11 cheney-hello
+39718895    0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt; 1 root   root      0 11月 22 11:11 root-hello
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unshare&lt;/code&gt;命令，将当前用户映射为&lt;strong&gt;User Namespace&lt;/strong&gt;下的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt;用户，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;id
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1000&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;cheney&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1000&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;cheney&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1000&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;cheney&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,3&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;sys&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,90&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;network&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,98&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;power&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,985&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;video&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,991&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;lp&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,998&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;wheel&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,1001&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;docker&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;unshare &lt;span class=&quot;nt&quot;&gt;--user&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在新启动的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bash&lt;/code&gt;进程内查看用户和目录，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;id
+&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,65534&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;nobody&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-lia&lt;/span&gt;
+total 8
+39718891 drwxr-xr-x 2 root   root   4096 11月 22 11:11 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+39584209 drwxr-xr-x 7 root   root   4096 11月 22 10:56 ..
+39718892 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt; 1 root   root      0 11月 22 11:11 cheney-hello
+39718895 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt; 1 nobody nobody    0 11月 22 11:11 root-hello
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;可以看到，文件&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cheney-hello&lt;/code&gt;的用户和用户组由&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cheney:cheney&lt;/code&gt;变为了&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root:root&lt;/code&gt;，而文件&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root-hello&lt;/code&gt;的用户信息由&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root:root&lt;/code&gt;转换为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nobody:nobody&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;在新启动进程中，分别向&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cheney-hello&lt;/code&gt;和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root-hello&lt;/code&gt;写数据，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;OK&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ./cheney-hello
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ./cheney-hello
+OK
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;OK&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ./root-hello
+bash: ./root-hello: Permission denied
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;说明，新建的&lt;strong&gt;User Namespace&lt;/strong&gt;下的用户&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt;等同于宿主机上用户&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cheney&lt;/code&gt;，二者权限一致；并且该&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt;用户并非宿主机的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;root&lt;/code&gt;用户。&lt;/p&gt;
+
+&lt;p&gt;执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;su&lt;/code&gt;来切换用户失败，说明用户是隔离的，并且可以映射用户。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;cheney-hp user]# su root
+su: Authentication service cannot retrieve authentication info
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;cheney-hp user]# su cheney
+su: Authentication service cannot retrieve authentication info
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;net-namespace&quot;&gt;Net Namespace&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;Net Namespace&lt;/strong&gt;用来隔离网络设备、IP地址和端口信息等。&lt;/p&gt;
+
+&lt;p&gt;宿主机上查看网络信息，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ip addr
+1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eno1: &amp;lt;NO-CARRIER,BROADCAST,MULTICAST,UP&amp;gt; mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether c4:34:6b:02:34:dd brd ff:ff:ff:ff:ff:ff
+    altname enp14s0
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unshare&lt;/code&gt;为新的进程建立网络命名空间，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unshare &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+ip addr
+1: lo: &amp;lt;LOOPBACK&amp;gt; mtu 65536 qdisc noop state DOWN group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;进存在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;loop&lt;/code&gt;环路设备。&lt;/p&gt;
+
+&lt;h2 id=&quot;为进程定义网络命名空间&quot;&gt;为进程定义网络命名空间&lt;/h2&gt;
+
+&lt;p&gt;创建命名空间&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ns0-1&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip netns add ns0-1
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;创建veth-pair，并把&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;veth1&lt;/code&gt;分配给命名空间&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ns0-1&lt;/code&gt;，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;add veth0 &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;veth peer name veth1
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;veth1 netns ns0-1
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;veth0&lt;/code&gt;分配IP地址，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip addr add 192.168.5.1/24 dev veth0
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;veth0 up
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在命名空间&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ns0-1&lt;/code&gt;内，为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;veth1&lt;/code&gt;分配IP地址，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;ns0-1 ip addr add 192.168.5.2/24 dev veth1
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;ns0-1 ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;veth1 up
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;测试网络。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ping 192.168.5.2 &lt;span class=&quot;nt&quot;&gt;-Iveth0&lt;/span&gt;
+PING 192.168.5.2 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;192.168.5.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; from 192.168.5.1 veth0: 56&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;84&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; bytes of data.
+64 bytes from 192.168.5.2: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;64 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.048 ms
+64 bytes from 192.168.5.2: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;64 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.057 ms
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsenter&lt;/code&gt;命令复用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ns0-1&lt;/code&gt;，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nsenter &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/run/netns/ns0-1 /bin/bash
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在新启动的进程中，查看网络设备，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ip &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;show
+1: lo: &amp;lt;LOOPBACK&amp;gt; mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+8: veth1@if9: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether a6:27:92:0d:4c:f5 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ip addr show
+1: lo: &amp;lt;LOOPBACK&amp;gt; mtu 65536 qdisc noop state DOWN group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+8: veth1@if9: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether a6:27:92:0d:4c:f5 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.5.2/24 scope global veth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a427:92ff:fe0d:4cf5/64 scope &lt;span class=&quot;nb&quot;&gt;link
+       &lt;/span&gt;valid_lft forever preferred_lft forever
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ping 192.168.5.1
+PING 192.168.5.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;192.168.5.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 56&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;84&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; bytes of data.
+64 bytes from 192.168.5.1: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;64 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.069 ms
+64 bytes from 192.168.5.1: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;64 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.050 ms
+64 bytes from 192.168.5.1: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;64 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.058 ms
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;配置进程的网络命名空间&quot;&gt;配置进程的网络命名空间&lt;/h2&gt;
+
+&lt;p&gt;假设&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/bash&lt;/code&gt;启动的网络命名空间隔离，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unshare &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$$&lt;/span&gt;
+2296
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ip netns&lt;/code&gt;操作的目录为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/run/netns/&lt;/code&gt;，将&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/proc/2296/ns/net&lt;/code&gt;链接到&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/run/netns/&lt;/code&gt;目录下便可以为其配置网络空间。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo ln&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; /proc/2296/ns/net /var/run/netns/ns0-1
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;查看网络命名空间，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ip netns list
+ns0-1
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ip&lt;/code&gt;命令为PID为2296的进程创建网络设备，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;add veth0 &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;veth peer name veth1
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;veth1 netns ns0-1
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;ns0-1 ip addr add 192.168.5.2/24 dev veth1
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip netns &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;ns0-1 ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;veth1 up
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip addr add 192.168.5.1/24 dev veth0
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip &lt;span class=&quot;nb&quot;&gt;link set &lt;/span&gt;veth0 up
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;PID为2296的进程中查看网络设备，可以发现&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;veth1&lt;/code&gt;，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ip &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;show
+1: lo: &amp;lt;LOOPBACK&amp;gt; mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+4: veth1@if5: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether a6:27:92:0d:4c:f5 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ip addr show
+1: lo: &amp;lt;LOOPBACK&amp;gt; mtu 65536 qdisc noop state DOWN group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+4: veth1@if5: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether a6:27:92:0d:4c:f5 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.5.2/24 scope global veth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a427:92ff:fe0d:4cf5/64 scope &lt;span class=&quot;nb&quot;&gt;link
+       &lt;/span&gt;valid_lft forever preferred_lft forever
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ping 192.168.5.1 &lt;span class=&quot;nt&quot;&gt;-Iveth1&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c3&lt;/span&gt;
+PING 192.168.5.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;192.168.5.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; from 192.168.5.2 veth1: 56&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;84&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; bytes of data.
+64 bytes from 192.168.5.1: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;64 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.063 ms
+64 bytes from 192.168.5.1: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;64 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.057 ms
+64 bytes from 192.168.5.1: &lt;span class=&quot;nv&quot;&gt;icmp_seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3 &lt;span class=&quot;nv&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;64 &lt;span class=&quot;nb&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.069 ms
+
+&lt;span class=&quot;nt&quot;&gt;---&lt;/span&gt; 192.168.5.1 ping statistics &lt;span class=&quot;nt&quot;&gt;---&lt;/span&gt;
+3 packets transmitted, 3 received, 0% packet loss, &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;2017ms
+rtt min/avg/max/mdev &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0.057/0.063/0.069/0.005 ms
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;unshare-和-nsenter&quot;&gt;unshare 和 nsenter&lt;/h1&gt;
+
+&lt;h2 id=&quot;unshare&quot;&gt;unshare&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Run a program with some namespaces unshared from the parent.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;即&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unshare&lt;/code&gt;可以指定创建新的命名空间，而不从父进程继承。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;unshare &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;
+
+Usage:
+ unshare &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;options] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&amp;lt;program&amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&amp;lt;argument&amp;gt;...]]
+
+Run a program with some namespaces unshared from the parent.
+
+Options:
+ &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--mount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]      unshare mounts namespace
+ &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--uts&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]        unshare UTS namespace &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;hostname &lt;/span&gt;etc&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--ipc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]        unshare System V IPC namespace
+ &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]        unshare network namespace
+ &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--pid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]        unshare pid namespace
+ &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]       unshare user namespace
+ &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--cgroup&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]     unshare cgroup namespace
+ &lt;span class=&quot;nt&quot;&gt;-T&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]       unshare &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;namespace
+
+ &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt;                fork before launching &amp;lt;program&amp;gt;
+ &lt;span class=&quot;nt&quot;&gt;--map-user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;uid&amp;gt;|&amp;lt;name&amp;gt;   map current user to uid &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;implies &lt;span class=&quot;nt&quot;&gt;--user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;--map-group&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;gid&amp;gt;|&amp;lt;name&amp;gt;  map current group to gid &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;implies &lt;span class=&quot;nt&quot;&gt;--user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--map-root-user&lt;/span&gt;       map current user to root &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;implies &lt;span class=&quot;nt&quot;&gt;--user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--map-current-user&lt;/span&gt;    map current user to itself &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;implies &lt;span class=&quot;nt&quot;&gt;--user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+ &lt;span class=&quot;nt&quot;&gt;--kill-child&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;signame&amp;gt;]  when dying, &lt;span class=&quot;nb&quot;&gt;kill &lt;/span&gt;the forked child &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;implies &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+                             defaults to SIGKILL
+ &lt;span class=&quot;nt&quot;&gt;--mount-proc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;&lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;]&lt;/span&gt;      mount proc filesystem first &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;implies &lt;span class=&quot;nt&quot;&gt;--mount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;--propagation&lt;/span&gt; slave|shared|private|unchanged
+                           modify mount propagation &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;mount namespace
+ &lt;span class=&quot;nt&quot;&gt;--setgroups&lt;/span&gt; allow|deny    control the setgroups syscall &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;user namespaces
+ &lt;span class=&quot;nt&quot;&gt;--keep-caps&lt;/span&gt;               retain capabilities granted &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;user namespaces
+
+ &lt;span class=&quot;nt&quot;&gt;-R&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--root&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;&lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;          run the &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;with root directory &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;to &amp;lt;&lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--wd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;&lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;            change working directory to &amp;lt;&lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;-S&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--setuid&lt;/span&gt; &amp;lt;uid&amp;gt;        &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;uid &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;entered namespace
+ &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--setgid&lt;/span&gt; &amp;lt;gid&amp;gt;        &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;gid &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;entered namespace
+ &lt;span class=&quot;nt&quot;&gt;--monotonic&lt;/span&gt; &amp;lt;offset&amp;gt;      &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;clock monotonic offset &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seconds&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;namespaces
+ &lt;span class=&quot;nt&quot;&gt;--boottime&lt;/span&gt; &amp;lt;offset&amp;gt;       &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;clock boottime offset &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;seconds&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;namespaces
+
+ &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;                display this &lt;span class=&quot;nb&quot;&gt;help&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--version&lt;/span&gt;             display version
+
+For more details see unshare&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;例如，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unshare&lt;/code&gt;选择了选项&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--net&lt;/code&gt;，这意味着新的进程拥有新的网络命令空间，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unshare &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+ip addr
+1: lo: &amp;lt;LOOPBACK&amp;gt; mtu 65536 qdisc noop state DOWN group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;可以看到除了环路设备外没有其它网络设备。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--net[=&amp;lt;file&amp;gt;]&lt;/code&gt;是指创建的新的网络命名空间会另存在指定文件中，在进程关闭后命名空间不消失。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;touch&lt;/span&gt; ./net-ns
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;unshare &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;./net-ns &lt;span class=&quot;nt&quot;&gt;--fork&lt;/span&gt; /bin/bash
+ip &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;add veth0 &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;veth peer name veth1
+ip &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;show
+1: lo: &amp;lt;LOOPBACK&amp;gt; mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: veth1@veth0: &amp;lt;BROADCAST,MULTICAST,M-DOWN&amp;gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether 52:a6:8e:fa:09:bd brd ff:ff:ff:ff:ff:ff
+3: veth0@veth1: &amp;lt;BROADCAST,MULTICAST,M-DOWN&amp;gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether ea:b9:c4:c1:bd:2c brd ff:ff:ff:ff:ff:ff
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;本质上是将&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/proc/$pid/ns/net&lt;/code&gt;挂载在了&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;net-ns&lt;/code&gt;文件上（&lt;strong&gt;mount bind&lt;/strong&gt;）。可以使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsenter&lt;/code&gt;来复用命名空间。&lt;/p&gt;
+
+&lt;h2 id=&quot;nsenter&quot;&gt;nsenter&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Run a program with namespaces of other processes.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsenter&lt;/code&gt;可以为新启动的进程复用其它进程的命名空间。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nsenter &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;
+
+Usage:
+ nsenter &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;options] &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&amp;lt;program&amp;gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&amp;lt;argument&amp;gt;...]]
+
+Run a program with namespaces of other processes.
+
+Options:
+ &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--all&lt;/span&gt;              enter all namespaces
+ &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--target&lt;/span&gt; &amp;lt;pid&amp;gt;     target process to get namespaces from
+ &lt;span class=&quot;nt&quot;&gt;-m&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--mount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]   enter mount namespace
+ &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--uts&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]     enter UTS namespace &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;hostname &lt;/span&gt;etc&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+ &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--ipc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]     enter System V IPC namespace
+ &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]     enter network namespace
+ &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--pid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]     enter pid namespace
+ &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--cgroup&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]  enter cgroup namespace
+ &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]    enter user namespace
+ &lt;span class=&quot;nt&quot;&gt;-T&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;file&amp;gt;]    enter &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;namespace
+ &lt;span class=&quot;nt&quot;&gt;-S&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--setuid&lt;/span&gt; &amp;lt;uid&amp;gt;     &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;uid &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;entered namespace
+ &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--setgid&lt;/span&gt; &amp;lt;gid&amp;gt;     &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;gid &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;entered namespace
+     &lt;span class=&quot;nt&quot;&gt;--preserve-credentials&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;not &lt;span class=&quot;nb&quot;&gt;touch &lt;/span&gt;uids or gids
+ &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--root&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;&lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;]&lt;/span&gt;     &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;the root directory
+ &lt;span class=&quot;nt&quot;&gt;-w&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--wd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[=&lt;/span&gt;&amp;lt;&lt;span class=&quot;nb&quot;&gt;dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;]&lt;/span&gt;       &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;the working directory
+ &lt;span class=&quot;nt&quot;&gt;-F&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--no-fork&lt;/span&gt;          &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;not fork before &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ing &amp;lt;program&amp;gt;
+
+ -h, --help             display this help
+ -V, --version          display version
+
+For more details see nsenter(1).
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;最常用的方法是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-t&lt;/code&gt;来设置目标进程，配置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-m&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-u&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-i&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-n&lt;/code&gt;等决定复用的命名空间。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--net[=&amp;lt;file&amp;gt;]&lt;/code&gt;这种形式可以直接指定命名空间路径，通常为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/proc/$pid/ns/&lt;/code&gt;目录下的文件，当然它们的链接文件和挂载点同样可以。&lt;/p&gt;
+
+&lt;p&gt;例如，复用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;unshare&lt;/code&gt;的另存的命名空间（挂载文件）&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nsenter &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;./net-ns /bin/bash
+ip &lt;span class=&quot;nb&quot;&gt;link
+&lt;/span&gt;1: lo: &amp;lt;LOOPBACK&amp;gt; mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: veth1@veth0: &amp;lt;BROADCAST,MULTICAST,M-DOWN&amp;gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether 52:a6:8e:fa:09:bd brd ff:ff:ff:ff:ff:ff
+3: veth0@veth1: &amp;lt;BROADCAST,MULTICAST,M-DOWN&amp;gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether ea:b9:c4:c1:bd:2c brd ff:ff:ff:ff:ff:ff
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;复用链接文件，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;ln&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; /proc/4779/ns/net ./net-ns-link
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nsenter &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;./net-ns-link /bin/bash
+ip &lt;span class=&quot;nb&quot;&gt;link
+&lt;/span&gt;1: lo: &amp;lt;LOOPBACK&amp;gt; mtu 65536 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: veth1@veth0: &amp;lt;BROADCAST,MULTICAST,M-DOWN&amp;gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether 52:a6:8e:fa:09:bd brd ff:ff:ff:ff:ff:ff
+3: veth0@veth1: &amp;lt;BROADCAST,MULTICAST,M-DOWN&amp;gt; mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether ea:b9:c4:c1:bd:2c brd ff:ff:ff:ff:ff:ff
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2023/03/14/linux-namespace/</link>
+        <guid isPermaLink="true">http://localhost:4000/2023/03/14/linux-namespace/</guid>
+        
+        <category>Linux</category>
+        
+        <category>Linux Namespace</category>
+        
+        <category>docker</category>
+        
+        <category>container</category>
+        
+        <category>nsenter</category>
+        
+        <category>unshare</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>计算机系统各类延时概况</title>
+        <description>&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;事件&lt;/th&gt;
+      &lt;th&gt;延时&lt;/th&gt;
+      &lt;th&gt;相对时间比例&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1个CPU周期&lt;/td&gt;
+      &lt;td&gt;0.3 ns&lt;/td&gt;
+      &lt;td&gt;1 s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;L1缓存访问&lt;/td&gt;
+      &lt;td&gt;0.9 ns&lt;/td&gt;
+      &lt;td&gt;3 s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;L2缓存访问&lt;/td&gt;
+      &lt;td&gt;2.8 ns&lt;/td&gt;
+      &lt;td&gt;9 s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;L3缓存访问&lt;/td&gt;
+      &lt;td&gt;12.9 ns&lt;/td&gt;
+      &lt;td&gt;43 s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;主存访问（从CPU访问DRAM）&lt;/td&gt;
+      &lt;td&gt;120 ns&lt;/td&gt;
+      &lt;td&gt;6 分钟&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;固态硬盘I/O（闪存）&lt;/td&gt;
+      &lt;td&gt;50-150 us&lt;/td&gt;
+      &lt;td&gt;2-6 天&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;旋转磁盘I/O&lt;/td&gt;
+      &lt;td&gt;1-10 ms&lt;/td&gt;
+      &lt;td&gt;1-12 月&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;互联网：从旧金山到纽约&lt;/td&gt;
+      &lt;td&gt;40 ms&lt;/td&gt;
+      &lt;td&gt;4 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;互联网：从旧金山到英国&lt;/td&gt;
+      &lt;td&gt;81 ms&lt;/td&gt;
+      &lt;td&gt;8 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;互联网：从旧金山到澳大利亚&lt;/td&gt;
+      &lt;td&gt;183 ms&lt;/td&gt;
+      &lt;td&gt;19 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;TCP包重传&lt;/td&gt;
+      &lt;td&gt;1-3 s&lt;/td&gt;
+      &lt;td&gt;105-317 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;OS虚拟化系统重启&lt;/td&gt;
+      &lt;td&gt;4 s&lt;/td&gt;
+      &lt;td&gt;423 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;SCSI命令超时&lt;/td&gt;
+      &lt;td&gt;30 s&lt;/td&gt;
+      &lt;td&gt;3 千年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;硬件虚拟化系统重启&lt;/td&gt;
+      &lt;td&gt;40 s&lt;/td&gt;
+      &lt;td&gt;4 千年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;物理系统重启&lt;/td&gt;
+      &lt;td&gt;5 m&lt;/td&gt;
+      &lt;td&gt;32 千年&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2023/03/14/latency-summary/</link>
+        <guid isPermaLink="true">http://localhost:4000/2023/03/14/latency-summary/</guid>
+        
+        <category>latency</category>
+        
+        <category>memory</category>
+        
+        <category>cpu</category>
+        
+        <category>cache</category>
+        
+        <category>network packet</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Graph easy工具</title>
+        <description>&lt;h1 id=&quot;基本语法&quot;&gt;基本语法&lt;/h1&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;graph-easy&lt;/code&gt;兼容graphviz语法&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[hello]&amp;lt;-&amp;gt;[world]&apos;&lt;/span&gt; | graph-easy
++-------+      +-------+
+| hello | &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | world |
++-------+      +-------+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[hello]&amp;lt;-&amp;gt;[world]-&amp;gt;[OK]\n&apos;&lt;/span&gt; | graph-easy
++-------+      +-------+     +----+
+| hello | &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | world | &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | OK |
++-------+      +-------+     +----+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[hello]&amp;lt;-&amp;gt;[world]-&amp;gt;[OK]\n[good]-&amp;gt;[world]&apos;&lt;/span&gt; | graph-easy
++------+     +-------+     +----+
+| good | &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | world | &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | OK |
++------+     +-------+     +----+
+               ^
+               |
+               |
+               v
+             +-------+
+             | hello |
+             +-------+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;嵌入子图&quot;&gt;嵌入子图&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;(ns0-1: [veth1]) [veth0]&amp;lt;-&amp;gt;[veth1] [veth0]&amp;lt;-&amp;gt;[brt]&apos;&lt;/span&gt; | graph-easy
+  +-------+        +-----+
+  | veth0 |   &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | brt |
+  +-------+        +-----+
+    ^
+    |
+    |
+    v
++ - - - - - +
+&lt;span class=&quot;s1&quot;&gt;&apos; ns0-1:    &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; | veth1 | &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
++ - - - - - +
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;连接线加标签&quot;&gt;连接线加标签&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;(ns0-1: [veth1]) [veth0]&amp;lt;-&amp;gt;{label:&quot;pair&quot;}[veth1] [veth0]&amp;lt;-&amp;gt;[brt]&apos;&lt;/span&gt; | graph-easy
+  +-------+        +-----+
+  | veth0 |   &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | brt |
+  +-------+        +-----+
+    ^
+    |
+    | pair
+    v
++ - - - - - +
+&lt;span class=&quot;s1&quot;&gt;&apos; ns0-1:    &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; | veth1 | &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
++ - - - - - +
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2023/03/14/graph-easy/</link>
+        <guid isPermaLink="true">http://localhost:4000/2023/03/14/graph-easy/</guid>
+        
+        <category>Cli</category>
+        
+        <category>graphviz</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>DNS服务与配置</title>
+        <description>&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;用于查询和更新域名。&lt;/p&gt;
+
+&lt;p&gt;其中&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;要配合&lt;strong&gt;bind&lt;/strong&gt;服务器使用。&lt;/p&gt;
+
+&lt;h1 id=&quot;1-bind域名服务器简易配置&quot;&gt;1 &lt;strong&gt;bind&lt;/strong&gt;域名服务器简易配置&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.org.cn/Bind9%E5%AE%89%E8%A3%85%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%8D%97#HOWTO_Setup_BIND9_DNS_Server_.EF.BC.88.E5.A6.82.E4.BD.95.E5.AE.89.E8.A3.85.E8.AE.BE.E7.BD.AEBind9_DNS.E6.9C.8D.E5.8A.A1.E5.99.A8.EF.BC.89&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;接下来，将说明如何在&lt;strong&gt;Ubuntu 20.04.1 LTS&lt;/strong&gt;安装配置&lt;strong&gt;bind&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; bind9
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;安装相关工具，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; dnsutils bind9-host
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;配置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.conf&lt;/code&gt;。如下为示例文件内容：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;// this configuration file.
+//
+// If you are just adding zones, please &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;that &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /etc/bind/named.conf.local
+
+include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.options&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.default-zones&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+logging &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	channel access_log &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		file &lt;span class=&quot;s2&quot;&gt;&quot;/var/log/named.log&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		severity dynamic&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		print-category &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		print-severity &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		print-time &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	category default &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		access_log&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+zone &lt;span class=&quot;s2&quot;&gt;&quot;etcd.com&quot;&lt;/span&gt; IN &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;master&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	file &lt;span class=&quot;s2&quot;&gt;&quot;/var/lib/bind/db.etcd.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	allow-query &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		any&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	allow-update &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		any&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;该文件中配置了两部分&lt;a href=&quot;http://www.hangdaowangluo.com/archives/1615&quot;&gt;日志&lt;/a&gt;及区域两部分内容，其中区域部分更加规范的方法实在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.conf.local&lt;/code&gt;配置。这里，配置了名为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;etcd.com&lt;/code&gt;的区域，它允许任意查询和更新，其数据文件为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/lib/bind/db.etcd.com&lt;/code&gt;，如下是示例内容。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nv&quot;&gt;$TTL&lt;/span&gt; 604800	&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 1 week
+@		IN SOA	dns.etcd.com. admin.etcd.com. &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+				100000     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; serial
+				604800     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; refresh &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 week&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+				86400      &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; retry &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 day&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+				2419200    &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; expire &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4 weeks&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+				604800     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; minimum &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 week&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+				&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+		IN	NS	dns
+dns		IN	A	192.168.100.50
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@		IN SOA	dns.etcd.com. admin.etcd.com. &lt;/code&gt;中，需要配置域名服务器、和管理员邮箱。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin.etcd.com&lt;/code&gt;可转化为邮箱地址&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin@etcd.com&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;常见的记录类型见下表：&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;类型&lt;/th&gt;
+      &lt;th&gt;说明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;A&lt;/td&gt;
+      &lt;td&gt;地址记录&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CNAME&lt;/td&gt;
+      &lt;td&gt;别名&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;MX&lt;/td&gt;
+      &lt;td&gt;邮件交换记录&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;NS&lt;/td&gt;
+      &lt;td&gt;域名服务器记录&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://fasionchan.com/network/dns/record-types/&quot;&gt;更多的可参考该资料&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;配置好上述文件后，执行如下命令启动&lt;strong&gt;bind&lt;/strong&gt;服务器。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;named
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如下命令可以查看日志。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;tail&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; /var/log/named.log
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;2-nslookup和nsupdate&quot;&gt;2 nslookup和nsupdate&lt;/h1&gt;
+&lt;p&gt;用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;命令进行一下测试。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nslookup dns.etcd.com 192.168.100.50
+Server:		192.168.100.50
+Address:	192.168.100.50#53
+
+Name:	dns.etcd.com
+Address: 192.168.100.50
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;命令可以添加新记录。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;
+server 192.168.100.50
+zone etcd.com
+update add n0.etcd.com 80000 IN A 192.168.100.120
+update add n1.etcd.com 80000 IN A 192.168.100.121
+update add n2.etcd.com 80000 IN A 192.168.100.122
+send
+quit
+&apos;&lt;/span&gt; | nsupdate
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;最后使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;验证是否添加成功。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nslookup n0.etcd.com 192.168.100.50
+Server:		192.168.100.50
+Address:	192.168.100.50#53
+
+Name:	n0.etcd.com
+Address: 192.168.100.120
+
+
+nslookup n1.etcd.com 192.168.100.50
+Server:		192.168.100.50
+Address:	192.168.100.50#53
+
+Name:	n1.etcd.com
+Address: 192.168.100.121
+
+
+nslookup n2.etcd.com 192.168.100.50
+Server:		192.168.100.50
+Address:	192.168.100.50#53
+
+Name:	n2.etcd.com
+Address: 192.168.100.122
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;bind&lt;/strong&gt;为数据文件开启了&lt;strong&gt;journal&lt;/strong&gt;模式用于保护数据安全，例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/lib/bind/db.etcd.com&lt;/code&gt;文件的目录下会生成&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;db.etcd.com.jnl&lt;/code&gt;文件，所以随意绕过&lt;strong&gt;bind&lt;/strong&gt;修改数据文件，会导致&lt;strong&gt;bind&lt;/strong&gt;启动失败。虽然删除&lt;strong&gt;jnl&lt;/strong&gt;文件可以恢复启动，但是会造成数据丢失。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2023/03/14/dns/</link>
+        <guid isPermaLink="true">http://localhost:4000/2023/03/14/dns/</guid>
+        
+        <category>DNS</category>
+        
+        <category>nslookup</category>
+        
+        <category>nsupdate</category>
+        
+        <category>bind</category>
+        
+        
+      </item>
     
       <item>
         <title>数字证书与cfssl工具链</title>

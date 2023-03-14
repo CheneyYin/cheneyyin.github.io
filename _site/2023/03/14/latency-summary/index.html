@@ -12,17 +12,58 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="Cheney.Yin的博客 | Cheney Blog">
+        content="计算机系统各类延时概况 - Cheney.Yin的博客 | Cheney Blog">
     
-    <meta property="og:type" content="website">
-    <meta property="og:description"
-        content="「To explore or to exploite is a question.」">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="
+  
+    
+      事件
+      延时
+      相对时间比例
+    
+  
+  
+    
+      1个CPU周期
+      0.3 ns
+      1 s
+    
+    
+      L1缓存访问
+      0.9 ns
+      3 s
+    
+    
+      L2缓存访问
+      2.8 ns
+      9 s
+    
+    
+  ...">
+    
+    <meta property="article:published_time" content=" 2023-03-14T00:00:00Z">
+    
+    
+    <meta property="article:author" content="Cheney.Yin">
+    
+    
+    <meta property="article:tag" content="latency">
+    
+    <meta property="article:tag" content="memory">
+    
+    <meta property="article:tag" content="cpu">
+    
+    <meta property="article:tag" content="cache">
+    
+    <meta property="article:tag" content="network packet">
+    
     
     <meta property="og:image" content="http://localhost:4000/img/cheney.jpg">
-    <meta property="og:url" content="http://localhost:4000/">
+    <meta property="og:url" content="http://localhost:4000/2023/03/14/latency-summary/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>Cheney.Yin的博客 | Cheney Blog</title>
+    <title>计算机系统各类延时概况 - Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -31,7 +72,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/">
+    <link rel="canonical" href="http://localhost:4000/2023/03/14/latency-summary/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -192,14 +233,14 @@
   </div>
 </div>
 
-    <!-- Page Header -->
+    <!-- Post Header -->
 
 
 
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/img/home-bg.jpg');
+        background-image: url('/img/bg-material.jpg');
         background: ;
     }
 
@@ -209,253 +250,207 @@
 
 
 
+<header class="intro-header" >
 
-
-
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
-  <div class="header-mask"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-        <div class="site-heading">
-        
-          <h1>Cheney.Yin Blog</h1>
-          <span class="subheading">「To explore or to exploite is a question.」</span>
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=latency" title="latency">latency</a>
+                        
+                        <a class="tag" href="/archive/?tag=memory" title="memory">memory</a>
+                        
+                        <a class="tag" href="/archive/?tag=cpu" title="cpu">cpu</a>
+                        
+                        <a class="tag" href="/archive/?tag=cache" title="cache">cache</a>
+                        
+                        <a class="tag" href="/archive/?tag=network+packet" title="network packet">network packet</a>
+                        
+                    </div>
+                    <h1>计算机系统各类延时概况</h1>
+                    
+                    <h2 class="subheading"></h2>
+                    <span class="meta">Posted by Cheney.Yin on March 14, 2023</span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
 
 
-<!-- Main Content -->
-<div class="container">
-  <div class="row">
-    
-
-    <!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
-      col-xs-12 postlist-container">
-      
-<div class="post-preview">
-    <a href="/2023/03/14/linux-namespace/">
-        <h2 class="post-title">
-            Linux Namespace
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍Linux的几种常见Namespace
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                概况
 
 
-  
-    
-      名称
-      作用
-      版本
-    
-  
-  
-    
-      Mount (mnt)
-      隔离挂载点
-      2.4.19
-    
-    
-      Process ID (pid)
-      隔离进程ID
-      2.6.24
-    
-    
-      Network (net)
-      隔离网...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on March 14, 2023
-    </p>
-</div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2023/03/14/latency-summary/">
-        <h2 class="post-title">
-            计算机系统各类延时概况
-        </h2>
-        
-        <div class="post-content-preview">
-            
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
                 
-  
-    
-      事件
-      延时
-      相对时间比例
-    
-  
-  
-    
-      1个CPU周期
-      0.3 ns
-      1 s
-    
-    
-      L1缓存访问
-      0.9 ns
-      3 s
-    
-    
-      L2缓存访问
-      2.8 ns
-      9 s
-    
-    
-  ...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on March 14, 2023
-    </p>
-</div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2023/03/14/graph-easy/">
-        <h2 class="post-title">
-            Graph easy工具
-        </h2>
+				<table>
+  <thead>
+    <tr>
+      <th>事件</th>
+      <th>延时</th>
+      <th>相对时间比例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1个CPU周期</td>
+      <td>0.3 ns</td>
+      <td>1 s</td>
+    </tr>
+    <tr>
+      <td>L1缓存访问</td>
+      <td>0.9 ns</td>
+      <td>3 s</td>
+    </tr>
+    <tr>
+      <td>L2缓存访问</td>
+      <td>2.8 ns</td>
+      <td>9 s</td>
+    </tr>
+    <tr>
+      <td>L3缓存访问</td>
+      <td>12.9 ns</td>
+      <td>43 s</td>
+    </tr>
+    <tr>
+      <td>主存访问（从CPU访问DRAM）</td>
+      <td>120 ns</td>
+      <td>6 分钟</td>
+    </tr>
+    <tr>
+      <td>固态硬盘I/O（闪存）</td>
+      <td>50-150 us</td>
+      <td>2-6 天</td>
+    </tr>
+    <tr>
+      <td>旋转磁盘I/O</td>
+      <td>1-10 ms</td>
+      <td>1-12 月</td>
+    </tr>
+    <tr>
+      <td>互联网：从旧金山到纽约</td>
+      <td>40 ms</td>
+      <td>4 年</td>
+    </tr>
+    <tr>
+      <td>互联网：从旧金山到英国</td>
+      <td>81 ms</td>
+      <td>8 年</td>
+    </tr>
+    <tr>
+      <td>互联网：从旧金山到澳大利亚</td>
+      <td>183 ms</td>
+      <td>19 年</td>
+    </tr>
+    <tr>
+      <td>TCP包重传</td>
+      <td>1-3 s</td>
+      <td>105-317 年</td>
+    </tr>
+    <tr>
+      <td>OS虚拟化系统重启</td>
+      <td>4 s</td>
+      <td>423 年</td>
+    </tr>
+    <tr>
+      <td>SCSI命令超时</td>
+      <td>30 s</td>
+      <td>3 千年</td>
+    </tr>
+    <tr>
+      <td>硬件虚拟化系统重启</td>
+      <td>40 s</td>
+      <td>4 千年</td>
+    </tr>
+    <tr>
+      <td>物理系统重启</td>
+      <td>5 m</td>
+      <td>32 千年</td>
+    </tr>
+  </tbody>
+</table>
+
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2023/03/14/graph-easy/" data-toggle="tooltip" data-placement="top" title="Graph easy工具">
+                        Previous<br>
+                        <span>Graph easy工具</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2023/03/14/linux-namespace/" data-toggle="tooltip" data-placement="top" title="Linux Namespace">
+                        Next<br>
+                        <span>Linux Namespace</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <hr style="visibility: hidden;">
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
         
-        <h3 class="post-subtitle">
-            Graph easy是一种用于在Cli下的绘图工具
-        </h3>
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
         
-        <div class="post-content-preview">
-            
-                基本语法
-graph-easy兼容graphviz语法
 
-1
-2
-3
-4
-echo '[hello]&lt;-&gt;[world]' | graph-easy
-+-------+      +-------+
-| hello | &lt;--&gt; | world |
-+-------+      +-------+
-
-
-1
-2
-3
-4
-echo '[hello]&lt;-&gt;[wo...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on March 14, 2023
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2023/03/14/dns/">
-        <h2 class="post-title">
-            DNS服务与配置
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍DNS相关概念和常用命令
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                nslookup、nsupdate用于查询和更新域名。
-
-其中nsupdate要配合bind服务器使用。
-
-1 bind域名服务器简易配置
-
-参考
-
-接下来，将说明如何在Ubuntu 20.04.1 LTS安装配置bind。
-
-1
-apt install -y bind9
-
-
-安装相关工具，
-
-1
-apt install -y dnsutils bind9-host
-
-
-配置/etc/bin...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on March 14, 2023
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2023/03/14/cfssl/">
-        <h2 class="post-title">
-            数字证书与cfssl工具链
-        </h2>
-        
-        <h3 class="post-subtitle">
-            分析数字证书原理，记录cfssl常用命令。
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                1 什么是根证书？
-
-参考
-
-根证书是证书颁发机构(CA)的公钥证书，是在公开密钥基础建设中，信任链的起点。根证书没有上层机构再为其本身作数字签名，所以都是自签证书。
-
-2 X.509证书规范
-
-参考
-
-一般的，一个数字证书内容可能包括基本数据（版本、序列号）、所签名对象信息（签名算法类型、签发者信息、有效期、被签发人、签发的公开密钥）、CA 的数字签名等等。
-
-目前使用最广泛的标准为 IT...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on March 14, 2023
-    </p>
-</div>
-<hr>
-
-
-<!-- Pager -->
-
-
-    </div>
     <!-- Sidebar Container -->
-    <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12
-      col-xs-12 sidebar-container">
-      <!-- Featured Tags -->
-      
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
 
 
 <section>
+    
+        <hr class="hidden-sm hidden-xs">
     
     <h5><a href="/archive/">FEATURED TAGS</a></h5>
     <div class="tags">
@@ -468,87 +463,77 @@ apt install -y dnsutils bind9-host
 </section>
 
 
-      <!-- Short About -->
-      <section class="visible-md visible-lg">
-  <hr>
-  <h5><a href="/about/">ABOUT ME</a></h5>
-  <div class="short-about">
-    
-    <img src="/img/cheney.jpg" />
-    
-    
-    <p>呆若MUJI</p>
-    
-    <!-- SNS Link -->
-    
-
-
-<ul class="list-inline">
-
-
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://www.zhihu.com/people/cheney-yin-77">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa  fa-stack-1x fa-inverse">知</i>
-      </span>
-    </a>
-  </li>
-  
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://github.com/CheneyYin">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-      </span>
-    </a>
-  </li>
-  
-  
-</ul>
-  </div>
-</section>
-
-      <!-- Friends Blog -->
-      
+                <!-- Friends Blog -->
+                
 <hr>
 <h5>FRIENDS</h5>
 <ul class="list-inline">
   
 </ul>
 
-
+            </div>
+        </div>
     </div>
-    
-  </div>
-</div>
+</article>
+
+<!-- add support for mathjax by voleking-->
 
 
-<!-- Add support for Mathjax by Voleking-->
-<!-- If you want to see formulars well in post preview, Maybe you should add this.-->
-<!-- However, most of the time formulars may not appear in the post preview, you can delete it.-->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      equationNumbers: {
-        autoNumber: "AMS"
-      }
-    },
-    tex2jax: {
-      inlineMath: [ ['$','$'] ],
-      displayMath: [ ['$$','$$'] ],
-      processEscapes: true,
-    }
-  });
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "cheneyyin";
+    var disqus_identifier = "/2023/03/14/latency-summary";
+    var disqus_url = "http://localhost:4000/2023/03/14/latency-summary/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
 </script>
-<script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'right',
+          // icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
 
