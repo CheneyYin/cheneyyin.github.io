@@ -57,13 +57,15 @@ public class App {
 ## 基本概念
 ### 依赖
 **maven**依赖如下：
+
 ```xml
 <dependency>
-			<groupId>org.apache.spark</groupId>
-			<artifactId>spark-streaming_2.11</artifactId>
-			<version>2.2.1</version>
+	<groupId>org.apache.spark</groupId>
+	<artifactId>spark-streaming_2.11</artifactId>
+	<version>2.2.1</version>
 </dependency>
 ```
+
 **Kafka**、**Flume**、**Kinesis**需要添加相对应的组件。常见组件如下，
 
 | 源      | 组件                             |
@@ -80,6 +82,7 @@ public class App {
 SparkConf conf = new SparkConf().setMaster(master).setAppName(appName);
 JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 ```
+
 其中`appName`为应用名称，`master`集群模式（**Spark standalone**、**mesos**、**YARN**、**local[\*]**）。`SparkContext`在`StreamingContext`内部已创建，通过`ssc.sparkContext()`访问。
 
 批处理间隔必须根据应用程序和可用集群资源的等待时间要求进行设置。[优化指南](http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887785)
@@ -102,6 +105,7 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 5. 一个`SparkContext`就可以被重用以创建多个`StreamingContext`，只要前一个`StreamingContext`在下一个`StreamingContext`被创建之前停止（不停止`SparkContext`）。
 
 ### 离散化流
+
 **DStream**是**Spark Streaming**提供的基本抽象，在**Spark**内部，**DStream**由一系列的**RDD**组成，每个**RDD**包含了一定时间间隔的数据。
 应用于**DStream**的任何操作会转化为对于底层的**RDD**的操作。例如上述统计单词个数的例子中，转换一个行成为单词中，`flatMap`操作被应用于行离散流中的每个**RDD**来生成单词离散流的**RDD**。
 这些底层的**RDD**变换有**Spark engine**计算。**DStream**操作隐藏了大多数这些细节并为了方便起见，提供给了开发者一个更高级别的接口。
@@ -113,6 +117,7 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 需要注意到是，接收器需要占用一个核来接收数据。除了计算需要的CPU核，还需要分配其它核给接收器。
 
 #### Basic Sources
+
 除了**TCP sockets**，**StreamingContext API**还提供了根据文件作为输入源创建离散流的方法。
 - 文件流：用于从文件中读取数据，在任何与**HDFS API**兼容的文件系统中（即，HDFS、S3、NFS等），一个离散流可以通过下面方式创建：
   **Spark Streaming**将监控数据目录，并且处理任何在该目录下创建的文件（不支持嵌套目录）。注意：
@@ -124,6 +129,7 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 - **Streams based on Custom Receivers**：离散流可以使用通过自定义的接收器来接收到数据来创建。（[自定义接收器](http://spark.apache.org/docs/latest/streaming-custom-receivers.html)）
 
 - **Queue of RDDs as Stream**（**RDDs队列作为一个流**）：为了使用测试数据测试**Spark Streaming**应用程序，还可以使用**streamingContext.queueStream(queueOfRDDs)**创建一个基于**RDD**队列的离散流，每个进入队列的**RDD**都将被视为**DStream**中的一个批次数据，并且就一个流进行处理。
+
 ```java
     JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
     ssc.sparkContext().setLogLevel("WARN");
@@ -153,6 +159,7 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 如果系统从这些可靠的数据来源接收数据，并且被确认正确地接收数据，它可以确保数据不会因为任何类型的失败而导致数据丢失。
 1. Reliable Receiver：当数据被接收并存储在**Spark**中并带有备份副本时，一个可靠的接收器（**reliable receiver**）正确地发送确认给一个可靠的数据源（**reliable source**）。
 2. Unreliable Receiver：一个不可靠的接收器不发送确认到数据源。这可以用于不支持确认的数据源，或者甚至是可靠的数据源当你不想或者不需要进行复杂的确认的时候。
+
 ```java
 public class JavaCustomReceiver extends Receiver<String>{
 	private String host;
@@ -240,7 +247,9 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 注意：`Optional`是`org.apache.spark.api.java`下的类。
 
 #### transform操作
+
 **tansform操作**允许在**DStream**运行任何**RDD-to-RDD**函数。它能够被用来应用任何没有在**DStream API**中提供的**RDD**操作。例如过滤出包含某个RDD中关键字的单词。
+
 ```java
 JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
     ssc.sparkContext().setLogLevel("WARN");
@@ -269,6 +278,7 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 - **sliding interval**：窗口操作执行时间间隔。
 这两个参数必须是源**DStream**上批时间间隔的倍数。
 `reduceByKeyAndWindow`有两种用法，第一种用法如下，
+
 ```java
 //统计窗口内的单词个数
 int batchInterval = 5;
@@ -511,7 +521,7 @@ try {
 
 对于通过网络接收数据输入流（如**Kafka**、**Flume**、**Sockets**等），默认的持久性级别为复制两个节点的数据容错。
 
-### checkpoint
+### Checkpoint
 
 **Spark Streaming**通过checkpoint来容错，以便任务失败之后可以从checkpoint里面恢复。
 
@@ -527,6 +537,7 @@ try {
 - 当应用程序第一次启动，新建一个**StreamingContext**，启动所有**Stream**，然后调用**start()**方法。
 - 当应用程序因为故障重新启动，它将会从**checkpoint**目录**checkpoint**数据重新创建**StreamingContext**。
 如下：
+
 ```java
 String checkpointDirectory = "file:///home/yanchengyu/streamCheckPoint";
 JavaStreamingContext jssc = JavaStreamingContext.getOrCreate(checkpointDirectory, () -> {

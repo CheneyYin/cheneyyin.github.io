@@ -440,15 +440,63 @@ textFile<span class="o">(</span><span class="s2">"/my/directory/*.gz"</span><spa
 
 <h3 id="hadooprdd分区方法">HadoopRDD分区方法</h3>
 
-<p>|      | #1   | #2   | #3   | #4   |
-| —- | —- | —- | —- | —- |
-| #1   | a    | b    | c    | d    |
-| #2   | \n   | 3    | g    | f    |
-| #3   | v    | e    | t    | d    |
-| #4   | d    | \n   | d    | 4    |
-| #5   | \n   | o    | z    | y    |
-| #6   | y    | y    | c    | \n   |
-上表现某个文件的存储内容，假设文件内容按照‘\n’划分记录，并且最小分区数为2，那么HadoopRDD的分区方法如下：</p>
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>#1</th>
+      <th>#2</th>
+      <th>#3</th>
+      <th>#4</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>#1</td>
+      <td>a</td>
+      <td>b</td>
+      <td>c</td>
+      <td>d</td>
+    </tr>
+    <tr>
+      <td>#2</td>
+      <td>\n</td>
+      <td>3</td>
+      <td>g</td>
+      <td>f</td>
+    </tr>
+    <tr>
+      <td>#3</td>
+      <td>v</td>
+      <td>e</td>
+      <td>t</td>
+      <td>d</td>
+    </tr>
+    <tr>
+      <td>#4</td>
+      <td>d</td>
+      <td>\n</td>
+      <td>d</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>#5</td>
+      <td>\n</td>
+      <td>o</td>
+      <td>z</td>
+      <td>y</td>
+    </tr>
+    <tr>
+      <td>#6</td>
+      <td>y</td>
+      <td>y</td>
+      <td>c</td>
+      <td>\n</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>上表现某个文件的存储内容，假设文件内容按照‘\n’划分记录，并且最小分区数为2，那么HadoopRDD的分区方法如下：</p>
 
 <p>HadoopRDD首先会根据文件总长度/最小分区数来预分区，上述文件预分区结果如下：</p>
 

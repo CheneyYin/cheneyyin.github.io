@@ -352,17 +352,19 @@
 <h2 id="基本概念">基本概念</h2>
 <h3 id="依赖">依赖</h3>
 <p><strong>maven</strong>依赖如下：</p>
+
 <div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
 5
 </pre></td><td class="rouge-code"><pre><span class="nt">&lt;dependency&gt;</span>
-			<span class="nt">&lt;groupId&gt;</span>org.apache.spark<span class="nt">&lt;/groupId&gt;</span>
-			<span class="nt">&lt;artifactId&gt;</span>spark-streaming_2.11<span class="nt">&lt;/artifactId&gt;</span>
-			<span class="nt">&lt;version&gt;</span>2.2.1<span class="nt">&lt;/version&gt;</span>
+	<span class="nt">&lt;groupId&gt;</span>org.apache.spark<span class="nt">&lt;/groupId&gt;</span>
+	<span class="nt">&lt;artifactId&gt;</span>spark-streaming_2.11<span class="nt">&lt;/artifactId&gt;</span>
+	<span class="nt">&lt;version&gt;</span>2.2.1<span class="nt">&lt;/version&gt;</span>
 <span class="nt">&lt;/dependency&gt;</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
+
 <p><strong>Kafka</strong>、<strong>Flume</strong>、<strong>Kinesis</strong>需要添加相对应的组件。常见组件如下，</p>
 
 <table>
@@ -397,6 +399,7 @@
 </pre></td><td class="rouge-code"><pre><span class="nc">SparkConf</span> <span class="n">conf</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SparkConf</span><span class="o">().</span><span class="na">setMaster</span><span class="o">(</span><span class="n">master</span><span class="o">).</span><span class="na">setAppName</span><span class="o">(</span><span class="n">appName</span><span class="o">);</span>
 <span class="nc">JavaStreamingContext</span> <span class="n">ssc</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">JavaStreamingContext</span><span class="o">(</span><span class="n">conf</span><span class="o">,</span> <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
+
 <p>其中<code class="language-plaintext highlighter-rouge">appName</code>为应用名称，<code class="language-plaintext highlighter-rouge">master</code>集群模式（<strong>Spark standalone</strong>、<strong>mesos</strong>、<strong>YARN</strong>、<strong>local[*]</strong>）。<code class="language-plaintext highlighter-rouge">SparkContext</code>在<code class="language-plaintext highlighter-rouge">StreamingContext</code>内部已创建，通过<code class="language-plaintext highlighter-rouge">ssc.sparkContext()</code>访问。</p>
 
 <p>批处理间隔必须根据应用程序和可用集群资源的等待时间要求进行设置。<a href="http://cwiki.apachecn.org/pages/viewpage.action?pageId=2887785">优化指南</a></p>
@@ -423,6 +426,7 @@
 </ol>
 
 <h3 id="离散化流">离散化流</h3>
+
 <p><strong>DStream</strong>是<strong>Spark Streaming</strong>提供的基本抽象，在<strong>Spark</strong>内部，<strong>DStream</strong>由一系列的<strong>RDD</strong>组成，每个<strong>RDD</strong>包含了一定时间间隔的数据。
 应用于<strong>DStream</strong>的任何操作会转化为对于底层的<strong>RDD</strong>的操作。例如上述统计单词个数的例子中，转换一个行成为单词中，<code class="language-plaintext highlighter-rouge">flatMap</code>操作被应用于行离散流中的每个<strong>RDD</strong>来生成单词离散流的<strong>RDD</strong>。
 这些底层的<strong>RDD</strong>变换有<strong>Spark engine</strong>计算。<strong>DStream</strong>操作隐藏了大多数这些细节并为了方便起见，提供给了开发者一个更高级别的接口。</p>
@@ -434,6 +438,7 @@
 <p>需要注意到是，接收器需要占用一个核来接收数据。除了计算需要的CPU核，还需要分配其它核给接收器。</p>
 
 <h4 id="basic-sources">Basic Sources</h4>
+
 <p>除了<strong>TCP sockets</strong>，<strong>StreamingContext API</strong>还提供了根据文件作为输入源创建离散流的方法。</p>
 <ul>
   <li>文件流：用于从文件中读取数据，在任何与<strong>HDFS API</strong>兼容的文件系统中（即，HDFS、S3、NFS等），一个离散流可以通过下面方式创建：
@@ -448,8 +453,10 @@
   <li>
     <p><strong>Streams based on Custom Receivers</strong>：离散流可以使用通过自定义的接收器来接收到数据来创建。（<a href="http://spark.apache.org/docs/latest/streaming-custom-receivers.html">自定义接收器</a>）</p>
   </li>
-  <li><strong>Queue of RDDs as Stream</strong>（<strong>RDDs队列作为一个流</strong>）：为了使用测试数据测试<strong>Spark Streaming</strong>应用程序，还可以使用<strong>streamingContext.queueStream(queueOfRDDs)</strong>创建一个基于<strong>RDD</strong>队列的离散流，每个进入队列的<strong>RDD</strong>都将被视为<strong>DStream</strong>中的一个批次数据，并且就一个流进行处理。
-    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+  <li><strong>Queue of RDDs as Stream</strong>（<strong>RDDs队列作为一个流</strong>）：为了使用测试数据测试<strong>Spark Streaming</strong>应用程序，还可以使用<strong>streamingContext.queueStream(queueOfRDDs)</strong>创建一个基于<strong>RDD</strong>队列的离散流，每个进入队列的<strong>RDD</strong>都将被视为<strong>DStream</strong>中的一个批次数据，并且就一个流进行处理。</li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -472,83 +479,38 @@
 21
 22
 23
-</pre></td><td class="rouge-code"><pre>  <span class="nc">JavaStreamingContext</span> <span class="n">ssc</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">JavaStreamingContext</span><span class="o">(</span><span class="n">conf</span><span class="o">,</span> <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
-  <span class="n">ssc</span><span class="o">.</span><span class="na">sparkContext</span><span class="o">().</span><span class="na">setLogLevel</span><span class="o">(</span><span class="s">"WARN"</span><span class="o">);</span>
-  <span class="nc">JavaSparkContext</span> <span class="n">sc</span> <span class="o">=</span> <span class="n">ssc</span><span class="o">.</span><span class="na">sparkContext</span><span class="o">();</span>
-  <span class="nc">Queue</span><span class="o">&lt;</span><span class="nc">JavaRDD</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;&gt;</span> <span class="n">rddQueue</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Queue</span><span class="o">&lt;</span><span class="nc">JavaRDD</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;&gt;)</span> <span class="k">new</span> <span class="nc">LinkedList</span><span class="o">&lt;</span><span class="nc">JavaRDD</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;&gt;();</span>
-  <span class="nc">File</span><span class="o">[]</span> <span class="n">dataFiles</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">"/home/yanchengyu/dataset"</span><span class="o">).</span><span class="na">listFiles</span><span class="o">();</span>
-  <span class="k">for</span> <span class="o">(</span><span class="nc">File</span> <span class="n">dataFile</span> <span class="o">:</span> <span class="n">dataFiles</span><span class="o">)</span> <span class="o">{</span>
-      <span class="nc">JavaRDD</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">textFile</span><span class="o">(</span><span class="s">"file://"</span> <span class="o">+</span> <span class="n">dataFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">());</span>
-      <span class="n">rddQueue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">rdd</span><span class="o">);</span>
-  <span class="o">}</span>
+</pre></td><td class="rouge-code"><pre>    <span class="nc">JavaStreamingContext</span> <span class="n">ssc</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">JavaStreamingContext</span><span class="o">(</span><span class="n">conf</span><span class="o">,</span> <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+    <span class="n">ssc</span><span class="o">.</span><span class="na">sparkContext</span><span class="o">().</span><span class="na">setLogLevel</span><span class="o">(</span><span class="s">"WARN"</span><span class="o">);</span>
+    <span class="nc">JavaSparkContext</span> <span class="n">sc</span> <span class="o">=</span> <span class="n">ssc</span><span class="o">.</span><span class="na">sparkContext</span><span class="o">();</span>
+    <span class="nc">Queue</span><span class="o">&lt;</span><span class="nc">JavaRDD</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;&gt;</span> <span class="n">rddQueue</span> <span class="o">=</span> <span class="o">(</span><span class="nc">Queue</span><span class="o">&lt;</span><span class="nc">JavaRDD</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;&gt;)</span> <span class="k">new</span> <span class="nc">LinkedList</span><span class="o">&lt;</span><span class="nc">JavaRDD</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;&gt;();</span>
+    <span class="nc">File</span><span class="o">[]</span> <span class="n">dataFiles</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">File</span><span class="o">(</span><span class="s">"/home/yanchengyu/dataset"</span><span class="o">).</span><span class="na">listFiles</span><span class="o">();</span>
+    <span class="k">for</span> <span class="o">(</span><span class="nc">File</span> <span class="n">dataFile</span> <span class="o">:</span> <span class="n">dataFiles</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">JavaRDD</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">rdd</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="na">textFile</span><span class="o">(</span><span class="s">"file://"</span> <span class="o">+</span> <span class="n">dataFile</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">());</span>
+        <span class="n">rddQueue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">rdd</span><span class="o">);</span>
+    <span class="o">}</span>
 
-  <span class="n">ssc</span><span class="o">.</span><span class="na">queueStream</span><span class="o">(</span><span class="n">rddQueue</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
-  <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">l</span> <span class="o">-&gt;</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">" "</span><span class="o">)).</span><span class="na">iterator</span><span class="o">())</span>
-  <span class="o">.</span><span class="na">mapToPair</span><span class="o">(</span><span class="n">w</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="nc">Tuple2</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;(</span><span class="n">w</span><span class="o">,</span> <span class="mi">1</span><span class="n">l</span><span class="o">))</span>
-  <span class="o">.</span><span class="na">reduceByKey</span><span class="o">((</span><span class="n">s</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">s</span> <span class="o">+</span> <span class="n">n</span><span class="o">)</span>
-  <span class="o">.</span><span class="na">print</span><span class="o">();</span>
+    <span class="n">ssc</span><span class="o">.</span><span class="na">queueStream</span><span class="o">(</span><span class="n">rddQueue</span><span class="o">,</span> <span class="kc">true</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">l</span> <span class="o">-&gt;</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">" "</span><span class="o">)).</span><span class="na">iterator</span><span class="o">())</span>
+    <span class="o">.</span><span class="na">mapToPair</span><span class="o">(</span><span class="n">w</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="nc">Tuple2</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;(</span><span class="n">w</span><span class="o">,</span> <span class="mi">1</span><span class="n">l</span><span class="o">))</span>
+    <span class="o">.</span><span class="na">reduceByKey</span><span class="o">((</span><span class="n">s</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">s</span> <span class="o">+</span> <span class="n">n</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">print</span><span class="o">();</span>
 
-  <span class="n">ssc</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-  <span class="k">try</span> <span class="o">{</span>
-      <span class="n">ssc</span><span class="o">.</span><span class="na">awaitTermination</span><span class="o">();</span>
-  <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-      <span class="c1">// TODO Auto-generated catch block</span>
-      <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-  <span class="o">}</span>
-</pre></td></tr></tbody></table></code></pre></div>    </div>
-    <h4 id="接收器的可靠性">接收器的可靠性</h4>
-    <p>如果系统从这些可靠的数据来源接收数据，并且被确认正确地接收数据，它可以确保数据不会因为任何类型的失败而导致数据丢失。
-      1. Reliable Receiver：当数据被接收并存储在<strong>Spark</strong>中并带有备份副本时，一个可靠的接收器（<strong>reliable receiver</strong>）正确地发送确认给一个可靠的数据源（<strong>reliable source</strong>）。
-      2. Unreliable Receiver：一个不可靠的接收器不发送确认到数据源。这可以用于不支持确认的数据源，或者甚至是可靠的数据源当你不想或者不需要进行复杂的确认的时候。
-```java
-public class JavaCustomReceiver extends Receiver<String>{
-  private String host;
-  private int port;
-  private Thread daemon;</String></p>
+    <span class="n">ssc</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">ssc</span><span class="o">.</span><span class="na">awaitTermination</span><span class="o">();</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// TODO Auto-generated catch block</span>
+        <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+    <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h4 id="接收器的可靠性">接收器的可靠性</h4>
+<p>如果系统从这些可靠的数据来源接收数据，并且被确认正确地接收数据，它可以确保数据不会因为任何类型的失败而导致数据丢失。</p>
+<ol>
+  <li>Reliable Receiver：当数据被接收并存储在<strong>Spark</strong>中并带有备份副本时，一个可靠的接收器（<strong>reliable receiver</strong>）正确地发送确认给一个可靠的数据源（<strong>reliable source</strong>）。</li>
+  <li>Unreliable Receiver：一个不可靠的接收器不发送确认到数据源。这可以用于不支持确认的数据源，或者甚至是可靠的数据源当你不想或者不需要进行复杂的确认的时候。</li>
+</ol>
 
-    <p>public JavaCustomReceiver(StorageLevel storageLevel, String host, int port) {
-      super(storageLevel);
-      // TODO Auto-generated constructor stub
-      this.host = host;
-      this.port = port;
-  }</p>
-
-    <p>@Override
-  public void onStart() {
-      // TODO Auto-generated method stub
-      if (this.daemon == null) {
-          this.daemon = new Thread(this::receive);
-      }
-      this.daemon.start();
-  }</p>
-
-    <p>private void receive() {
-      try (
-          Socket socket = new Socket(host, port);
-          BufferedReader reader = new BufferedReader( 
-                      new InputStreamReader(socket.getInputStream()));
-              ){
-          String line = null;
-          while(!this.isStopped() &amp;&amp; (line = reader.readLine()) != null) {
-              this.store(line.toUpperCase());
-          }			
-          this.restart(“Cannot continue to receive”);
-      } catch (UnknownHostException e) {
-          this.restart(“Unknown host”, e);
-      } catch (IOException e) {
-          this.restart(“Catch IO exception”);
-      }
-  }</p>
-
-    <p>@Override
-  public void onStop() {
-      this.daemon.interrupt();
-  }</p>
-  </li>
-</ul>
-
-<p>}</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -583,47 +545,134 @@ public class JavaCustomReceiver extends Receiver<String>{
 33
 34
 35
-</pre></td><td class="rouge-code"><pre>### DStreams的Transformation操作
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">JavaCustomReceiver</span> <span class="kd">extends</span> <span class="nc">Receiver</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;{</span>
+	<span class="kd">private</span> <span class="nc">String</span> <span class="n">host</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="kt">int</span> <span class="n">port</span><span class="o">;</span>
+	<span class="kd">private</span> <span class="nc">Thread</span> <span class="n">daemon</span><span class="o">;</span>
+	
+	<span class="kd">public</span> <span class="nf">JavaCustomReceiver</span><span class="o">(</span><span class="nc">StorageLevel</span> <span class="n">storageLevel</span><span class="o">,</span> <span class="nc">String</span> <span class="n">host</span><span class="o">,</span> <span class="kt">int</span> <span class="n">port</span><span class="o">)</span> <span class="o">{</span>
+		<span class="kd">super</span><span class="o">(</span><span class="n">storageLevel</span><span class="o">);</span>
+		<span class="c1">// TODO Auto-generated constructor stub</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">host</span> <span class="o">=</span> <span class="n">host</span><span class="o">;</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">port</span> <span class="o">=</span> <span class="n">port</span><span class="o">;</span>
+	<span class="o">}</span>
 
-#### updateStateByKey
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">()</span> <span class="o">{</span>
+		<span class="c1">// TODO Auto-generated method stub</span>
+		<span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">daemon</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">this</span><span class="o">.</span><span class="na">daemon</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Thread</span><span class="o">(</span><span class="k">this</span><span class="o">::</span><span class="n">receive</span><span class="o">);</span>
+		<span class="o">}</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">daemon</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+	<span class="o">}</span>
 
-```java
-JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
-    ssc.sparkContext().setLogLevel("WARN");
-    ssc.checkpoint("file:///home/yanchengyu/checkpoint");
-    String sourceService = "192.168.32.61";
-    int sourcePort = 12345;
+	<span class="kd">private</span> <span class="kt">void</span> <span class="nf">receive</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">try</span> <span class="o">(</span>
+			<span class="nc">Socket</span> <span class="n">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Socket</span><span class="o">(</span><span class="n">host</span><span class="o">,</span> <span class="n">port</span><span class="o">);</span>
+			<span class="nc">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">BufferedReader</span><span class="o">(</span> 
+						<span class="k">new</span> <span class="nf">InputStreamReader</span><span class="o">(</span><span class="n">socket</span><span class="o">.</span><span class="na">getInputStream</span><span class="o">()));</span>
+				<span class="o">){</span>
+			<span class="nc">String</span> <span class="n">line</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+			<span class="k">while</span><span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">isStopped</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+				<span class="k">this</span><span class="o">.</span><span class="na">store</span><span class="o">(</span><span class="n">line</span><span class="o">.</span><span class="na">toUpperCase</span><span class="o">());</span>
+			<span class="o">}</span>			
+			<span class="k">this</span><span class="o">.</span><span class="na">restart</span><span class="o">(</span><span class="s">"Cannot continue to receive"</span><span class="o">);</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">UnknownHostException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">this</span><span class="o">.</span><span class="na">restart</span><span class="o">(</span><span class="s">"Unknown host"</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+			<span class="k">this</span><span class="o">.</span><span class="na">restart</span><span class="o">(</span><span class="s">"Catch IO exception"</span><span class="o">);</span>
+		<span class="o">}</span>
+	<span class="o">}</span>
 
-    JavaReceiverInputDStream&lt;String&gt; ris = ssc.socketTextStream(sourceService, sourcePort);
-    JavaDStream&lt;String&gt; words = ris.flatMap(l -&gt; Arrays.asList(l.split(" ")).iterator());
-    JavaPairDStream&lt;String, Long&gt; pairs = words.mapToPair(w -&gt; new Tuple2(w, 1l));
+	<span class="nd">@Override</span>
+	<span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStop</span><span class="o">()</span> <span class="o">{</span>
+		<span class="k">this</span><span class="o">.</span><span class="na">daemon</span><span class="o">.</span><span class="na">interrupt</span><span class="o">();</span>
+	<span class="o">}</span>
 
-    Function2&lt;List&lt;Long&gt;, Optional&lt;Long&gt;, Optional&lt;Long&gt;&gt; func = new Function2&lt;List&lt;Long&gt;, Optional&lt;Long&gt;, Optional&lt;Long&gt;&gt;() {
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="dstreams的transformation操作">DStreams的Transformation操作</h3>
 
-        @Override
-        public Optional&lt;Long&gt; call(List&lt;Long&gt; v1, Optional&lt;Long&gt; v2) throws Exception {
-            // TODO Auto-generated method stub
-            long sum = v2.orElse(0l);
-            sum += v1.stream().mapToLong(v -&gt; v).sum();
-            return Optional.of(sum);
-        }
+<h4 id="updatestatebykey">updateStateByKey</h4>
 
-    };
-    JavaPairDStream&lt;String, Long&gt; wordCounts = pairs.&lt;Long&gt;updateStateByKey(func);
-    wordCounts.print();
-    ssc.start();
-    try {
-        ssc.awaitTermination();
-    } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
-    }
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+</pre></td><td class="rouge-code"><pre><span class="nc">JavaStreamingContext</span> <span class="n">ssc</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">JavaStreamingContext</span><span class="o">(</span><span class="n">conf</span><span class="o">,</span> <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+    <span class="n">ssc</span><span class="o">.</span><span class="na">sparkContext</span><span class="o">().</span><span class="na">setLogLevel</span><span class="o">(</span><span class="s">"WARN"</span><span class="o">);</span>
+    <span class="n">ssc</span><span class="o">.</span><span class="na">checkpoint</span><span class="o">(</span><span class="s">"file:///home/yanchengyu/checkpoint"</span><span class="o">);</span>
+    <span class="nc">String</span> <span class="n">sourceService</span> <span class="o">=</span> <span class="s">"192.168.32.61"</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">sourcePort</span> <span class="o">=</span> <span class="mi">12345</span><span class="o">;</span>
+
+    <span class="nc">JavaReceiverInputDStream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">ris</span> <span class="o">=</span> <span class="n">ssc</span><span class="o">.</span><span class="na">socketTextStream</span><span class="o">(</span><span class="n">sourceService</span><span class="o">,</span> <span class="n">sourcePort</span><span class="o">);</span>
+    <span class="nc">JavaDStream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">words</span> <span class="o">=</span> <span class="n">ris</span><span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">l</span> <span class="o">-&gt;</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">" "</span><span class="o">)).</span><span class="na">iterator</span><span class="o">());</span>
+    <span class="nc">JavaPairDStream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;</span> <span class="n">pairs</span> <span class="o">=</span> <span class="n">words</span><span class="o">.</span><span class="na">mapToPair</span><span class="o">(</span><span class="n">w</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="nc">Tuple2</span><span class="o">(</span><span class="n">w</span><span class="o">,</span> <span class="mi">1</span><span class="n">l</span><span class="o">));</span>
+
+    <span class="nc">Function2</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;,</span> <span class="nc">Optional</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;,</span> <span class="nc">Optional</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;&gt;</span> <span class="n">func</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Function2</span><span class="o">&lt;</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;,</span> <span class="nc">Optional</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;,</span> <span class="nc">Optional</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;&gt;()</span> <span class="o">{</span>
+
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="nc">Optional</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;</span> <span class="nf">call</span><span class="o">(</span><span class="nc">List</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;</span> <span class="n">v1</span><span class="o">,</span> <span class="nc">Optional</span><span class="o">&lt;</span><span class="nc">Long</span><span class="o">&gt;</span> <span class="n">v2</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+            <span class="c1">// TODO Auto-generated method stub</span>
+            <span class="kt">long</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">v2</span><span class="o">.</span><span class="na">orElse</span><span class="o">(</span><span class="mi">0</span><span class="n">l</span><span class="o">);</span>
+            <span class="n">sum</span> <span class="o">+=</span> <span class="n">v1</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">mapToLong</span><span class="o">(</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="n">v</span><span class="o">).</span><span class="na">sum</span><span class="o">();</span>
+            <span class="k">return</span> <span class="nc">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">sum</span><span class="o">);</span>
+        <span class="o">}</span>
+
+    <span class="o">};</span>
+    <span class="nc">JavaPairDStream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">Long</span><span class="o">&gt;</span> <span class="n">wordCounts</span> <span class="o">=</span> <span class="n">pairs</span><span class="o">.&lt;</span><span class="nc">Long</span><span class="o">&gt;</span><span class="n">updateStateByKey</span><span class="o">(</span><span class="n">func</span><span class="o">);</span>
+    <span class="n">wordCounts</span><span class="o">.</span><span class="na">print</span><span class="o">();</span>
+    <span class="n">ssc</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="n">ssc</span><span class="o">.</span><span class="na">awaitTermination</span><span class="o">();</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// TODO Auto-generated catch block</span>
+        <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+    <span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>注意：<code class="language-plaintext highlighter-rouge">Optional</code>是<code class="language-plaintext highlighter-rouge">org.apache.spark.api.java</code>下的类。</p>
 
 <h4 id="transform操作">transform操作</h4>
+
 <p><strong>tansform操作</strong>允许在<strong>DStream</strong>运行任何<strong>RDD-to-RDD</strong>函数。它能够被用来应用任何没有在<strong>DStream API</strong>中提供的<strong>RDD</strong>操作。例如过滤出包含某个RDD中关键字的单词。</p>
+
 <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
@@ -670,7 +719,10 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
     <p><strong>sliding interval</strong>：窗口操作执行时间间隔。
 这两个参数必须是源<strong>DStream</strong>上批时间间隔的倍数。
 <code class="language-plaintext highlighter-rouge">reduceByKeyAndWindow</code>有两种用法，第一种用法如下，</p>
-    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+  </li>
+</ul>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -700,19 +752,17 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 <span class="n">ris</span><span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">l</span> <span class="o">-&gt;</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">" "</span><span class="o">)).</span><span class="na">iterator</span><span class="o">())</span>
 <span class="o">.</span><span class="na">mapToPair</span><span class="o">(</span><span class="n">w</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="nc">Tuple2</span><span class="o">&lt;&gt;(</span><span class="n">w</span><span class="o">,</span> <span class="mi">1</span><span class="o">))</span>
 <span class="o">.</span><span class="na">reduceByKeyAndWindow</span><span class="o">((</span><span class="n">s</span><span class="o">,</span> <span class="n">n</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">s</span> <span class="o">+</span> <span class="n">n</span><span class="o">,</span> 
-      <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="n">batchInterval</span> <span class="o">*</span> <span class="mi">3</span><span class="o">),</span> 
-      <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="n">batchInterval</span> <span class="o">*</span> <span class="mi">2</span><span class="o">))</span>
+        <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="n">batchInterval</span> <span class="o">*</span> <span class="mi">3</span><span class="o">),</span> 
+        <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="n">batchInterval</span> <span class="o">*</span> <span class="mi">2</span><span class="o">))</span>
 <span class="o">.</span><span class="na">print</span><span class="o">();</span>
 <span class="n">ssc</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
 <span class="k">try</span> <span class="o">{</span>
-  <span class="n">ssc</span><span class="o">.</span><span class="na">awaitTermination</span><span class="o">();</span>
+    <span class="n">ssc</span><span class="o">.</span><span class="na">awaitTermination</span><span class="o">();</span>
 <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-  <span class="c1">// TODO Auto-generated catch block</span>
-  <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+    <span class="c1">// TODO Auto-generated catch block</span>
+    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
 <span class="o">}</span>
-</pre></td></tr></tbody></table></code></pre></div>    </div>
-  </li>
-</ul>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>第二种用法，使用<code class="language-plaintext highlighter-rouge">invFunc</code>处理窗口内的过期数据，更为高效，但需要启用checkpoint，例如</p>
 
@@ -1094,7 +1144,7 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
 
 <p>对于通过网络接收数据输入流（如<strong>Kafka</strong>、<strong>Flume</strong>、<strong>Sockets</strong>等），默认的持久性级别为复制两个节点的数据容错。</p>
 
-<h3 id="checkpoint">checkpoint</h3>
+<h3 id="checkpoint">Checkpoint</h3>
 
 <p><strong>Spark Streaming</strong>通过checkpoint来容错，以便任务失败之后可以从checkpoint里面恢复。</p>
 
@@ -1115,39 +1165,11 @@ JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
     </ul>
   </li>
   <li>当应用程序第一次启动，新建一个<strong>StreamingContext</strong>，启动所有<strong>Stream</strong>，然后调用<strong>start()</strong>方法。</li>
-  <li>
-    <p>当应用程序因为故障重新启动，它将会从<strong>checkpoint</strong>目录<strong>checkpoint</strong>数据重新创建<strong>StreamingContext</strong>。
-如下：
-```java
-String checkpointDirectory = “file:///home/yanchengyu/streamCheckPoint”;
-JavaStreamingContext jssc = JavaStreamingContext.getOrCreate(checkpointDirectory, () -&gt; {
-  JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
-  ssc.checkpoint(checkpointDirectory);
-  JavaSparkContext sc = ssc.sparkContext();</p>
-
-    <p>sc.setLogLevel(“WARN”);
-  String sourceService = “192.168.32.61”;
-  int sourcePort = 12345;
-  JavaDStream<String> rs = ssc.socketTextStream(sourceService, sourcePort)
-          .flatMap(l -&gt; Arrays.asList(l.split(" ")).iterator());
-  rs.checkpoint(Durations.seconds(25));
-  rs.mapToPair(w -&gt; new Tuple2&lt;&gt;(w, 1))
-      .<Integer>updateStateByKey((v, s) -&gt; 
-      Optional.of(v.stream().mapToInt(val -&gt; val).sum() + s.or(0)))
-      .print();
-  return ssc;
-});</Integer></String></p>
-  </li>
+  <li>当应用程序因为故障重新启动，它将会从<strong>checkpoint</strong>目录<strong>checkpoint</strong>数据重新创建<strong>StreamingContext</strong>。
+如下：</li>
 </ul>
 
-<p>jssc.start();
-try {
-    jssc.awaitTermination();
-} catch (InterruptedException e) {
-    // TODO Auto-generated catch block
-    e.printStackTrace();
-}</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -1173,56 +1195,96 @@ try {
 24
 25
 26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-</pre></td><td class="rouge-code"><pre>
-如果`checkpointDirectory`存在，上下文会将**checkpoint**数据重新创建。如果这个目录不存在，将调用传入的闭包创建一个新的上下文。
+</pre></td><td class="rouge-code"><pre><span class="nc">String</span> <span class="n">checkpointDirectory</span> <span class="o">=</span> <span class="s">"file:///home/yanchengyu/streamCheckPoint"</span><span class="o">;</span>
+<span class="nc">JavaStreamingContext</span> <span class="n">jssc</span> <span class="o">=</span> <span class="nc">JavaStreamingContext</span><span class="o">.</span><span class="na">getOrCreate</span><span class="o">(</span><span class="n">checkpointDirectory</span><span class="o">,</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="nc">JavaStreamingContext</span> <span class="n">ssc</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">JavaStreamingContext</span><span class="o">(</span><span class="n">conf</span><span class="o">,</span> <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+    <span class="n">ssc</span><span class="o">.</span><span class="na">checkpoint</span><span class="o">(</span><span class="n">checkpointDirectory</span><span class="o">);</span>
+    <span class="nc">JavaSparkContext</span> <span class="n">sc</span> <span class="o">=</span> <span class="n">ssc</span><span class="o">.</span><span class="na">sparkContext</span><span class="o">();</span>
 
-除了使用**getOrCreate**，开发者必须保证故障发生时，**driver**处理自动重启。只能通过部署运行应用程序的基础设施来达到该目的。
+    <span class="n">sc</span><span class="o">.</span><span class="na">setLogLevel</span><span class="o">(</span><span class="s">"WARN"</span><span class="o">);</span>
+    <span class="nc">String</span> <span class="n">sourceService</span> <span class="o">=</span> <span class="s">"192.168.32.61"</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">sourcePort</span> <span class="o">=</span> <span class="mi">12345</span><span class="o">;</span>
+    <span class="nc">JavaDStream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">ssc</span><span class="o">.</span><span class="na">socketTextStream</span><span class="o">(</span><span class="n">sourceService</span><span class="o">,</span> <span class="n">sourcePort</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">l</span> <span class="o">-&gt;</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">" "</span><span class="o">)).</span><span class="na">iterator</span><span class="o">());</span>
+    <span class="n">rs</span><span class="o">.</span><span class="na">checkpoint</span><span class="o">(</span><span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="mi">25</span><span class="o">));</span>
+    <span class="n">rs</span><span class="o">.</span><span class="na">mapToPair</span><span class="o">(</span><span class="n">w</span> <span class="o">-&gt;</span> <span class="k">new</span> <span class="nc">Tuple2</span><span class="o">&lt;&gt;(</span><span class="n">w</span><span class="o">,</span> <span class="mi">1</span><span class="o">))</span>
+        <span class="o">.&lt;</span><span class="nc">Integer</span><span class="o">&gt;</span><span class="n">updateStateByKey</span><span class="o">((</span><span class="n">v</span><span class="o">,</span> <span class="n">s</span><span class="o">)</span> <span class="o">-&gt;</span> 
+        <span class="nc">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">v</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">mapToInt</span><span class="o">(</span><span class="n">val</span> <span class="o">-&gt;</span> <span class="n">val</span><span class="o">).</span><span class="na">sum</span><span class="o">()</span> <span class="o">+</span> <span class="n">s</span><span class="o">.</span><span class="na">or</span><span class="o">(</span><span class="mi">0</span><span class="o">)))</span>
+        <span class="o">.</span><span class="na">print</span><span class="o">();</span>
+    <span class="k">return</span> <span class="n">ssc</span><span class="o">;</span>
+<span class="o">});</span>
 
-**RDD**有存储成本，这会导致批数据的处理时间增加。因此，需要小心的设置批处理的时间间隔。建议**checkpoint**时间间隔为批处理时间间隔的5-10倍。
+<span class="n">jssc</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+<span class="k">try</span> <span class="o">{</span>
+    <span class="n">jssc</span><span class="o">.</span><span class="na">awaitTermination</span><span class="o">();</span>
+<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// TODO Auto-generated catch block</span>
+    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
-### 累加器和广播变量
+<p>如果<code class="language-plaintext highlighter-rouge">checkpointDirectory</code>存在，上下文会将<strong>checkpoint</strong>数据重新创建。如果这个目录不存在，将调用传入的闭包创建一个新的上下文。</p>
 
-**Spark Streaming**无法从**checkpoint**中恢复累加器和广播变量。如果启用**checkpoint**并使用了累加器或广播变量，必须为它们创建Lazy实例化的单实例，以便在驱动程序重新启动失败后重新实例化。
+<p>除了使用<strong>getOrCreate</strong>，开发者必须保证故障发生时，<strong>driver</strong>处理自动重启。只能通过部署运行应用程序的基础设施来达到该目的。</p>
 
-```java
-String checkpointDirectory = "file:///home/yanchengyu/baCheckPoint";
-JavaStreamingContext jssc = JavaStreamingContext.getOrCreate(checkpointDirectory, () -&gt; {
-    JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(5));
-    ssc.checkpoint(checkpointDirectory);
-    JavaSparkContext sc = ssc.sparkContext();
-    LongAccumulator acc = SingletonAccul.getInstance(sc);
-    sc.setLogLevel("WARN");
-    String sourceService = "192.168.32.61";
-    int sourcePort = 12345;
-    JavaDStream&lt;String&gt; rs = ssc.socketTextStream(sourceService, sourcePort)
-            .flatMap(l -&gt; Arrays.asList(l.split(" ")).iterator());
-    rs.checkpoint(Durations.seconds(25));
-    rs.foreachRDD(rdd -&gt; {
-        System.out.println(acc.value());
-        acc.add(1);
-    });
-    return ssc;
-});
+<p><strong>RDD</strong>有存储成本，这会导致批数据的处理时间增加。因此，需要小心的设置批处理的时间间隔。建议<strong>checkpoint</strong>时间间隔为批处理时间间隔的5-10倍。</p>
 
-jssc.start();
-try {
-    jssc.awaitTermination();
-} catch (InterruptedException e) {
-    // TODO Auto-generated catch block
-    e.printStackTrace();
-}
+<h3 id="累加器和广播变量">累加器和广播变量</h3>
+
+<p><strong>Spark Streaming</strong>无法从<strong>checkpoint</strong>中恢复累加器和广播变量。如果启用<strong>checkpoint</strong>并使用了累加器或广播变量，必须为它们创建Lazy实例化的单实例，以便在驱动程序重新启动失败后重新实例化。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td><td class="rouge-code"><pre><span class="nc">String</span> <span class="n">checkpointDirectory</span> <span class="o">=</span> <span class="s">"file:///home/yanchengyu/baCheckPoint"</span><span class="o">;</span>
+<span class="nc">JavaStreamingContext</span> <span class="n">jssc</span> <span class="o">=</span> <span class="nc">JavaStreamingContext</span><span class="o">.</span><span class="na">getOrCreate</span><span class="o">(</span><span class="n">checkpointDirectory</span><span class="o">,</span> <span class="o">()</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="nc">JavaStreamingContext</span> <span class="n">ssc</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">JavaStreamingContext</span><span class="o">(</span><span class="n">conf</span><span class="o">,</span> <span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="mi">5</span><span class="o">));</span>
+    <span class="n">ssc</span><span class="o">.</span><span class="na">checkpoint</span><span class="o">(</span><span class="n">checkpointDirectory</span><span class="o">);</span>
+    <span class="nc">JavaSparkContext</span> <span class="n">sc</span> <span class="o">=</span> <span class="n">ssc</span><span class="o">.</span><span class="na">sparkContext</span><span class="o">();</span>
+    <span class="nc">LongAccumulator</span> <span class="n">acc</span> <span class="o">=</span> <span class="nc">SingletonAccul</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">sc</span><span class="o">);</span>
+    <span class="n">sc</span><span class="o">.</span><span class="na">setLogLevel</span><span class="o">(</span><span class="s">"WARN"</span><span class="o">);</span>
+    <span class="nc">String</span> <span class="n">sourceService</span> <span class="o">=</span> <span class="s">"192.168.32.61"</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">sourcePort</span> <span class="o">=</span> <span class="mi">12345</span><span class="o">;</span>
+    <span class="nc">JavaDStream</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">rs</span> <span class="o">=</span> <span class="n">ssc</span><span class="o">.</span><span class="na">socketTextStream</span><span class="o">(</span><span class="n">sourceService</span><span class="o">,</span> <span class="n">sourcePort</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">flatMap</span><span class="o">(</span><span class="n">l</span> <span class="o">-&gt;</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">l</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">" "</span><span class="o">)).</span><span class="na">iterator</span><span class="o">());</span>
+    <span class="n">rs</span><span class="o">.</span><span class="na">checkpoint</span><span class="o">(</span><span class="nc">Durations</span><span class="o">.</span><span class="na">seconds</span><span class="o">(</span><span class="mi">25</span><span class="o">));</span>
+    <span class="n">rs</span><span class="o">.</span><span class="na">foreachRDD</span><span class="o">(</span><span class="n">rdd</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">acc</span><span class="o">.</span><span class="na">value</span><span class="o">());</span>
+        <span class="n">acc</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+    <span class="o">});</span>
+    <span class="k">return</span> <span class="n">ssc</span><span class="o">;</span>
+<span class="o">});</span>
+
+<span class="n">jssc</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+<span class="k">try</span> <span class="o">{</span>
+    <span class="n">jssc</span><span class="o">.</span><span class="na">awaitTermination</span><span class="o">();</span>
+<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// TODO Auto-generated catch block</span>
+    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+<span class="o">}</span>
 </pre></td></tr></tbody></table></code></pre></div></div>
 
 <p>中断重启抛异常，</p>
