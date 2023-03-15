@@ -112,6 +112,8 @@
                         
                         
                         
+                        
+                        
                         <li class="search-icon">
                             <a href="javascript:void(0)">
                                 <i class="fa fa-search"></i>
@@ -244,6 +246,83 @@
     <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
       col-xs-12 postlist-container">
       
+<div class="post-preview">
+    <a href="/2022/06/21/docker-privilege-escalating/">
+        <h2 class="post-title">
+            Docker提权案例
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍一种docker提权场景
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                docker 提权案例
+
+假设存在用户tom，该用户无法sudo，但属于docker组。
+首先，创建用户，
+
+1
+sudo useradd -m tom
+
+查看用户当前信息，
+1
+2
+id tom
+uid=1002(tom) gid=1002(tom) groups=1002(tom)
+
+将用户加入到docker组，
+1
+2
+sudo gpasswd -a tom docker
+Adding...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on June 21, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2022/05/30/docker-registry/">
+        <h2 class="post-title">
+            简易Docker仓库
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍常用的docker镜像仓库和使用方法
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                简易docker仓库
+
+docker.io提供了简易的docker仓库实现，可以从docker.hub上拉取。
+
+1
+docker pull registry
+
+
+registry支持本地模式和远程模式。其中，本地模式仅限于本地访问，无需配置网络服务地址。
+
+1 本地模式
+
+本地模式启动方式如下，
+
+1
+docker run -d -v Your_local_registry:/var/li...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on May 30, 2022
+    </p>
+</div>
+<hr>
+
 <div class="post-preview">
     <a href="/2022/05/22/docker-volume/">
         <h2 class="post-title">
@@ -588,74 +667,6 @@ chroot是在Unix和Linux系统的一个操作，针对正在运作的软件进�
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="/2021/12/22/debug-hotspot/">
-        <h2 class="post-title">
-            调试Hotspot
-        </h2>
-        
-        <h3 class="post-subtitle">
-            记录调试Hotspot的环境和过程
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                调试Hotspot
-
-容器环境
-
-1
-docker run -itd -v /home/cheney/expr/jvm/openjdk12/:/opt/ --hostname openjdk.com --name openjdk ubuntu:18.04 /bin/bash
-
-
-安装依赖
-
-1
-2
-3
-4
-5
-6
-7
-apt install build-essential
-apt insta...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on December 22, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/12/06/transplant-pixyll-theme-on-mpe/">
-        <h2 class="post-title">
-            transplant pixyll theme on MPE
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍pixyll移植方法
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                为MPE移植pixyll主题
-
-最近Typora发布了正式版，然而Typora开启了收费模式。于是决定在vscode上配置新的markdown环境。
-
-Typora拥有出色的预览能力，vscode平台上的MPE（Markdown Preview Enhanced）刚好满足需要。但是，MPE的默认主题并不包含pixyll。所以尝试将Typora的pixyll移植到MPE。
-
-MPE默认提供了g...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on December 6, 2021
-    </p>
-</div>
-<hr>
-
 
 <!-- Pager -->
 
@@ -691,62 +702,97 @@ MPE默认提供了g...
         
         
         
-                <a data-sort="0021" 
-                    href="/archive/?tag=Linux"
-                    title="Linux"
-                    rel="4">Linux</a>
+                <a data-sort="0025" 
+                    href="/archive/?tag=Spark"
+                    title="Spark"
+                    rel="9">Spark</a>
         
-                <a data-sort="0015" 
+                <a data-sort="0024" 
                     href="/archive/?tag=Docker"
                     title="Docker"
                     rel="10">Docker</a>
         
-                <a data-sort="0021" 
+                <a data-sort="0030" 
+                    href="/archive/?tag=Linux"
+                    title="Linux"
+                    rel="4">Linux</a>
+        
+                <a data-sort="0030" 
+                    href="/archive/?tag=RDD"
+                    title="RDD"
+                    rel="4">RDD</a>
+        
+                <a data-sort="0030" 
                     href="/archive/?tag=Vert.x"
                     title="Vert.x"
                     rel="4">Vert.x</a>
         
-                <a data-sort="0021" 
+                <a data-sort="0030" 
                     href="/archive/?tag=vertx-core"
                     title="vertx-core"
                     rel="4">vertx-core</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=%E3%80%8A%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97--%E5%8E%9F%E7%90%86%E3%80%81%E7%AE%97%E6%B3%95%E4%B8%8E%E7%B3%BB%E7%BB%9F%E3%80%8B"
                     title="《分布式计算--原理、算法与系统》"
                     rel="2">《分布式计算--原理、算法与系统》</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
+                    href="/archive/?tag=%E5%85%AC%E5%B9%B3%E8%B0%83%E5%BA%A6"
+                    title="公平调度"
+                    rel="2">公平调度</a>
+        
+                <a data-sort="0032" 
                     href="/archive/?tag=%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"
                     title="分布式计算"
                     rel="2">分布式计算</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
+                    href="/archive/?tag=%E7%B4%AF%E5%8A%A0%E5%99%A8"
+                    title="累加器"
+                    rel="2">累加器</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=FIFO%E8%B0%83%E5%BA%A6"
+                    title="FIFO调度"
+                    rel="2">FIFO调度</a>
+        
+                <a data-sort="0032" 
                     href="/archive/?tag=JVM"
                     title="JVM"
                     rel="2">JVM</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=Java"
                     title="Java"
                     rel="2">Java</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
+                    href="/archive/?tag=Spark+Standalone"
+                    title="Spark Standalone"
+                    rel="2">Spark Standalone</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=Spark+Streaming"
+                    title="Spark Streaming"
+                    rel="2">Spark Streaming</a>
+        
+                <a data-sort="0032" 
                     href="/archive/?tag=container"
                     title="container"
                     rel="2">container</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=docker+image"
                     title="docker image"
                     rel="2">docker image</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=nsenter"
                     title="nsenter"
                     rel="2">nsenter</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=sudo"
                     title="sudo"
                     rel="2">sudo</a>

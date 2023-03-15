@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="这里是 Cheney.Yin 的个人博客">
+    <meta name="keywords" content="CHeney.Yin Blog, 博客, 个人网站, 互联网, Web, JavaScript, Database, Hadoop, Spark, Docker, 设计">
+    <meta name="theme-color" content="#000000">
+
+    <!-- Open Graph -->
+    <meta property="og:title"
+        content="Spark资源调度 - Cheney.Yin的博客 | Cheney Blog">
+    
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="概况
+">
+    
+    <meta property="article:published_time" content=" 2020-01-22T00:00:00Z">
+    
+    
+    <meta property="article:author" content="Cheney.Yin">
+    
+    
+    <meta property="article:tag" content="Spark">
+    
+    <meta property="article:tag" content="Scheduler">
+    
+    <meta property="article:tag" content="公平调度">
+    
+    <meta property="article:tag" content="FIFO调度">
+    
+    <meta property="article:tag" content="Executor">
+    
+    
+    <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
+    <meta property="og:url" content="https://cheneyyin.github.io/2020/01/22/spark-scheduler/">
+    <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
+
+    <title>Spark资源调度 - Cheney.Yin的博客 | Cheney Blog</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://cheneyyin.github.io/2020/01/22/spark-scheduler/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href=" /css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href=" /css/hux-blog.min.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"
+        type="text/css">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- ga & ba script hoook -->
+    <script></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+ </head>
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Cheney.Yin Blog</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div id="huxblog_navbar">
+                <div class="navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="/">Home</a>
+                        </li>
+                        
+                        
+                        
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                        
+                        
+                        <li>
+                            <a href="/archive/">Archive</a>
+                        </li>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <li class="search-icon">
+                            <a href="javascript:void(0)">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <script>
+        // Drop Bootstarp low-performance Navbar
+        // Use customize navbar with high-quality material design animation
+        // in high-perf jank-free CSS3 implementation
+        var $body = document.body;
+        var $toggle = document.querySelector('.navbar-toggle');
+        var $navbar = document.querySelector('#huxblog_navbar');
+        var $collapse = document.querySelector('.navbar-collapse');
+
+        var __HuxNav__ = {
+            close: function () {
+                $navbar.className = " ";
+                // wait until animation end.
+                setTimeout(function () {
+                    // prevent frequently toggle
+                    if ($navbar.className.indexOf('in') < 0) {
+                        $collapse.style.height = "0px"
+                    }
+                }, 400)
+            },
+            open: function () {
+                $collapse.style.height = "auto"
+                $navbar.className += " in";
+            }
+        }
+
+        // Bind Event
+        $toggle.addEventListener('click', function (e) {
+            if ($navbar.className.indexOf('in') > 0) {
+                __HuxNav__.close()
+            } else {
+                __HuxNav__.open()
+            }
+        })
+
+        /**
+         * Since Fastclick is used to delegate 'touchstart' globally
+         * to hack 300ms delay in iOS by performing a fake 'click',
+         * Using 'e.stopPropagation' to stop 'touchstart' event from 
+         * $toggle/$collapse will break global delegation.
+         * 
+         * Instead, we use a 'e.target' filter to prevent handler
+         * added to document close HuxNav.  
+         *
+         * Also, we use 'click' instead of 'touchstart' as compromise
+         */
+        document.addEventListener('click', function (e) {
+            if (e.target == $toggle) return;
+            if (e.target.className == 'icon-bar') return;
+            __HuxNav__.close();
+        })
+    </script>
+    <!-- Search -->
+<div class="search-page">
+  <div class="search-icon-close-container">
+    <span class="search-icon-close">
+      <i class="fa fa-chevron-down"></i>
+    </span>
+  </div>
+  <div class="search-main container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <form></form>
+        <input type="text" id="search-input" placeholder="$ grep...">
+        </form>
+        <div id="search-results" class="mini-post-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Post Header -->
+
+
+
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/bg-material.jpg');
+        background: ;
+    }
+
+    
+</style>
+
+
+
+
+<header class="intro-header" >
+
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=Spark" title="Spark">Spark</a>
+                        
+                        <a class="tag" href="/archive/?tag=Scheduler" title="Scheduler">Scheduler</a>
+                        
+                        <a class="tag" href="/archive/?tag=%E5%85%AC%E5%B9%B3%E8%B0%83%E5%BA%A6" title="公平调度">公平调度</a>
+                        
+                        <a class="tag" href="/archive/?tag=FIFO%E8%B0%83%E5%BA%A6" title="FIFO调度">FIFO调度</a>
+                        
+                        <a class="tag" href="/archive/?tag=Executor" title="Executor">Executor</a>
+                        
+                    </div>
+                    <h1>Spark资源调度</h1>
+                    
+                    <h2 class="subheading">介绍Spark跨应用调度和应用内调度的相关概念和配置</h2>
+                    <span class="meta">Posted by Cheney.Yin on January 22, 2020</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+
+
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                
+
+				<h1 id="概况">概况</h1>
+
+<p>spark 具备几种计算资源的调度机制。首先，在集群模式下，每个Spark应用(SparkContext的实例)运行在一组独立的执行器(executor)进程中。Spark集群管理器提供了跨应用的调度机制。其次，在每个Spark应用中，如果多个job(Spark actions)被不同的线程提交，它们能够并发执行。</p>
+
+<h1 id="跨应用调度">跨应用调度</h1>
+
+<p>运行在spark集群的应用，可以获得一组独立的executor JVM，这些JVM只运行应用下发的任务、存储应用数据。如果多个用户需要共享使用集群，它们的资源分配管理选项可以不同，并且依赖集群管理器。</p>
+
+<p>最简单的选项是资源静态分区(static partitioning)，它在所有集群管理器上都是有效的。每个应用都要设定一个生命周期内使用和持有资源的最大值。Spark‘s standalone、YARN 和 coarse-grained Mesos mode都支持这种资源分配策略。不同的集群模式下，资源配置如下：</p>
+
+<ul>
+  <li>
+    <p>Standalone mode: 默认情况下，应用提交至standalone 的集群后，将进入FIFO队列等待调度，并且应用会尽可能使用全部有效的计算节点。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th> </th>
+          <th>配置项</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CPU</td>
+          <td>spark.cores.max</td>
+          <td>应用使用的core数量上限</td>
+        </tr>
+        <tr>
+          <td>CPU</td>
+          <td>spark.deploy.defaultCores</td>
+          <td>应用默认使用的core数量</td>
+        </tr>
+        <tr>
+          <td>内存</td>
+          <td>spark.executor.memory</td>
+          <td>executor内存大小</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p>Mesos: 为了在Mesos上使用静态分区，可配置如下内容。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th> </th>
+          <th>配置项</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>启用</td>
+          <td>spark.mesos.coarse</td>
+          <td>值为true，启用静态分区。</td>
+        </tr>
+        <tr>
+          <td>CPU</td>
+          <td>spark.cores.max</td>
+          <td>应用使用的core数量上限</td>
+        </tr>
+        <tr>
+          <td>内存</td>
+          <td>spark.executor.memory</td>
+          <td>executor内存大小</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p>YARN: 可以由Spark Yarn client控制集群分配的执行器数量，配置内容如下。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th> </th>
+          <th>Spark YARN Client配置项</th>
+          <th>集群配置项</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>CPU</td>
+          <td>–num-executors</td>
+          <td>spark.executor.instances</td>
+          <td>控制执行器数量</td>
+        </tr>
+        <tr>
+          <td>CPU</td>
+          <td>–executor-cores</td>
+          <td>spark.executor.cores</td>
+          <td>每个执行器分配核数</td>
+        </tr>
+        <tr>
+          <td>内存</td>
+          <td>–executor-memory</td>
+          <td>spark.executor.memory</td>
+          <td>每个执行器内存量</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>跨应用的内存不可共享使用，CPU核实动态共享使用的。</p>
+
+    <h1 id="动态资源分配">动态资源分配</h1>
+
+    <p>Spark提供了一种动态资源调度机制，根据工作负载去调整应用占用的资源。这意味着，应用可以释放不使用的资源，当应用需要时可以再次申请。在多应用共享资源的Spark集群中，这种特性是十分有用的。</p>
+
+    <p>该机制默认是关闭的，所有coarse-gained集群管理器都可以启动动态资源调度（standalone、YARN、mesos coarse-gained）。</p>
+
+    <h2 id="配置和安装">配置和安装</h2>
+
+    <p>开启动态资源调度，需要配置两项。首先，应用要配置spark.dynamicAllocation.enabled为true；然后，每个worker都要开启external shuffle service， 应用需要配置spark.shuffle.service.enabled为true。</p>
+
+    <p>其它与之相关的配置项，都在spark.dynamicAllocation.*和spark.shuffle.service.*命名空间中。</p>
+
+    <h2 id="资源分配策略">资源分配策略</h2>
+
+    <p>动态资源分配，应该能使Spark释放不再使用的执行器，为需要资源的应用分配执行器。由于没有明确的方式去预测将要被移除的执行器未来是否会执行任务，将要新添的执行器未来是否会空闲。所以需要一些启发因子来确定执行器何时被删除和添加。</p>
+
+    <h3 id="请求策略">请求策略</h3>
+
+    <p>开启动态分配的Spark应用，在它提交的任务还处于挂起等待状态时，应用将申请额外的执行器。这种场景其实暗示了现存的执行器不足以同时覆盖提交执行未完的任务。</p>
+
+    <p>Spark以轮次方式请求执行器。拥有挂起任务的应用，会在spark.dynamicAllocation.schedulerBacklogTimeout秒后，发起请求；并且每隔spark.dynamicAllocation.sustainedSchedulerBacklogTimeout秒，应用将请求一次。每轮请求的执行器数量将指数式的增长。例如，某个应用在第一轮增加了一个执行器，随后将增加2、8、16…..个执行器。</p>
+
+    <h3 id="删除策略">删除策略</h3>
+
+    <p>删除策略十分简单。Spark应用会将空闲时间超过spark.dynamicAllocation.executorIdleTimeout秒的执行器移除。在多数情况下，该条件和请求条件互斥，如果应用还存在挂起任务，执行器不会空闲。</p>
+
+    <h2 id="解除执行器">解除执行器</h2>
+
+    <p>未启用动态分配时，一个Spark 执行器出现失败后，或者应用退出时，执行器会退出。在这两种场景下，所有和执行器关联的状态不再需要，可以被安全丢弃。在动态分配下，当执行器移除后，应用仍会运转。如果应用试图去访问存放在执行器的状态，则需要重新计算状态。所以，Spark需要一套执行器解除机制，在执行器清理前将状态保存。</p>
+
+    <p>这种需求对shuffle是非常重要的。在一次shuffle过程中，Spark执行器将其map输出结果写入本地磁盘文件，其它执行器试图去拉取这些文件，该执行器会为其它执行器提供文件访问服务。 然而，当出现掉队现象时，一些任务和其它同代任务相比，未能及时去拉取shuffle文件，导致动态分配在shuffle真正完成前删除执行器，进而使得部分shuffle文件被重计算。</p>
+
+    <p>Spark 1.2版本开始使用external shuffle service保存shuffle文件。在集群的每个节点上都会运行external shuffle service， external shuffle service是一个long-running 进程，并且独立于spark应用和应用相关的执行器。如果external shuffle service生效，spark执行器会从shuffle service拉取文件，替代从其它执行器获取。这意味着，任何执行器写出的shuffle状态超出了执行器的生命周期。</p>
+
+    <p>除shuffle文件之外，执行器也会在磁盘和内存中缓存数据。当执行器被删除后，所有缓存数据将不能访问。为了缓解该问题，可以默认执行器缓存的数据不被删除。你可以通过spark.dynamicAllocation.cachedExecutorIdleTimeout配置该行为。在将来的版本，缓存的数据可以保存在堆外存储中，和external shuffle service保存数据的思路类似。</p>
+
+    <h1 id="spark应用内部调度">Spark应用内部调度</h1>
+
+    <p>在一个Spark应用内，多个由不同线程提交的job可以同时并行执行。Spark的action行为会触发生成一个job。</p>
+
+    <p>默认情况下，spark调度器按照FIFO的方式调取job。每个job可分为多个stage，FIFO的调度基本准则是(1).不同job间，优先执行；(2)队头job未使用全部集群资源，后续job可别调取执行。(3).同一job内，先驱stage优先调取执行。</p>
+
+    <p>从spark 0.8开始，Fair调度器被使用。在Fair调度模式下，spark以轮转的方式分配job的任务。这意味着即使长job在运行，短job在提交后仍然可以立即分配资源执行。这种调度模式适合多用户的情况。</p>
+
+    <p>在SparkContext配置spark.scheduler.mode为FAIR，便可开启FAIR调度器。</p>
+
+    <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="k">val</span> <span class="nv">conf</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SparkConf</span><span class="o">().</span><span class="py">setMaster</span><span class="o">(...).</span><span class="py">setAppName</span><span class="o">(...)</span>
+<span class="nv">conf</span><span class="o">.</span><span class="py">set</span><span class="o">(</span><span class="s">"spark.scheduler.mode"</span><span class="o">,</span> <span class="s">"FAIR"</span><span class="o">)</span>
+<span class="k">val</span> <span class="nv">sc</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SparkContext</span><span class="o">(</span><span class="n">conf</span><span class="o">)</span>
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+
+    <h2 id="fair调度池">Fair调度池</h2>
+
+    <p>Fair调度器支持将job放入调度池，并且为每个子池配置不同的参数。调度池适用于job轻重缓急的情况。如果没有任何干预，新提交的job会进入默认调度池。job的调度池可以在SparkContext中配置spark.scheduler.pool来选择它们需要提交的调度池。</p>
+
+    <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="c1">// Assuming sc is your SparkContext variable</span>
+<span class="nv">sc</span><span class="o">.</span><span class="py">setLocalProperty</span><span class="o">(</span><span class="s">"spark.scheduler.pool"</span><span class="o">,</span> <span class="s">"pool1"</span><span class="o">)</span>
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+
+    <p>在配置SparkContext的local property后，该线程内所有提交的job将会使用该调度池的名字。使用完毕后，通过如下命令清理调度池。</p>
+
+    <div class="language-scala highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nv">sc</span><span class="o">.</span><span class="py">setLocalProperty</span><span class="o">(</span><span class="s">"spark.scheduler.pool"</span><span class="o">,</span> <span class="kc">null</span><span class="o">)</span>
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+
+    <h2 id="调度池的默认行为">调度池的默认行为</h2>
+
+    <p>默认情况下，所有调度池平等的共享集群资源，并且每个调度池内部由FIFO调取job。例如，你为每个用户创建一个调度池，这意味着每个用户将平等地共享集群资源，每个用户的查询会按序进行，而不是后来的查询要等待先前的用户释放资源。</p>
+
+    <h2 id="调度池配置">调度池配置</h2>
+
+    <p>每个调度池包含三个属性：</p>
+
+    <ul>
+      <li>
+        <p>schedulingMode: FIFO或FAIR。</p>
+      </li>
+      <li>
+        <p>weight: 调度池之间共享资源的相对权重。</p>
+      </li>
+      <li>
+        <p>minShare: 每个调度池使用的最小CPU核数量。默认值为0.</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>调度池的配置文件是XML格式，可以参考conf/fairscheduler.xml.template，在SparkConf中设置spark.scheduler.allocation.file即可。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>```scala
+conf.set("spark.scheduler.allocation.file", "/path/to/file")
+```
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>fairscheduler.xml例子如下，</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre>```xml
+&lt;?xml version="1.0"?&gt;
+&lt;allocations&gt;
+  &lt;pool name="production"&gt;
+    &lt;schedulingMode&gt;FAIR&lt;/schedulingMode&gt;
+    &lt;weight&gt;1&lt;/weight&gt;
+    &lt;minShare&gt;2&lt;/minShare&gt;
+  &lt;/pool&gt;
+  &lt;pool name="test"&gt;
+    &lt;schedulingMode&gt;FIFO&lt;/schedulingMode&gt;
+    &lt;weight&gt;2&lt;/weight&gt;
+    &lt;minShare&gt;3&lt;/minShare&gt;
+  &lt;/pool&gt;
+&lt;/allocations&gt;
+```
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>包含连个子池，分别为production、test。FIFO调度池默认的weight为1、minShare为3。</p>
+
+<p>Fair的调度准则如下，</p>
+
+<ol>
+  <li>调度池运行的task数小于minShare，则优先调取。</li>
+  <li>调度池运行task数/minShare越小，则优先调取。</li>
+  <li>调度池运行task数/weight越小，则优先调取。</li>
+  <li>比较名称。</li>
+</ol>
+
+<p>Fair调度器轮转执行，每轮先选择调度池，然后从池中选择任务。</p>
+
+
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/01/05/spark-shared-variables/" data-toggle="tooltip" data-placement="top" title="Spark共享变量">
+                        Previous<br>
+                        <span>Spark共享变量</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/03/21/spark-streaming/" data-toggle="tooltip" data-placement="top" title="Spark Streaming">
+                        Next<br>
+                        <span>Spark Streaming</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <hr style="visibility: hidden;">
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+
+
+<section>
+    
+        <hr class="hidden-sm hidden-xs">
+    
+    <h5><a href="/archive/">FEATURED TAGS</a></h5>
+    <div class="tags">
+        
+        
+        
+        
+        
+        
+                <a data-sort="0025" 
+                    href="/archive/?tag=Spark"
+                    title="Spark"
+                    rel="9">Spark</a>
+        
+                <a data-sort="0024" 
+                    href="/archive/?tag=Docker"
+                    title="Docker"
+                    rel="10">Docker</a>
+        
+                <a data-sort="0030" 
+                    href="/archive/?tag=Linux"
+                    title="Linux"
+                    rel="4">Linux</a>
+        
+                <a data-sort="0030" 
+                    href="/archive/?tag=RDD"
+                    title="RDD"
+                    rel="4">RDD</a>
+        
+                <a data-sort="0030" 
+                    href="/archive/?tag=Vert.x"
+                    title="Vert.x"
+                    rel="4">Vert.x</a>
+        
+                <a data-sort="0030" 
+                    href="/archive/?tag=vertx-core"
+                    title="vertx-core"
+                    rel="4">vertx-core</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=%E3%80%8A%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97--%E5%8E%9F%E7%90%86%E3%80%81%E7%AE%97%E6%B3%95%E4%B8%8E%E7%B3%BB%E7%BB%9F%E3%80%8B"
+                    title="《分布式计算--原理、算法与系统》"
+                    rel="2">《分布式计算--原理、算法与系统》</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=%E5%85%AC%E5%B9%B3%E8%B0%83%E5%BA%A6"
+                    title="公平调度"
+                    rel="2">公平调度</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"
+                    title="分布式计算"
+                    rel="2">分布式计算</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=%E7%B4%AF%E5%8A%A0%E5%99%A8"
+                    title="累加器"
+                    rel="2">累加器</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=FIFO%E8%B0%83%E5%BA%A6"
+                    title="FIFO调度"
+                    rel="2">FIFO调度</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=JVM"
+                    title="JVM"
+                    rel="2">JVM</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=Java"
+                    title="Java"
+                    rel="2">Java</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=Spark+Standalone"
+                    title="Spark Standalone"
+                    rel="2">Spark Standalone</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=Spark+Streaming"
+                    title="Spark Streaming"
+                    rel="2">Spark Streaming</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=container"
+                    title="container"
+                    rel="2">container</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=docker+image"
+                    title="docker image"
+                    rel="2">docker image</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=nsenter"
+                    title="nsenter"
+                    rel="2">nsenter</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=sudo"
+                    title="sudo"
+                    rel="2">sudo</a>
+    </div>
+</section>
+
+
+                <!-- Friends Blog -->
+                
+<hr>
+<h5>FRIENDS</h5>
+<ul class="list-inline">
+  
+</ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<!-- add support for mathjax by voleking-->
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "cheneyyin";
+    var disqus_identifier = "/2020/01/22/spark-scheduler";
+    var disqus_url = "https://cheneyyin.github.io/2020/01/22/spark-scheduler/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'right',
+          // icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <!-- SNS Link -->
+                
+
+
+<ul class="list-inline text-center">
+
+
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://www.zhihu.com/people/cheney-yin-77">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa  fa-stack-1x fa-inverse">知</i>
+      </span>
+    </a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://github.com/CheneyYin">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+  </li>
+  
+  
+</ul>
+
+                <p class="copyright text-muted">
+                    Copyright &copy; Cheney.Yin Blog 2023
+                    <br>
+                    Powered by <a href="http://cheneyyin.github.io">Cheney.Yin Blog</a> |
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px"
+                        height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=CheneyYin&repo=cheneyyin.github.io&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Simple Jekyll Search -->
+<script src="/js/simple-jekyll-search.min.js"></script>
+
+<!-- Service Worker -->
+
+<script src="/js/snackbar.js "></script>
+<script src="/js/sw-registration.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+        var d = document, t = 'script',
+            o = d.createElement(t),
+            s = d.getElementsByTagName(t)[0];
+        o.src = u;
+        if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+        s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!--
+     Because of the native support for backtick-style fenced code blocks
+     right within the Markdown is landed in Github Pages,
+     From V1.6, There is no need for Highlight.js,
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+
+
+
+
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function () {
+        var $nav = document.querySelector("nav");
+        if ($nav) FastClick.attach($nav);
+    })
+</script>
+
+<!-- Google Analytics -->
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KMZ19PZE4D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-KMZ19PZE4D');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        // interop with multilangual 
+        if ('' == 'true') {
+            _containerSelector = 'div.post-container.active'
+        } else {
+            _containerSelector = 'div.post-container'
+        }
+
+        // init
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        // clean
+        $(selector).html('')
+
+        // appending
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+<!-- Multi-Lingual -->
+
+
+<!-- Simple Jekyll Search -->
+<script>
+    // https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript
+    function htmlDecode(input) {
+        var e = document.createElement('textarea');
+        e.innerHTML = input;
+        // handle case of empty input
+        return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+    }
+
+    SimpleJekyllSearch({
+        searchInput: document.getElementById('search-input'),
+        resultsContainer: document.getElementById('search-results'),
+        json: '/search.json',
+        searchResultTemplate: '<div class="post-preview item"><a href="{url}"><h2 class="post-title">{title}</h2><h3 class="post-subtitle">{subtitle}</h3><hr></a></div>',
+        noResultsText: 'No results',
+        limit: 50,
+        fuzzy: false,
+        // a hack to get escaped subtitle unescaped. for some reason, 
+        // post.subtitle w/o escape filter nuke entire search.
+        templateMiddleware: function (prop, value, template) {
+            if (prop === 'subtitle' || prop === 'title') {
+                if (value.indexOf("code")) {
+                    return htmlDecode(value);
+                } else {
+                    return value;
+                }
+            }
+        }
+    });
+
+    $(document).ready(function () {
+        var $searchPage = $('.search-page');
+        var $searchOpen = $('.search-icon');
+        var $searchClose = $('.search-icon-close');
+        var $searchInput = $('#search-input');
+        var $body = $('body');
+
+        $searchOpen.on('click', function (e) {
+            e.preventDefault();
+            $searchPage.toggleClass('search-active');
+            var prevClasses = $body.attr('class') || '';
+            setTimeout(function () {
+                $body.addClass('no-scroll');
+            }, 400)
+
+            if ($searchPage.hasClass('search-active')) {
+                $searchClose.on('click', function (e) {
+                    e.preventDefault();
+                    $searchPage.removeClass('search-active');
+                    $body.attr('class', prevClasses);  // from closure 
+                });
+                $searchInput.focus();
+            }
+        });
+    });
+</script>
+
+</body>
+
+</html>

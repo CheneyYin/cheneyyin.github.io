@@ -112,6 +112,8 @@
                         
                         
                         
+                        
+                        
                         <li class="search-icon">
                             <a href="javascript:void(0)">
                                 <i class="fa fa-search"></i>
@@ -244,6 +246,74 @@
     <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
       col-xs-12 postlist-container">
       
+<div class="post-preview">
+    <a href="/2021/12/22/debug-hotspot/">
+        <h2 class="post-title">
+            调试Hotspot
+        </h2>
+        
+        <h3 class="post-subtitle">
+            记录调试Hotspot的环境和过程
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                调试Hotspot
+
+容器环境
+
+1
+docker run -itd -v /home/cheney/expr/jvm/openjdk12/:/opt/ --hostname openjdk.com --name openjdk ubuntu:18.04 /bin/bash
+
+
+安装依赖
+
+1
+2
+3
+4
+5
+6
+7
+apt install build-essential
+apt insta...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on December 22, 2021
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2021/12/06/transplant-pixyll-theme-on-mpe/">
+        <h2 class="post-title">
+            transplant pixyll theme on MPE
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍pixyll移植方法
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                为MPE移植pixyll主题
+
+最近Typora发布了正式版，然而Typora开启了收费模式。于是决定在vscode上配置新的markdown环境。
+
+Typora拥有出色的预览能力，vscode平台上的MPE（Markdown Preview Enhanced）刚好满足需要。但是，MPE的默认主题并不包含pixyll。所以尝试将Typora的pixyll移植到MPE。
+
+MPE默认提供了g...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on December 6, 2021
+    </p>
+</div>
+<hr>
+
 <div class="post-preview">
     <a href="/2021/12/05/dns/">
         <h2 class="post-title">
@@ -436,6 +506,86 @@ echo '[hello]&lt;-&gt;[wo...
 </div>
 <hr>
 
+<div class="post-preview">
+    <a href="/2020/04/11/spark-streaming-out-of-order/">
+        <h2 class="post-title">
+            Spark Streaming乱序案例
+        </h2>
+        
+        <h3 class="post-subtitle">
+            分析因调度器配置引起的数据同步乱序
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                Spark Streaming RDD乱序
+
+问题描述
+
+Spark Streaming RDD乱序是指，在其开启公平调度的前提下，Spark Streaming周期性地提交Job，并且Job可并发执行。然而在严格的传输语义的要求下（如Exactly-Once），Spark Streaming需要向上游系统发送应答记录数据拉取进度，例如Kafka Consumer会向Kafka broker...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on April 11, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/03/21/spark-streaming/">
+        <h2 class="post-title">
+            Spark Streaming
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍Spark Streaming的基本概念和使用
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                Spark Streaming
+
+概述
+
+Spark Streaming是Spark Core API的扩展，它支持弹性的、高吞吐、容错的实时数据流的处理。数据可以通过多种数据源获取，例如Kafka、Flume、Kinesis以及TCP Sockets，也可以通过例如map、reduce、join、window等高阶函数组成的复杂算法处理。最终，处理后的数据可以输出到文件系统，数据库以及实时...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on March 21, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/22/spark-scheduler/">
+        <h2 class="post-title">
+            Spark资源调度
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍Spark跨应用调度和应用内调度的相关概念和配置
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                概况
+
+spark 具备几种计算资源的调度机制。首先，在集群模式下，每个Spark应用(SparkContext的实例)运行在一组独立的执行器(executor)进程中。Spark集群管理器提供了跨应用的调度机制。其次，在每个Spark应用中，如果多个job(Spark actions)被不同的线程提交，它们能够并发执行。
+
+跨应用调度
+
+运行在spark集群的应用，可以获得一组独立的exe...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on January 22, 2020
+    </p>
+</div>
+<hr>
+
 
 <!-- Pager -->
 
@@ -445,6 +595,10 @@ echo '[hello]&lt;-&gt;[wo...
         <a href="/page2">&larr; Newer Posts</a>
     </li>
     
+    
+    <li class="next">
+        <a href="/page4">Older Posts &rarr;</a>
+    </li>
     
 </ul>
 
@@ -467,62 +621,97 @@ echo '[hello]&lt;-&gt;[wo...
         
         
         
-                <a data-sort="0021" 
-                    href="/archive/?tag=Linux"
-                    title="Linux"
-                    rel="4">Linux</a>
+                <a data-sort="0025" 
+                    href="/archive/?tag=Spark"
+                    title="Spark"
+                    rel="9">Spark</a>
         
-                <a data-sort="0015" 
+                <a data-sort="0024" 
                     href="/archive/?tag=Docker"
                     title="Docker"
                     rel="10">Docker</a>
         
-                <a data-sort="0021" 
+                <a data-sort="0030" 
+                    href="/archive/?tag=Linux"
+                    title="Linux"
+                    rel="4">Linux</a>
+        
+                <a data-sort="0030" 
+                    href="/archive/?tag=RDD"
+                    title="RDD"
+                    rel="4">RDD</a>
+        
+                <a data-sort="0030" 
                     href="/archive/?tag=Vert.x"
                     title="Vert.x"
                     rel="4">Vert.x</a>
         
-                <a data-sort="0021" 
+                <a data-sort="0030" 
                     href="/archive/?tag=vertx-core"
                     title="vertx-core"
                     rel="4">vertx-core</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=%E3%80%8A%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97--%E5%8E%9F%E7%90%86%E3%80%81%E7%AE%97%E6%B3%95%E4%B8%8E%E7%B3%BB%E7%BB%9F%E3%80%8B"
                     title="《分布式计算--原理、算法与系统》"
                     rel="2">《分布式计算--原理、算法与系统》</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
+                    href="/archive/?tag=%E5%85%AC%E5%B9%B3%E8%B0%83%E5%BA%A6"
+                    title="公平调度"
+                    rel="2">公平调度</a>
+        
+                <a data-sort="0032" 
                     href="/archive/?tag=%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"
                     title="分布式计算"
                     rel="2">分布式计算</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
+                    href="/archive/?tag=%E7%B4%AF%E5%8A%A0%E5%99%A8"
+                    title="累加器"
+                    rel="2">累加器</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=FIFO%E8%B0%83%E5%BA%A6"
+                    title="FIFO调度"
+                    rel="2">FIFO调度</a>
+        
+                <a data-sort="0032" 
                     href="/archive/?tag=JVM"
                     title="JVM"
                     rel="2">JVM</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=Java"
                     title="Java"
                     rel="2">Java</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
+                    href="/archive/?tag=Spark+Standalone"
+                    title="Spark Standalone"
+                    rel="2">Spark Standalone</a>
+        
+                <a data-sort="0032" 
+                    href="/archive/?tag=Spark+Streaming"
+                    title="Spark Streaming"
+                    rel="2">Spark Streaming</a>
+        
+                <a data-sort="0032" 
                     href="/archive/?tag=container"
                     title="container"
                     rel="2">container</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=docker+image"
                     title="docker image"
                     rel="2">docker image</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=nsenter"
                     title="nsenter"
                     rel="2">nsenter</a>
         
-                <a data-sort="0023" 
+                <a data-sort="0032" 
                     href="/archive/?tag=sudo"
                     title="sudo"
                     rel="2">sudo</a>

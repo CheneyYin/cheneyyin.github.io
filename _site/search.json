@@ -1,6 +1,22 @@
 [
   
     {
+      "title"    : "Spark Standalone集群隐藏的REST API",
+      "subtitle" : "介绍如何使用Spark Standalone隐藏的REST API",
+      "tags"     : "Spark, Spark Standalone, REST API",
+      "url"      : "/2022/09/06/spark-standalone-rest-api/",
+      "date"     : "2022-09-06 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Spark Standalone集群启动配置",
+      "subtitle" : "介绍Spark Standalone集群启动的常用配置项目",
+      "tags"     : "Spark, Spark Standalone",
+      "url"      : "/2022/08/29/spark-standalone-start-configure/",
+      "date"     : "2022-08-29 00:00:00 +0800"
+    } ,
+  
+    {
       "title"    : "Vert.x core 3 --- Event Bus",
       "subtitle" : "介绍Event Bus相关概念和使用",
       "tags"     : "Vert.x, vertx-core, Event Bus, 消息发布/订阅",
@@ -198,6 +214,62 @@
       "tags"     : "Cli, graphviz",
       "url"      : "/2021/06/22/graph-easy/",
       "date"     : "2021-06-22 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Spark Streaming乱序案例",
+      "subtitle" : "分析因调度器配置引起的数据同步乱序",
+      "tags"     : "Spark, Spark Streaming, Kafka, 乱序, 公平调度, FIFO调度, Exactly-Once, 累加器",
+      "url"      : "/2020/04/11/spark-streaming-out-of-order/",
+      "date"     : "2020-04-11 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Spark Streaming",
+      "subtitle" : "介绍Spark Streaming的基本概念和使用",
+      "tags"     : "Spark, Spark Streaming, 流式计算, 接收器, RDD, 微批处理",
+      "url"      : "/2020/03/21/spark-streaming/",
+      "date"     : "2020-03-21 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Spark资源调度",
+      "subtitle" : "介绍Spark跨应用调度和应用内调度的相关概念和配置",
+      "tags"     : "Spark, Scheduler, 公平调度, FIFO调度, Executor",
+      "url"      : "/2020/01/22/spark-scheduler/",
+      "date"     : "2020-01-22 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Spark共享变量",
+      "subtitle" : "介绍Spark共享变量的相关概念和使用方法",
+      "tags"     : "Spark, 共享变量, 广播变量, 累加器",
+      "url"      : "/2020/01/05/spark-shared-variables/",
+      "date"     : "2020-01-05 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Spark RDD 3 --- 持久化",
+      "subtitle" : "介绍RDD持久化的相关概念和配置",
+      "tags"     : "Spark, RDD, 持久化",
+      "url"      : "/2019/12/21/spark-rdd-persistence/",
+      "date"     : "2019-12-21 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Spark RDD 2 --- 操作",
+      "subtitle" : "介绍RDD的Transformation、Action和Shuffle操作。",
+      "tags"     : "Spark, RDD, Transformation, Action, Shuffle",
+      "url"      : "/2019/12/12/spark-rdd-operator/",
+      "date"     : "2019-12-12 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Spark RDD 1 --- 基础",
+      "subtitle" : "介绍Spark RDD的相关概念和基本操作",
+      "tags"     : "Spark, RDD, 数据分区, 闭包",
+      "url"      : "/2019/12/06/spark-rdd-basic/",
+      "date"     : "2019-12-06 00:00:00 +0800"
     } 
   
 ]
