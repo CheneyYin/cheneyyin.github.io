@@ -12,17 +12,17 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="About - Cheney.Yin的博客 | Cheney Blog">
+        content="Cheney.Yin的博客 | Cheney Blog">
     
     <meta property="og:type" content="website">
     <meta property="og:description"
         content="「To explore or to exploite is a question.」">
     
     <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/about/">
+    <meta property="og:url" content="https://cheneyyin.github.io/page2/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>About - Cheney.Yin的博客 | Cheney Blog</title>
+    <title>Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -31,7 +31,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/about/">
+    <link rel="canonical" href="https://cheneyyin.github.io/page2/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -201,17 +201,10 @@
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/img/bg-me-2022.jpg');
+        background-image: url('/img/home-bg.jpg');
         background: ;
     }
 
-    
-    header.intro-header .header-mask{
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        background: rgba(0,0,0, 0.3);
-    }
     
 </style>
 
@@ -221,7 +214,7 @@
 
 
 
-<header class="intro-header" style="background-image: url('/img/bg-me-2022.jpg')">
+<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
   <div class="header-mask"></div>
   <div class="container">
     <div class="row">
@@ -229,7 +222,7 @@
         
         <div class="site-heading">
         
-          <h1>About</h1>
+          <h1>Cheney.Yin Blog</h1>
           <span class="subheading">「To explore or to exploite is a question.」</span>
         </div>
       </div>
@@ -248,34 +241,168 @@
     <!-- PostList Container -->
     <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
       col-xs-12 postlist-container">
-      <!-- Chinese Version -->
-<div class="zh post-container">
+      
+<div class="post-preview">
+    <a href="/2021/11/11/cgroup-v2/">
+        <h2 class="post-title">
+            Cgroup v2
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍Cgroup相关概念和常用命令
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                cgroup v2
+
+详细参考
+
+概况
+
+cgroup是一个目录树，每层目录下都可以创建子目录，子目录默认继承父目录的属性，具有层级结构。
+
+cgroup把一个cgroup目录中的资源划分给它的子目录，子目录可以把资源继续划分给它的子目录，子目录分配的资源之和不能超过父目录，进程或者线程可以使用的资源受到它们委身的目录中的资源的限制。
+
+cgroup v2和cgroup v1区别很大，这一点...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on November 11, 2021
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2021/11/04/linux-namespace/">
+        <h2 class="post-title">
+            Linux Namespace
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍Linux的几种常见Namespace
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                概况
+
+
+  
+    
+      名称
+      作用
+      版本
+    
+  
+  
+    
+      Mount (mnt)
+      隔离挂载点
+      2.4.19
     
     
-
+      Process ID (pid)
+      隔离进程ID
+      2.6.24
+    
+    
+      Network (net)
+      隔离网...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on November 4, 2021
+    </p>
 </div>
+<hr>
 
+<div class="post-preview">
+    <a href="/2021/10/14/cfssl/">
+        <h2 class="post-title">
+            数字证书与cfssl工具链
+        </h2>
+        
+        <h3 class="post-subtitle">
+            分析数字证书原理，记录cfssl常用命令。
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                1 什么是根证书？
 
-<!-- disqus 评论框 start -->
-<div class="comment">
-    <div id="disqus_thread" class="disqus-thread">
+参考
 
-    </div>
+根证书是证书颁发机构(CA)的公钥证书，是在公开密钥基础建设中，信任链的起点。根证书没有上层机构再为其本身作数字签名，所以都是自签证书。
+
+2 X.509证书规范
+
+参考
+
+一般的，一个数字证书内容可能包括基本数据（版本、序列号）、所签名对象信息（签名算法类型、签发者信息、有效期、被签发人、签发的公开密钥）、CA 的数字签名等等。
+
+目前使用最广泛的标准为 IT...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on October 14, 2021
+    </p>
 </div>
-<!-- disqus 评论框 end -->
+<hr>
 
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "cheneyyin";
-    var disqus_identifier = "cheneyyin//about/";
-    var disqus_url = "https://cheneyyin.github.io/about/";
+<div class="post-preview">
+    <a href="/2021/06/22/graph-easy/">
+        <h2 class="post-title">
+            Graph easy工具
+        </h2>
+        
+        <h3 class="post-subtitle">
+            Graph easy是一种用于在Cli下的绘图工具
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                基本语法
+graph-easy兼容graphviz语法
 
-    (function () {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
+1
+2
+3
+4
+echo '[hello]&lt;-&gt;[world]' | graph-easy
++-------+      +-------+
+| hello | &lt;--&gt; | world |
++-------+      +-------+
+
+
+1
+2
+3
+4
+echo '[hello]&lt;-&gt;[wo...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on June 22, 2021
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+    <li class="previous">
+        <a href="/">&larr; Newer Posts</a>
+    </li>
+    
+    
+</ul>
 
 
     </div>
@@ -554,7 +681,7 @@
     function generateCatalog(selector) {
 
         // interop with multilangual 
-        if ('false' == 'true') {
+        if ('' == 'true') {
             _containerSelector = 'div.post-container.active'
         } else {
             _containerSelector = 'div.post-container'

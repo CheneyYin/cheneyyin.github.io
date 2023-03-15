@@ -12,17 +12,28 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="About - Cheney.Yin的博客 | Cheney Blog">
+        content="Docker数据卷 - Cheney.Yin的博客 | Cheney Blog">
     
-    <meta property="og:type" content="website">
-    <meta property="og:description"
-        content="「To explore or to exploite is a question.」">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="docker数据卷
+">
+    
+    <meta property="article:published_time" content=" 2022-05-22T00:00:00Z">
+    
+    
+    <meta property="article:author" content="Cheney.Yin">
+    
+    
+    <meta property="article:tag" content="Docker">
+    
+    <meta property="article:tag" content="数据卷">
+    
     
     <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/about/">
+    <meta property="og:url" content="https://cheneyyin.github.io/2022/05/22/docker-volume/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>About - Cheney.Yin的博客 | Cheney Blog</title>
+    <title>Docker数据卷 - Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -31,7 +42,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/about/">
+    <link rel="canonical" href="https://cheneyyin.github.io/2022/05/22/docker-volume/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -194,99 +205,262 @@
   </div>
 </div>
 
-    <!-- Page Header -->
+    <!-- Post Header -->
 
 
 
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/img/bg-me-2022.jpg');
+        background-image: url('/img/bg-material.jpg');
         background: ;
     }
 
-    
-    header.intro-header .header-mask{
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        background: rgba(0,0,0, 0.3);
-    }
     
 </style>
 
 
 
 
+<header class="intro-header" >
 
-
-
-<header class="intro-header" style="background-image: url('/img/bg-me-2022.jpg')">
-  <div class="header-mask"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-        <div class="site-heading">
-        
-          <h1>About</h1>
-          <span class="subheading">「To explore or to exploite is a question.」</span>
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=Docker" title="Docker">Docker</a>
+                        
+                        <a class="tag" href="/archive/?tag=%E6%95%B0%E6%8D%AE%E5%8D%B7" title="数据卷">数据卷</a>
+                        
+                    </div>
+                    <h1>Docker数据卷</h1>
+                    
+                    <h2 class="subheading">介绍Docker数据卷的相关概念和使用方法</h2>
+                    <span class="meta">Posted by Cheney.Yin on May 22, 2022</span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
 
 
-<!-- Main Content -->
-<div class="container">
-  <div class="row">
-    
-
-    <!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
-      col-xs-12 postlist-container">
-      <!-- Chinese Version -->
-<div class="zh post-container">
-    
-    
-
-</div>
 
 
-<!-- disqus 评论框 start -->
-<div class="comment">
-    <div id="disqus_thread" class="disqus-thread">
-
-    </div>
-</div>
-<!-- disqus 评论框 end -->
-
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "cheneyyin";
-    var disqus_identifier = "cheneyyin//about/";
-    var disqus_url = "https://cheneyyin.github.io/about/";
-
-    (function () {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
 
 
-    </div>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                
+
+				<h1 id="docker数据卷">docker数据卷</h1>
+
+<h2 id="管理数据卷">管理数据卷</h2>
+
+<pre><code class="language-she">docker volume help
+
+Usage:  docker volume COMMAND
+
+Manage volumes
+
+Commands:
+  create      Create a volume
+  inspect     Display detailed information on one or more volumes
+  ls          List volumes
+  prune       Remove all unused local volumes
+  rm          Remove one or more volumes
+</code></pre>
+
+<p>创建数据卷，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker volume create one-volume
+one-volume
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>查看数据卷，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre>docker volume <span class="nb">ls
+</span>DRIVER    VOLUME NAME
+<span class="nb">local     </span>4d8f935f757dbb8ac4b10430f5aab5ca75da0858dd1baa71918ea8c7ad07cc2a
+<span class="nb">local     </span>9c68e6e515d217439ba91b7afd022015404f26ca3986463823b3e470394157cd
+<span class="nb">local     </span>9f59429de397d54c782fa11ae6cd2107079f97ba91b7008e2b5a541b0b1f4b95
+<span class="nb">local     </span>78e96e66f3fdef7fd4e316400a08f518ac6568f84704ca388d77a82b0a8f1509
+<span class="nb">local     </span>01714f7baa8968d17ea4b17b2fea9622463bfc43a42c15f4625e67ec0ca69181
+<span class="nb">local     </span>bc2041319f5b1d890902fd3d677efcd38730ee60d92f805e25318c01a1a8b740
+<span class="nb">local     </span>f5a6a2826e5f5f455b47fb563856a6947a8b74c77f5a7b4c10e8547c3fceccf2
+<span class="nb">local     </span>one-volume
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="容器配置数据卷">容器配置数据卷</h2>
+
+<p>启动容器<code class="language-plaintext highlighter-rouge">ubuntu</code>，并指定数据卷，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker run <span class="nt">-itd</span> <span class="nt">--mount</span> <span class="nb">source</span><span class="o">=</span>one-volume,target<span class="o">=</span>/opt <span class="nt">--hostname</span> ubuntu.com <span class="nt">--name</span> ubuntu ubuntu /bin/bash
+8bde099b742cc9702c9cb1b939e2de933f793afadafb587a2b0e1f0c253959c7
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker inspect <span class="nt">--format</span> <span class="s1">'\{\{.Mounts\}\}'</span> ubuntu
+<span class="o">[{</span>volume one-volume /var/lib/docker/volumes/one-volume/_data /opt <span class="nb">local </span>z <span class="nb">true</span> <span class="o">}]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>向<code class="language-plaintext highlighter-rouge">/opt/hello</code>写入<code class="language-plaintext highlighter-rouge">hello</code>，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>docker <span class="nb">exec</span> <span class="nt">-it</span> ubuntu /bin/bash <span class="nt">-c</span> <span class="s1">'echo "hello" &gt; /opt/hello'</span>
+docker <span class="nb">exec</span> <span class="nt">-it</span> ubuntu /bin/bash <span class="nt">-c</span> <span class="s1">'cat /opt/hello'</span>
+hello
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="容器复用容器数据卷">容器复用容器数据卷</h2>
+
+<p>启动容器<code class="language-plaintext highlighter-rouge">busybox</code>，并从容器<code class="language-plaintext highlighter-rouge">busybox</code>复用数据卷，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker run <span class="nt">-itd</span> <span class="nt">--volumes-from</span> ubuntu <span class="nt">--hostname</span> busybox.com <span class="nt">--name</span> busybox busybox /bin/sh
+638d959856e08b73e14bb9d757d5512f6a6da5f132b44c9d0c03020a27e8fcd4
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker inspect <span class="nt">--format</span> <span class="s1">'\{\{.Mounts\}\}'</span> busybox
+<span class="o">[{</span>volume one-volume /var/lib/docker/volumes/one-volume/_data /opt <span class="nb">local  true</span> <span class="o">}]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>访问共享文件，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker <span class="nb">exec</span> <span class="nt">-it</span> busybox /bin/sh <span class="nt">-c</span> <span class="s1">'cat /opt/hello'</span>
+hello
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="数据卷映射">数据卷映射</h2>
+
+<p>在<code class="language-plaintext highlighter-rouge">docker run</code>中，使用<code class="language-plaintext highlighter-rouge">-v</code>开启容器数据卷，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker run <span class="nt">-itd</span> <span class="nt">-v</span> /opt <span class="nt">--hostname</span> busybox.com <span class="nt">--name</span> busybox busybox /bin/sh
+9a4900b2a5f69037f33a57a02858a9f3b9c25bd4ae799e3ea2008ce17b1fc688
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker inspect <span class="nt">--format</span> <span class="s1">'\{\{.Mounts\}\}'</span> busybox
+<span class="o">[{</span>volume 941a2e4bdf9f76c4e07c0b3fd67688495b384f8b9ecfa02332bb8ec1e369ac31 /var/lib/docker/volumes/941a2e4bdf9f76c4e07c0b3fd67688495b384f8b9ecfa02332bb8ec1e369ac31/_data /opt <span class="nb">local  true</span> <span class="o">}]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-v HOST_PATH:CONTAINER_PATH</code>可以指定宿主机路径作为数据卷，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker run <span class="nt">-itd</span> <span class="nt">-v</span> /home/XXX/expr/docker/A:/opt <span class="nt">--hostname</span> busybox.com <span class="nt">--name</span> busybox busybox /bin/sh
+5584070ff88e4d62a3bb84fbf5978d9efe5a1185cbbca54b12bbad51ee3b9e78
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>docker inspect <span class="nt">--format</span> <span class="s1">'\{\{.Mounts\}\}'</span> busybox
+<span class="o">[{</span><span class="nb">bind</span>  /home/cheney/expr/docker/A /opt   <span class="nb">true </span>rprivate<span class="o">}]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2022/05/12/docker-image-command/" data-toggle="tooltip" data-placement="top" title="Docker image常用命令">
+                        Previous<br>
+                        <span>Docker image常用命令</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2022/05/30/docker-registry/" data-toggle="tooltip" data-placement="top" title="简易Docker仓库">
+                        Next<br>
+                        <span>简易Docker仓库</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <hr style="visibility: hidden;">
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
     <!-- Sidebar Container -->
-    <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12
-      col-xs-12 sidebar-container">
-      <!-- Featured Tags -->
-      
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
 
 
 <section>
+    
+        <hr class="hidden-sm hidden-xs">
     
     <h5><a href="/archive/">FEATURED TAGS</a></h5>
     <div class="tags">
@@ -329,87 +503,77 @@
 </section>
 
 
-      <!-- Short About -->
-      <section class="visible-md visible-lg">
-  <hr>
-  <h5><a href="/about/">ABOUT ME</a></h5>
-  <div class="short-about">
-    
-    <img src="/img/cheney.jpg" />
-    
-    
-    <p>呆若MUJI</p>
-    
-    <!-- SNS Link -->
-    
-
-
-<ul class="list-inline">
-
-
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://www.zhihu.com/people/cheney-yin-77">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa  fa-stack-1x fa-inverse">知</i>
-      </span>
-    </a>
-  </li>
-  
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://github.com/CheneyYin">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-      </span>
-    </a>
-  </li>
-  
-  
-</ul>
-  </div>
-</section>
-
-      <!-- Friends Blog -->
-      
+                <!-- Friends Blog -->
+                
 <hr>
 <h5>FRIENDS</h5>
 <ul class="list-inline">
   
 </ul>
 
-
+            </div>
+        </div>
     </div>
-    
-  </div>
-</div>
+</article>
+
+<!-- add support for mathjax by voleking-->
 
 
-<!-- Add support for Mathjax by Voleking-->
-<!-- If you want to see formulars well in post preview, Maybe you should add this.-->
-<!-- However, most of the time formulars may not appear in the post preview, you can delete it.-->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      equationNumbers: {
-        autoNumber: "AMS"
-      }
-    },
-    tex2jax: {
-      inlineMath: [ ['$','$'] ],
-      displayMath: [ ['$$','$$'] ],
-      processEscapes: true,
-    }
-  });
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "cheneyyin";
+    var disqus_identifier = "/2022/05/22/docker-volume";
+    var disqus_url = "https://cheneyyin.github.io/2022/05/22/docker-volume/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
 </script>
-<script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'right',
+          // icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
 
@@ -554,7 +718,7 @@
     function generateCatalog(selector) {
 
         // interop with multilangual 
-        if ('false' == 'true') {
+        if ('' == 'true') {
             _containerSelector = 'div.post-container.active'
         } else {
             _containerSelector = 'div.post-container'

@@ -14,7 +14,8 @@ tags:
  - docker export
 ---
 
-# docker container操作
+# Docker container常用命令
+
 ## 1 docker container状态图
 <center>
     <img style="border-radius: 0.3125em;
@@ -28,9 +29,6 @@ tags:
       图1 docker容器状态变化
   	</div>
 </center>
-
-
-------
 
 ## 2 命令详解
 
