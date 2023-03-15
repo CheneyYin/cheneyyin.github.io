@@ -1,6 +1,30 @@
 [
   
     {
+      "title"    : "《分布式计算--原理、算法与系统》第二章 分布式计算模型 ",
+      "subtitle" : "本文概况了分布式计算的基本抽象，包括分布式事件、通信信道、全局状态的数学模型。",
+      "tags"     : "《分布式计算--原理、算法与系统》, 分布式计算, 分布式事件, 通信信道, 全局状态, 数学模型",
+      "url"      : "/2022/07/11/distrcmp-pas-1/",
+      "date"     : "2022-07-11 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "常见的Out of Memory Error",
+      "subtitle" : "介绍几种常见的导致OOM的场景",
+      "tags"     : "Java, JVM, OOM, Heap, Stack, Stack Frame, 栈帧, 常量池, Direct内存",
+      "url"      : "/2022/07/02/out-of-memory-error/",
+      "date"     : "2022-07-02 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "sudo和wheel用户组",
+      "subtitle" : "介绍wheel用户组的用途",
+      "tags"     : "Linux, sudo, wheel用户组",
+      "url"      : "/2022/06/25/sudo-and-wheel-group/",
+      "date"     : "2022-06-25 00:00:00 +0800"
+    } ,
+  
+    {
       "title"    : "Docker提权案例",
       "subtitle" : "介绍一种docker提权场景",
       "tags"     : "Docker, 提权, 用户组, sudo",
@@ -49,6 +73,14 @@
     } ,
   
     {
+      "title"    : "Make使用总结",
+      "subtitle" : "简单介绍了Make的使用基本方法",
+      "tags"     : "make, makefile, build",
+      "url"      : "/2022/04/09/make-introduction/",
+      "date"     : "2022-04-09 00:00:00 +0800"
+    } ,
+  
+    {
       "title"    : "chroot",
       "subtitle" : "介绍chroot使用方法",
       "tags"     : "chroot, Linux, busybox, docker, 隔离",
@@ -70,6 +102,22 @@
       "tags"     : "Docker, dockerd, docker-init, docker-proxy, containerd, containerd-shim, ctr, runc",
       "url"      : "/2022/01/17/docker-component/",
       "date"     : "2022-01-17 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "调试Hotspot",
+      "subtitle" : "记录调试Hotspot的环境和过程",
+      "tags"     : "Java, JVM, Hotspot, Docker, OpenJDK, debug, GDB, debuginfo",
+      "url"      : "/2021/12/22/debug-hotspot/",
+      "date"     : "2021-12-22 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "transplant pixyll theme on MPE",
+      "subtitle" : "介绍pixyll移植方法",
+      "tags"     : "Typora, Vscode, Markdown Preview Enhanced, theme",
+      "url"      : "/2021/12/06/transplant-pixyll-theme-on-mpe/",
+      "date"     : "2021-12-06 00:00:00 +0800"
     } ,
   
     {

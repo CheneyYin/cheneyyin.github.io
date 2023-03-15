@@ -5,9 +5,857 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 15 Mar 2023 11:30:25 +0800</pubDate>
-    <lastBuildDate>Wed, 15 Mar 2023 11:30:25 +0800</lastBuildDate>
+    <pubDate>Wed, 15 Mar 2023 12:32:46 +0800</pubDate>
+    <lastBuildDate>Wed, 15 Mar 2023 12:32:46 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
+    
+      <item>
+        <title>《分布式计算--原理、算法与系统》第二章 分布式计算模型 </title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;本文为《分布式计算–原理、算法与系统》第二章“分布式计算模型”的读书笔记。本文概况了分布式计算的基本抽象，包括分布式事件、通信信道、全局状态的数学模型。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;1-基本假设&quot;&gt;1 基本假设&lt;/h1&gt;
+
+&lt;p&gt;假设，一个分布式程序由\(n\)个&lt;strong&gt;异步&lt;/strong&gt;进程\(p_1\)，\(p_2\)，\(...\)，\(p_i\)，\(...\)，\(p_n\)组成，进程之间使用通信网络进行消息传递。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;为了保证一般性，各个进程之间没有共享存储，只能互发消息联系。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;令\(C_{ij}\)表示进程\(p_i\)到\(p_j\)的通信信道，\(m_{ij}\)表示进程\(p_i\)发往\(p_j\)的消息。进程可以自发的执行某个动作，异步发送消息。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;异步发送消息，即进程发送消息后不用等待该消息是否发送完成，转而执行其它动作。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;2-分布式事件类型&quot;&gt;2 分布式事件类型&lt;/h1&gt;
+
+&lt;p&gt;进程的执行的动作可简单抽象为原子动作，这些动作可以分为三类：&lt;strong&gt;内部事件&lt;/strong&gt;、&lt;strong&gt;消息发送事件&lt;/strong&gt;、&lt;strong&gt;消息接收事件&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;令\(e^{x}_i\)表示进程\(p_i\)上的第\(x\)个事件；对于一个消息\(m\)，\(send(m)\)表示发送消息，\(rec(m)\)表示接收消息。&lt;/p&gt;
+
+&lt;p&gt;各种事件的发生，将会导致对应的进程和通信信道的状态改变。例如，一个内部事件改变其所处的进程的状态，一个发送事件或者接收事件则改变事件收发双方的状态。&lt;/p&gt;
+
+&lt;p&gt;进程\(p_i\)运行过程会产生一个事件序列：\(e^1_i\)，\(e^2_i\)，\(...e^x_i\)，\(e^{x+1}_i\)，\(...\)，该序列记为\(\mathcal{H_i}\)：&lt;/p&gt;
+
+\[\mathcal{H_i}=(h_i,\to_i)\]
+
+&lt;p&gt;其中，\(h_i\)是进程\(p_i\)产生的事件集合；二元关系\(\to_i\)则定义了事件之间顺序，即&lt;strong&gt;因果依赖&lt;/strong&gt;（Causal Dependency）。&lt;/p&gt;
+
+&lt;p&gt;进程间发送、接收消息使得信息得以流动，同时也在发送进程和接收进程间建立了因果依赖关系。这里，使用\(\to_{msg}\)表示进程间消息交换导致的因果依赖，对两个进程间交换消息\(m\)有：
+\(send(m)\to_{msg}rec(m)\)
+关系\(\to_{msg}\)定义了在发送和接收事件的因果依赖。&lt;/p&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/distrcmp_pas_1-1.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图1 某分布式运行时空图
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;p&gt;图1是一个包含三个进程的分布式运行时空图，横轴表示进程运行过程（即时间方向），每一个点表示一个事件，点与点之间的箭头线表示一次消息传递。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;通常，事件的执行要花费一定的时间，这里简化细节，假设事件的执行是原子的（具有不可分割性、瞬时性），所以用点表示事件执行。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;图1中，对于进程\(p_1\)，\(e^1_1\)、\(e^3_1\)是内部事件，\(e^2_1\)、\(e^5_1\)是消息发送事件，\(e^4_1\)是消息接收事件。&lt;/p&gt;
+
+&lt;h1 id=&quot;3-分布式事件关系&quot;&gt;3 分布式事件关系&lt;/h1&gt;
+
+&lt;p&gt;分布式事件间存在两类关系：因果优先关系（Causal Precedence Relation）、逻辑并发和物理并发关系。&lt;/p&gt;
+
+&lt;h2 id=&quot;31-因果优先关系&quot;&gt;3.1 因果优先关系&lt;/h2&gt;
+
+&lt;p&gt;一个分布式应用的运行导致不同进程产生一组分布式事件，令\(H=\cup_ih_i\)表示分布式计算过程中执行事件的集合。在集合\(H\)上定义一个二元关系\(\to\)，来表示分布式运行中事件间的因果依赖关系。
+\(\forall e^x_i,\forall e^y_j \in H, e^x_j \to e^y_j \Leftrightarrow \begin {cases}
+e^x_i \to_i e^y_j i.e.,(i=j) \land (x &amp;lt; y) &amp;amp;or //进程内顺序\\\
+e^x_i \to_{msg} e^y_j &amp;amp;or //进程间的消息传递\\\
+\exists e^z_k \in H: e^x_i \to e^z_k \land e^z_k \to e^y_j &amp;amp;//间接依赖
+\end{cases}\)&lt;/p&gt;
+
+&lt;p&gt;在分布式计算事件间的因果优先关系引发了一个&lt;strong&gt;反自反偏序关系（严格偏序关系）&lt;/strong&gt;&lt;sup id=&quot;fnref:1&quot; role=&quot;doc-noteref&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;，记为\(\mathcal{H}=(H,\to)\)。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;之所以为偏序关系而非全序关系，是因为该关系并非对所有事件成立，例如图1中\(e^3_1\)和\(e^4_2\)不存在因果关系。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;之所以为严格偏序关系，是因为不存在某个事件依赖自身的事实，即\(\forall e^x \in H, e^x \nrightarrow e^x\)。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;其中关系\(\to\)是Lamport的&lt;strong&gt;happens before&lt;/strong&gt;关系，对于任意两个事件\(e_i\)和\(e_j\)，如果\(e_i \to e_j\)则事件\(e_j\)直接或间接依赖\(e_i\)。例如图1中存在关系\(e^2_1 \to e^2_2\)。&lt;/p&gt;
+
+&lt;p&gt;对于任意两个事件\(e_i\)和\(e_j\)，如果\(e_i \nrightarrow e_j\)则事件\(e_j\)不直接或间接依赖\(e_i\)。在图1中存在关系\(e^3_1 \nrightarrow e^3_3\)。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;ul&gt;
+    &lt;li&gt;
+      &lt;p&gt;对于任意两个事件\(e_i\)和\(e_j\)，\(e_i \nrightarrow e_j \nRightarrow e_j \nrightarrow e_i\)；&lt;/p&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;p&gt;对于任意两个事件\(e_i\)和\(e_j\)，\(e_i \to e_j \Rightarrow e_j \nrightarrow e_i\)。&lt;/p&gt;
+
+      &lt;p&gt;例如图1中，进程\(p_1\)在\(e^2_1\)处向进程\(p_2\)发送消息，进程\(p_2\)在\(e^2_2\)处接收消息，根据常理，事件\(e_j\)依赖\(e_i\)，即先发送后接收；\(e^2_2 \nrightarrow e^2_1\)必然不成立，不可能在消息发送前接收到消息。&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;对于任意两个事件\(e_i\)和\(e_j\)，如果\(e_i \nrightarrow e_j\)且\(e_j \nrightarrow e_i\)，则事件\(e_i\)和\(e_j\)是并发的，这种关系记为\(e_i \parallel e_j\)。例如，在图1中存在\(e^3_1 \parallel e^3_3\)。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;并发关系没有&lt;strong&gt;传递性&lt;/strong&gt;，即\((e_i \parallel e_j) \land (e_j \parallel e_k) \nRightarrow e_i \parallel e_k\)，例如图1中\(e^3_3 \parallel e^4_2\) 且\(e^4_2 \parallel e^5_1\)，但是\(e^3_3 \nparallel e^5_1\)。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;注意对任意两个事件\(e_i\)和\(e_j\)，在分布式运行中，要么\(e_i \to e_j\)，要么\(e_j \to e_i\)，或者\(e_i \parallel e_j\)。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;32-逻辑并发和物理并发&quot;&gt;3.2 逻辑并发和物理并发&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;逻辑并发：当两个事件间无因果影响时，两个事件是逻辑并发的。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;物理并发：不同事件在物理时间的同一时刻发生。&lt;/p&gt;
+
+    &lt;blockquote&gt;
+      &lt;p&gt;两个或者更多个事件不在同一物理时间发生，但它们可能是逻辑并发的。例如图1中，\(\{e^3_1,e^4_2,e^3_3\}\)是逻辑并发的，但是它们显然不在同一物理时刻发生。&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;4-通信网络模型&quot;&gt;4 通信网络模型&lt;/h1&gt;
+
+&lt;p&gt;通信网络提供了几种模型，分别是：先进先出（First-In First-Out，FIFO）、非先进先出、因果序（Causal Ordering）。&lt;/p&gt;
+
+&lt;p&gt;在FIFO模型中，每个信道都运行一个FIFO消息&lt;strong&gt;队列&lt;/strong&gt;，消息顺序是由信道维持的。&lt;/p&gt;
+
+&lt;p&gt;在非FIFO模型中，每个信道都运行一个&lt;strong&gt;集合&lt;/strong&gt;，其中发送进程向集合加入消息，接收进程从中移除消息，&lt;strong&gt;被加入或移除的消息顺序是随机的&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;因果序模型是基于&lt;strong&gt;happens before&lt;/strong&gt;关系，一个支持因果序模型的系统满足因果依赖（CO）：
+\(\begin{align*}
+\forall m_{ij},m_{kj},\qquad &amp;amp;if\qquad send(m_{ij}) \to send(m_{kj})\\\
+&amp;amp;then\quad rec(m_{ij}) \to rec(m_{kj})
+\end{align*}\)&lt;/p&gt;
+
+&lt;p&gt;该特性确保那些发往同一目标的因果依赖的消息，以符合它们之间因果依赖关系的顺序进行发送。因果依赖消息的发送暗含了FIFO消息发送的特性。进一步，\(CO \subset FIFO \subset 非FIFO\)。&lt;/p&gt;
+
+&lt;h1 id=&quot;5-分布式系统的全局状态&quot;&gt;5 分布式系统的全局状态&lt;/h1&gt;
+
+&lt;p&gt;分布式系统的全局状态是其各个组成部件本地状态的集合，包括各个处理器状态和所有通信信道的状态。处理器在任何时刻的状态由处理器寄存器状态、堆栈状态以及内存状态等来定义，而且依赖于分布式应用的本地语义；信道的状态则由信道中传输的消息集合给出。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;事件发生会改变相关处理器和信道的状态，进而导致全局状态变化。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;令\(LS^x_i\)表示处理器（或者进程）\(p_i\)在事件\(e^x_i\)发生后，在事件\(e^{x+1}_i\)发生前的状态。\(LS^0_i\)则表示\(p_i\)的初始状态，\(LS^x_i\)是\(p_i\)从初始状态直到事件\(e^x_i\)之间所有事件执行后的结果。&lt;/p&gt;
+
+&lt;p&gt;令\(send(m) \leqslant LS^x_i\)，表示\(\exists y:\ 1 \leq y \leq x \ :: e^y_i=send(m)\)，即截止至事件\(e^x_i\)发生，\(p_i\)上发送过消息\(m\)。&lt;/p&gt;
+
+&lt;p&gt;令\(rec(m) \nleqslant LS^x_i\)，表示\(\forall y:\ 1 \leq y \leq x \ :: \ e^y_i \neq rec(m)\)，即截止至事件\(e^x_i\)发生，\(p_i\)从未接收过消息\(m\)。&lt;/p&gt;
+
+&lt;p&gt;一个信道的状态难以形式化地描述，其状态依赖于所有连接的处理器的状态。令\(SC^{x,y}_{ij}\)表示信道\(C_{ij}\)的状态，其定义如下：
+\(SC^{x,y}_{ij}=\{m_{ij}\ \lvert\ send(m_{ij}) \leqslant LS^x_i \land rec(m_{ij}) \nleqslant LS^y_j\}\)
+因此，信道状态\(SC^{x,y}_{ij}\)表示直至事件\(e^x_i\)，\(p_i\)发送的所有信息中，\(p_j\)直至事件\(e^y_j\)还未接收的消息。也就是信道\(C_{ij}\)截止在事件\(e^y_j\)时，内积压的\(p_i\)在截止在事件\(e^x_i\)时发送的所有信息。&lt;/p&gt;
+
+&lt;p&gt;分布式系统的全局状态是所有处理器本地状态和信道状态的集合，全局状态可定义为
+\(GS=\{\cup_iLS^{x_i}_i,\ \cup_{j,k}SC^{y_j,z_k}_{jk}\}\)
+全局状态的快照(Snapshot)是有意义的，分布式系统的所有组成部件的状态都必须在同一时刻进行记录。但是，只有在所有进程的本地时钟都能够完美地和其它进程的时钟同步，或者有一个所有处理器都能够随时访问的全局系统时钟才可能实现。但是，二者都不能。&lt;/p&gt;
+
+&lt;p&gt;然而，分布式系统的所有部件的状态无法在同一瞬间被记录，记录每个消息作为发送消息或接收消息的情况也是有意义的。&lt;/p&gt;
+
+&lt;p&gt;万事有因才有果，一个消息没有被发送，也就无法被接收，这种状态被称为一致性全局状态。在分布式系统下，非一致性全局状态是不存在的，没有意义的。&lt;/p&gt;
+
+&lt;p&gt;一个全局状态\(GS=\{\cup_iLS^{x_i}_i,\ \cup_{j,k}SC^{y_j,z_k}_{jk}\}\)是一个一致性全局状态，假如满足如下条件：
+\(\forall m_{ij}:\ send(m_{ij}) \nleqslant LS^{x_i}_i \Rightarrow m_{ij} \notin SC^{x_i,y_j}_{ij} \land rec(m_{ij}) \nleqslant LS^{y_j}_j\)
+也就是没有发送消息，就没有接收消息。&lt;/p&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/distrcmp_pas_1-2.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图2 某分布式运行的时空图
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;p&gt;在图2中，包含本地状态\(\{LS^1_1,LS^3_2,LS^3_3,LS^2_4\}\)的全局状态\(GS_1\)是不一致的，因为\(p_2\)的状态\(LS^3_2\)已经记录了消息\(m_{12}\)的接收，然而\(p_1\)的状态\(LS^1_1\)还未记录该消息的发送，所有不满足一致性条件，即没有发送消息，就没有接收消息。&lt;/p&gt;
+
+&lt;p&gt;在图2中，包含本地状态\(\{LS^2_1,LS^4_2,LS^4_3,LS^2_4\}\)的全局状态\(GS_2\)是一致状态，因为除了包含消息\(m_{21}\)的\(C_{21}\)外的其余信道都是空的（空信道意味着发送的消息都已被接收）。&lt;/p&gt;
+
+&lt;p&gt;全局状态\(GS=\{\cup_i LS^{x_i}_i, \cup_{j,k}SC^{y_j,z_k}_{jk}\}\)是非中转的，假如：
+\(\forall i, \forall j:\ 1 \leq i,j \leq n\ ::\ SC^{y_i,z_j}_{ij}\ = \varnothing\)
+所有信道在非中转全局状态中都被记录为空。&lt;/p&gt;
+
+&lt;p&gt;如果一个全局状态是非中转的，并且是一致的，则该全局状态是&lt;strong&gt;强一致&lt;/strong&gt;的。例如图2中，包含本地状态\(\{LS^2_1,LS^3_2,LS^4_3,LS^2_4\}\)的全局状态是强一致状态。&lt;/p&gt;
+
+&lt;h1 id=&quot;6-分布式计算的运行分割&quot;&gt;6 分布式计算的运行分割&lt;/h1&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/distrcmp_pas_1-3.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图3 分布式运行中的分割线
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;p&gt;分割线与每条进程线的某个点相交，可以把整个计算程分为两个部分，分布式事件也被分为两个集合，分别为过去集合（PAST）和未来集合（FUTURE）。PAST集合为分割线左侧所有事件组成，FUTURE集合则为分割线右侧所有事件组成。对于一条分割线\(C\)，\(PAST(C)\)、\(FUTURE(C)\)分别表示\(C\)的PAST事件集合和FUTURE事件集合。&lt;/p&gt;
+
+&lt;p&gt;每条分割线也对应了一个全局状态。例如在图3中，分割线\(C_1\)对应了一个本地状态为\(\{LS^1_1,LS^3_2,LS^3_3,LS^2_4\}\)全局状态。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;定义&lt;/strong&gt;：如果\(e^{Max\_PAST_i(C)}_i\)表示进程\(p_i\)上，分割线\(C\)的PAST集合中最新的事件，那么由分割线所表示的一致性全局状态是\(\{\cup_i LS^{Max\_PAST_i(C)}_i,\cup_{j,k}SC^{y_j,z_k}_{jk}\}\)，其中，
+\(SC^{y_j,z_k}_{jk} = \{m \lvert send(m) \in PAST(C) \land rec(m) \in FUTURE(C)\}\)
+\(SC^{y_j,z_k}_{jk}\)的定义说明，任何信道中仅暂存发送的消息，不存在已接收但未发送的消息。在图3中，分割线\(C_1\)对应的全局状态是非一致的，因为接收消息事件\(e^2_2 \in PAST(C_1)\)，使得信道状态\(SC^{e^1_1,e^3_2}_{1,2}\)违背\(SC^{y_j,z_k}_{jk}\)的定义，所以该全局状态是非一致的。同理，分割线\(C_2\)对应的全局状态是一致的。&lt;/p&gt;
+
+&lt;h1 id=&quot;7-事件的过去和未来锥面&quot;&gt;7 事件的过去和未来锥面&lt;/h1&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/distrcmp_pas_1-4.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图4 分布式计算中过去和未来锥面的示意图
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;h2 id=&quot;71-过去锥面&quot;&gt;7.1 过去锥面&lt;/h2&gt;
+
+&lt;p&gt;在分布式计算中，事件\(e_j\)应该只收到与其有因果依赖关系的事件\(e_i\)影响，即\(e_i \to e_j\)，那么所有\(e_i\)可用的信息均可以被\(e_j\)访问到，所有这样的事件\(e_i\)都属于\(e_j\)的过去事件。&lt;/p&gt;
+
+&lt;p&gt;令\(Past(e_j)\)表示在计算\((H,\to)\)中\(e_j\)的过去事件，即，
+\(Past(e_j) = \{e_i \lvert\ \forall e_i \in H,\ e_i \to e_j\}\)
+令\(Past_i(e_j)\)表示进程\(p_i\)上所有属于\(Past(e_j)\)事件的集合，\(max(Past_i(e_j))\)则是进程\(p_i\)上最新的影响\(e_j\)的事件。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;\(max(Past_i(e_j))\)总是一个消息发送事件。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;令\(Max\_Past(e_j) = \cup_{\forall i} \{max(Past_i(e_j))\}\)，\(Max\_Past(e_j)\)包含每个进程上影响\(e_j\)的最新事件，其被称之为事件\(e_j\)的&lt;strong&gt;过去锥面&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;\(Max\_Past(e_j)\)对应了一条一致性分割线。因为\(Max\_Past(e_j)\)内所有事件都为发送消息事件，而且紧贴锥面前的所有信道状态都为\(\varnothing\)，所有不存在没有发送事件的接收事件，因此这是一条一致性分割线。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;72-未来锥面&quot;&gt;7.2 未来锥面&lt;/h2&gt;
+
+&lt;p&gt;令\(Future（e_j）\)表示事件\(e_j\)的未来事件，它包含所有受到\(e_j\)影响的事件\(e_i\)。在计算\((H,\to)\)中，\(Future(e_j)\)定义为
+\(Future(e_j) = \{e_i \lvert \ \forall e_i \in H,\ e_j \to e_i\}\)
+\(Future_i(e_j)\)则表示进程\(p_i\)上所有受\(e_j\)影响的事件的集合，\(min(Future_i(e_j))\)是进程\(p_i\)上受\(e_j\)影响的首个事件。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;\(min(Future_i(e_j))\)为消息接收事件。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;令\(Min\_Past(e_j) = \cup_{\forall i}\{min(Future_i(e_j))\}\)，它包含了每个进程上受事件\(e_j\)影响的第一个事件，这样的集合被称为事件\(e_j\)的&lt;strong&gt;未来锥面&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;\(Min\_Past(e_j)\)对应了一条一致性分割线。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在图4中，如果进程\(p_i\)上某个事件发生在\(max(Past_i(e_j))\)和\(min(Future_i(e_j))\)之间，那么该事件与事件\(e_j\)是并发的。&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;因为该事件既不影响\(e_j\)，也不受\(e_j\)影响，所以同\(e_j\)是并发关系。&lt;/p&gt;
+
+  &lt;p&gt;集合\(H - Past(e_j) - Future(e_j)\)内的所有事件都与事件\(e_j\)是并发的。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;footnotes&quot; role=&quot;doc-endnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot; role=&quot;doc-endnote&quot;&gt;
+      &lt;p&gt;https://zh.wikipedia.org/wiki/%E5%81%8F%E5%BA%8F%E5%85%B3%E7%B3%BB &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot; role=&quot;doc-backlink&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</description>
+        <pubDate>Mon, 11 Jul 2022 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2022/07/11/distrcmp-pas-1/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/11/distrcmp-pas-1/</guid>
+        
+        <category>《分布式计算--原理、算法与系统》</category>
+        
+        <category>分布式计算</category>
+        
+        <category>分布式事件</category>
+        
+        <category>通信信道</category>
+        
+        <category>全局状态</category>
+        
+        <category>数学模型</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>常见的Out of Memory Error</title>
+        <description>&lt;h1 id=&quot;out-of-memory-error&quot;&gt;Out of Memory Error&lt;/h1&gt;
+
+&lt;h2 id=&quot;heap内存oom&quot;&gt;Heap内存OOM&lt;/h2&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;//  &quot;java.debug.settings.vmArgs&quot;: &quot;-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError&quot;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HeapOutMemory&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MemoryObject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;MemoryObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;MemoryObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;结果：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt; /usr/bin/env /usr/lib/jvm/java-11-openjdk/bin/java &lt;span class=&quot;nt&quot;&gt;-Xms20m&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Xmx20m&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-XX&lt;/span&gt;:+HeapDumpOnOutOfMemoryError &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; /home/cheney/expr/java/OutOfMemoryError/bin HeapOutMemory 
+java.lang.OutOfMemoryError: Java heap space
+Dumping heap to java_pid46145.hprof ...
+Heap dump file created &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;28212769 bytes &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;0.123 secs]
+Exception &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;thread &lt;span class=&quot;s2&quot;&gt;&quot;main&quot;&lt;/span&gt; java.lang.OutOfMemoryError: Java heap space
+        at java.base/java.util.Arrays.copyOf&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Arrays.java:3720&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at java.base/java.util.Arrays.copyOf&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Arrays.java:3689&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at java.base/java.util.ArrayList.grow&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ArrayList.java:238&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at java.base/java.util.ArrayList.grow&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ArrayList.java:243&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at java.base/java.util.ArrayList.add&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ArrayList.java:486&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at java.base/java.util.ArrayList.add&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ArrayList.java:499&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at HeapOutMemory.main&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;HeapOutMemory.java:12&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;stack过深启发stackoverflow&quot;&gt;Stack过深启发StackOverflow&lt;/h2&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;c1&quot;&gt;//  &quot;java.debug.settings.vmArgs&quot;: &quot;-Xss136k&quot;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StackOverflow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stackDepth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stackPush&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;stackDepth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;stackPush&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;StackOverflow&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sof&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StackOverflow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;sof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;stackPush&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Throwable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;stack depth:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sof&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;stackDepth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;结果：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;/usr/bin/env /usr/lib/jvm/java-11-openjdk/bin/java &lt;span class=&quot;nt&quot;&gt;-Xss136k&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; /home/cheney/expr/java/OutOfMemoryError/bin StackOverflow 
+stack depth:365
+Exception &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;thread &lt;span class=&quot;s2&quot;&gt;&quot;main&quot;&lt;/span&gt; java.lang.StackOverflowError
+        at StackOverflow.stackPush&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackOverflow.java:6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackOverflow.stackPush&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackOverflow.java:7&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+			......
+        at StackOverflow.stackPush&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackOverflow.java:7&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackOverflow.main&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackOverflow.java:13&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;stack栈帧过大引发stackoverflow&quot;&gt;Stack栈帧过大引发StackOverflow&lt;/h2&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;
+&lt;span class=&quot;c1&quot;&gt;// &quot;java.debug.settings.vmArgs&quot;: &quot;-Xss136k&quot;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StackFrameOverflow&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;stackDepth&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stackPushLargeFrame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused6&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused7&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused9&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused11&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused12&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused13&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused14&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused15&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused17&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused18&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused19&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused21&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused22&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused23&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused24&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused25&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused26&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused27&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused28&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused29&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused30&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused31&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused33&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused34&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused35&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused36&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused37&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused38&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused39&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused40&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused41&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused42&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused43&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused44&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused45&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused46&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused47&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused48&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused49&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused50&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused51&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused52&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused53&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused54&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused55&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused56&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused57&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused58&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused59&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused60&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused61&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused62&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused63&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused65&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused66&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused67&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused68&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused69&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused70&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused71&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused72&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused73&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused74&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused75&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused76&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused77&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused78&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused79&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused80&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused81&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused82&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused83&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused84&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused85&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused86&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused87&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused88&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused89&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;long&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused90&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused91&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused92&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused93&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused94&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused95&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused96&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused97&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused98&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;unused99&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+    
+        &lt;span class=&quot;n&quot;&gt;unused0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused5&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused7&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused8&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused9&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;unused10&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused11&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused12&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused13&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused14&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused15&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused16&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused17&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused18&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused19&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;unused20&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused21&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused22&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused23&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused24&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused25&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused26&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused27&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused28&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused29&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;unused30&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused31&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused32&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused33&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused34&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused35&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused36&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused37&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused38&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused39&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;unused40&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused41&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused42&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused43&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused44&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused45&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused46&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused47&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused48&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused49&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;unused50&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused51&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused52&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused53&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused54&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused55&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused56&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused57&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused58&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused59&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;unused60&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused61&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused62&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused63&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused64&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused65&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused66&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused67&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused68&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused69&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;unused70&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused71&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused72&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused73&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused74&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused75&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused76&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused77&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused78&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused79&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;unused80&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused81&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused82&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused83&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused84&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused85&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused86&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused87&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused88&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused89&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;unused90&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused91&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused92&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused93&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused94&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused95&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused96&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused97&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused98&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unused99&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;stackDepth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++;&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;stackPushLargeFrame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;StackFrameOverflow&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sfo&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StackFrameOverflow&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;sfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;stackPushLargeFrame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Throwable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Stack depth:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;stackDepth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;结果：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;/usr/bin/env /usr/lib/jvm/java-11-openjdk/bin/java &lt;span class=&quot;nt&quot;&gt;-Xss136k&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; /home/cheney/expr/java/OutOfMemoryError/bin StackFrameOverflow 
+Stack depth:20
+Exception &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;thread &lt;span class=&quot;s2&quot;&gt;&quot;main&quot;&lt;/span&gt; java.lang.StackOverflowError
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:18&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.stackPushLargeFrame&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:30&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at StackFrameOverflow.main&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;StackFrameOverflow.java:36&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;和上一例子相比，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-Xss136k&lt;/code&gt;栈大小一直，但本例的栈深度更小。&lt;/p&gt;
+
+&lt;h2 id=&quot;创建线程引发oom&quot;&gt;创建线程引发OOM&lt;/h2&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StackOverflowByThread&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;while&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;){&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nc&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;InterruptedException&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;c1&quot;&gt;// TODO Auto-generated catch block&lt;/span&gt;
+                &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Cancel Thread.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;threads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threadsArray&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threadsArray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;Thread&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thread&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(()-&amp;gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;loop&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;threadsArray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Start #&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot; thread.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Has start all threads.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Thread&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;thread&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threadsArray&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;interrupt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;nc&quot;&gt;System&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Has send cancel all threads.&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;StackOverflowByThread&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;soft&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;StackOverflowByThread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;soft&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;threads&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;Throwable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;为了方便测试，建立开启内存控制器的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cgroup&lt;/code&gt;组，&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;mkdir /sys/fs/cgroup/A
+echo &apos;33554432&apos; &amp;gt; /sys/fs/cgroup/A/memory.max
+echo $$ &amp;gt; /sys/fs/cgroup/A/cgroup.procs
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;java &lt;span class=&quot;nt&quot;&gt;-Xss136k&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Xmx20m&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; ./bin StackOverflowByThread
+...
+...
+Start &lt;span class=&quot;c&quot;&gt;#1249 thread.&lt;/span&gt;
+Start &lt;span class=&quot;c&quot;&gt;#1250 thread.&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;1]    44247 killed     java &lt;span class=&quot;nt&quot;&gt;-Xss136k&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Xmx20m&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; ./bin StackOverflowByThread
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;常量池启发oom&quot;&gt;常量池启发OOM&lt;/h2&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.HashSet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;java.util.Set&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// &quot;java.debug.settings.vmArgs&quot;: &quot;-Xmx20m -Xms20m -XX:MaxMetaspaceSize=10m&quot;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ConstantPoolOOM&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;constantPoolOOM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;poolSet&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HashSet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100000000&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;poolSet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;valueOf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;intern&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nc&quot;&gt;ConstantPoolOOM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cpOOM&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ConstantPoolOOM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cpOOM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;constantPoolOOM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;结果：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;/usr/lib/jvm/java-11-openjdk/bin/java &lt;span class=&quot;nt&quot;&gt;-Xmx20m&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-Xms20m&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-XX&lt;/span&gt;:MaxMetaspaceSize&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10m &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; /home/cheney/expr/java/OutOfMemoryError/bin ConstantPoolOOM 
+Exception &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;thread &lt;span class=&quot;s2&quot;&gt;&quot;main&quot;&lt;/span&gt; java.lang.OutOfMemoryError: Java heap space
+        at java.base/java.util.HashMap.resize&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;HashMap.java:699&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at java.base/java.util.HashMap.putVal&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;HashMap.java:658&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at java.base/java.util.HashMap.put&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;HashMap.java:607&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at java.base/java.util.HashSet.add&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;HashSet.java:220&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at ConstantPoolOOM.constantPoolOOM&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ConstantPoolOOM.java:9&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+        at ConstantPoolOOM.main&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ConstantPoolOOM.java:15&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;direct内存oom&quot;&gt;Direct内存OOM&lt;/h2&gt;
+
+&lt;p&gt;后续补充&lt;/p&gt;
+</description>
+        <pubDate>Sat, 02 Jul 2022 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2022/07/02/out-of-memory-error/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/02/out-of-memory-error/</guid>
+        
+        <category>Java</category>
+        
+        <category>JVM</category>
+        
+        <category>OOM</category>
+        
+        <category>Heap</category>
+        
+        <category>Stack</category>
+        
+        <category>Stack Frame</category>
+        
+        <category>栈帧</category>
+        
+        <category>常量池</category>
+        
+        <category>Direct内存</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>sudo和wheel用户组</title>
+        <description>&lt;h1 id=&quot;sudo-和-wheel组&quot;&gt;sudo 和 wheel组&lt;/h1&gt;
+
+&lt;p&gt;查看&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker&lt;/code&gt;用户信息，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;id &lt;/span&gt;docker
+&lt;span class=&quot;nv&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1001&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;docker&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1001&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;docker&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1001&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;docker&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker&lt;/code&gt;用户没有加入&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/sudoers&lt;/code&gt;，因此&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo&lt;/code&gt;命令失败。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;docker@cheney-hp etc]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip addr
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;docker:
+docker is not &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the sudoers file.  This incident will be reported.
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;解决该问题有两种方式，一种是把&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker&lt;/code&gt;加入&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/sudoers&lt;/code&gt;，例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;echo &apos;docker ALL=(ALL) ALL&apos; &amp;gt;&amp;gt; /etc/sudoers&lt;/code&gt;，另一种方式是把&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker&lt;/code&gt;加入&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wheel&lt;/code&gt;用户组。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;gpasswd &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; docker wheel
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;docker@cheney-hp etc]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip addr
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;docker:
+1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Sat, 25 Jun 2022 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2022/06/25/sudo-and-wheel-group/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/06/25/sudo-and-wheel-group/</guid>
+        
+        <category>Linux</category>
+        
+        <category>sudo</category>
+        
+        <category>wheel用户组</category>
+        
+        
+      </item>
     
       <item>
         <title>Docker提权案例</title>
@@ -1248,134 +2096,50 @@ PID   USER     TIME  COMMAND
       </item>
     
       <item>
-        <title>chroot</title>
-        <description>&lt;h1 id=&quot;chroot&quot;&gt;chroot&lt;/h1&gt;
-
-&lt;h2 id=&quot;1-什么是chroot&quot;&gt;1 什么是chroot&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;是在Unix和Linux系统的一个操作，针对正在运作的软件进程和子进程，改变其外显的根目录。由&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;设置根目录的程序是不能够对这个指定根目录之外的文件进行访问、读取、更改。&lt;/p&gt;
-
-&lt;h2 id=&quot;2-实例&quot;&gt;2 实例&lt;/h2&gt;
-
-&lt;p&gt;这里，使用现成的busybox镜像来创建一个系统的基础文件目录，其中包含了一些常用的二进制文件。&lt;/p&gt;
-
+        <title>Make使用总结</title>
+        <description>&lt;h1 id=&quot;makefile介绍&quot;&gt;makefile介绍&lt;/h1&gt;
+&lt;h2 id=&quot;1-书写规则&quot;&gt;1 书写规则&lt;/h2&gt;
+&lt;p&gt;规则包括两部分：(1)依赖关系，(2)生成目标的方法。&lt;/p&gt;
+&lt;h3 id=&quot;语法&quot;&gt;语法&lt;/h3&gt;
+&lt;p&gt;语法1&lt;/p&gt;
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
 3
-4
-5
-6
-7
-8
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;c&quot;&gt;# 创建rootfs目录&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;mkdir &lt;/span&gt;rootfs
-
-&lt;span class=&quot;c&quot;&gt;# 将busybox image的目录文件打包进压缩文件&lt;/span&gt;
-docker &lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;docker create busybox&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; busybox.tar
-
-&lt;span class=&quot;c&quot;&gt;# busybox文件解压至rootfs&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-xvf&lt;/span&gt; ./busybox.tar &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; ./rootfs
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;targets : prerequisites
+    &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;
+    ...
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;操作完成后，进入&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rootfs&lt;/code&gt;目录，目录下会出现类似宿主系统的目录和文件。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;❯ &lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; ./
-bin  dev  etc  home  proc  root  sys  tmp  usr  var
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
+&lt;p&gt;语法2&lt;/p&gt;
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
 3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;❯ tree &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt; 2 ./
-./
-├── bin
-│   ├── &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
-│   ├── &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt;
-│   ├── acpid
-│   ├── addgroup
-│   ├── add-shell
-│   ├── adduser
-......
-├── dev
-│   ├── console
-│   ├── pts
-│   └── shm
-├── etc
-│   ├── group
-│   ├── &lt;span class=&quot;nb&quot;&gt;hostname&lt;/span&gt;
-│   ├── hosts
-│   ├── localtime
-│   ├── mtab -&amp;gt; /proc/mounts
-│   ├── network
-│   ├── passwd
-│   ├── resolv.conf
-│   └── shadow
-├── home
-├── proc
-├── root
-├── sys
-├── tmp
-├── usr
-│   └── sbin
-└── var
-    ├── spool
-    └── www
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;targets : prerequisites &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command
+    command&lt;/span&gt;
+    ...
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;targets&lt;/code&gt;是文件名，可以是一个或者多个文件名（多个文件名以空格分割），可以是通配符。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;command&lt;/code&gt;如果不同&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;target : prerequisites&lt;/code&gt;在同一行，则&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;command&lt;/code&gt;必须以&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TAB&lt;/code&gt;开头。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;prerequisites&lt;/code&gt;是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;targets&lt;/code&gt;依赖的目标文件，如果依赖的目标文件比&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;targets&lt;/code&gt;新，则&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;targets&lt;/code&gt;会重新生成。
+    &lt;h3 id=&quot;伪目标&quot;&gt;伪目标&lt;/h3&gt;
+  &lt;/li&gt;
+  &lt;li&gt;伪目标是标签而不是文件。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;make&lt;/code&gt;无法生成它的依赖关系、决定它是否执行。&lt;/li&gt;
+  &lt;li&gt;伪目标一般不能和文件同名，除非使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.PHONY&lt;/code&gt;指明为伪目标。
+```shell
+all : prog1 prog2 prog3
+.PHONY : all&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;下面可以通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;切换至准备好的根目录，并启动&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;prog1 : prog1.o utils.o
+    cc -o prog1 prog1.o utils.o&lt;/p&gt;
 
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo chroot&lt;/span&gt; ./ /bin/sh
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;prog2 : prog2.o
+    cc -o prog2 prog2.o&lt;/p&gt;
 
-&lt;p&gt;执行完毕后，查看根目录，可以看到根目录已经变成了&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;busybox&lt;/code&gt;根目录。&lt;/p&gt;
+&lt;p&gt;prog3 : prog3.o sort.o utils.o
+    cc -o prog3 prog3.o sort.o utils.o&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-she&quot;&gt;/ # ls
-bin   dev   etc   home  proc  root  sys   tmp   usr   var
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;此刻，进程&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;已经与它的父进程在目录空间上隔离开了。&lt;/p&gt;
-
-&lt;h2 id=&quot;3-chroot的隔离局限性&quot;&gt;3 chroot的隔离局限性&lt;/h2&gt;
-
-&lt;p&gt;上文，已经提到&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;可以改变进程的根目录，那么其它内核资源（如网络、PID等）是否隔离？&lt;/p&gt;
-
-&lt;p&gt;如下是在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;启动的子进程）输出的网络信息。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
 3
 4
@@ -1387,583 +2151,71 @@ bin   dev   etc   home  proc  root  sys   tmp   usr   var
 10
 11
 12
-13
-14
-15
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;/ &lt;span class=&quot;c&quot;&gt;# ip addr&lt;/span&gt;
-1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue qlen 1000
-    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-2: eno1: &amp;lt;NO-CARRIER,BROADCAST,MULTICAST,UP&amp;gt; mtu 1500 qdisc fq_codel qlen 1000
-    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether c4:34:6b:02:34:dd brd ff:ff:ff:ff:ff:ff
-3: wlo1: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc mq qlen 1000
-    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether 00:71:cc:22:cc:bb brd ff:ff:ff:ff:ff:ff
-    inet 192.168.2.142/24 brd 192.168.2.255 scope global dynamic noprefixroute wlo1
-       valid_lft 42010sec preferred_lft 42010sec
-    inet6 fe80::5ce6:a689:8d04:a0b3/64 scope &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;noprefixroute
-       valid_lft forever preferred_lft forever
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;- 伪目标是标签而不是文件，所以为目标总是被执行。
+```shell
+.PHONY : cleanall cleanobj cleandiff
+
+cleanall : cleanobj cleandiff
+    rm prog
+
+cleanobj ：
+    rm *.o
+
+cleandiff :
+    rm *.diff
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;当执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;make cleanall&lt;/code&gt;时，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cleanobj&lt;/code&gt;和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cleandiff&lt;/code&gt;总会被执行。&lt;/p&gt;
+&lt;h3 id=&quot;多目标&quot;&gt;多目标&lt;/h3&gt;
+&lt;p&gt;多个目标有相同依赖。&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;objects :&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;wildcard &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.c&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;
+a b : &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;objects&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;$@ - $(objects)&apos;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$@&lt;/code&gt;为目标集合。&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;如下实在宿主系统下输出的网络信息。&lt;/p&gt;
-
+&lt;p&gt;执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;make a b&lt;/code&gt;输出如下：&lt;/p&gt;
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
 3
 4
 5
 6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;❯ ip addr
-1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-2: eno1: &amp;lt;NO-CARRIER,BROADCAST,MULTICAST,UP&amp;gt; mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
-    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether c4:34:6b:02:34:dd brd ff:ff:ff:ff:ff:ff
-    altname enp14s0
-3: wlo1: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc mq state UP group default qlen 1000
-    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether 00:71:cc:22:cc:bb brd ff:ff:ff:ff:ff:ff
-    altname wlp7s0f0
-    inet 192.168.2.142/24 brd 192.168.2.255 scope global dynamic noprefixroute wlo1
-       valid_lft 41641sec preferred_lft 41641sec
-    inet6 fe80::5ce6:a689:8d04:a0b3/64 scope &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;noprefixroute
-       valid_lft forever preferred_lft forever
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;make a
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;a A.c B.c&apos;&lt;/span&gt;
+a A.c B.c
+make a
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;a A.c B.c&apos;&lt;/span&gt;
+b A.c B.c
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;通过对比，可以发现网络没有隔离。&lt;/p&gt;
-
-&lt;p&gt;接下来，对比PID有没有隔离。由于&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;需要执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps&lt;/code&gt;，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps&lt;/code&gt;依赖&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;procfs&lt;/code&gt;，所以需要先挂载&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/proc&lt;/code&gt;目录，操作命令如下。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-she&quot;&gt;mount -t proc proc /proc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps&lt;/code&gt;命令后，可以看到全部宿主系统的进程。&lt;/p&gt;
-
+&lt;p&gt;上述示例等价于：&lt;/p&gt;
 &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
 2
 3
 4
 5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;PID   USER     TIME  COMMAND
-    1 root      0:01 &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;systemd&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; /sbin/init
-    2 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;kthreadd]
-    3 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;rcu_gp]
-    4 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;rcu_par_gp]
-    8 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;mm_percpu_wq]
-    ......
-13806 1000      0:00 alacritty
-13808 1000      0:01 /usr/bin/zsh
-13817 1000      0:00 /usr/bin/zsh
-13910 1000      0:00 /usr/bin/zsh
-13911 1000      0:00 /usr/bin/zsh
-13913 1000      0:00 /usr/share/zsh-theme-powerlevel10k/gitstatus/usrbin/gitstatusd
-13945 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;kworker/0:1H]
-13954 root      0:00 ps
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;objects :&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;wildcard &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.c&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;
+a : &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;objects&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;a - $(objects)&apos;&lt;/span&gt;
+b : &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;objects&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;b - $(objects)&apos;&lt;/span&gt;
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;综上，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;的确只隔离了根目录，其它内核资源并未涉及。&lt;/p&gt;
+&lt;p&gt;待续&lt;/p&gt;
 </description>
-        <pubDate>Tue, 15 Mar 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/03/15/chroot/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/03/15/chroot/</guid>
+        <pubDate>Sat, 09 Apr 2022 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2022/04/09/make-introduction/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/04/09/make-introduction/</guid>
         
-        <category>chroot</category>
+        <category>make</category>
         
-        <category>Linux</category>
+        <category>makefile</category>
         
-        <category>busybox</category>
-        
-        <category>docker</category>
-        
-        <category>隔离</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>计算机系统各类延时概况</title>
-        <description>&lt;h1 id=&quot;计算机系统各类延时概况&quot;&gt;计算机系统各类延时概况&lt;/h1&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;事件&lt;/th&gt;
-      &lt;th&gt;延时&lt;/th&gt;
-      &lt;th&gt;相对时间比例&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;1个CPU周期&lt;/td&gt;
-      &lt;td&gt;0.3 ns&lt;/td&gt;
-      &lt;td&gt;1 s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;L1缓存访问&lt;/td&gt;
-      &lt;td&gt;0.9 ns&lt;/td&gt;
-      &lt;td&gt;3 s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;L2缓存访问&lt;/td&gt;
-      &lt;td&gt;2.8 ns&lt;/td&gt;
-      &lt;td&gt;9 s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;L3缓存访问&lt;/td&gt;
-      &lt;td&gt;12.9 ns&lt;/td&gt;
-      &lt;td&gt;43 s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;主存访问（从CPU访问DRAM）&lt;/td&gt;
-      &lt;td&gt;120 ns&lt;/td&gt;
-      &lt;td&gt;6 分钟&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;固态硬盘I/O（闪存）&lt;/td&gt;
-      &lt;td&gt;50-150 us&lt;/td&gt;
-      &lt;td&gt;2-6 天&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;旋转磁盘I/O&lt;/td&gt;
-      &lt;td&gt;1-10 ms&lt;/td&gt;
-      &lt;td&gt;1-12 月&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;互联网：从旧金山到纽约&lt;/td&gt;
-      &lt;td&gt;40 ms&lt;/td&gt;
-      &lt;td&gt;4 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;互联网：从旧金山到英国&lt;/td&gt;
-      &lt;td&gt;81 ms&lt;/td&gt;
-      &lt;td&gt;8 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;互联网：从旧金山到澳大利亚&lt;/td&gt;
-      &lt;td&gt;183 ms&lt;/td&gt;
-      &lt;td&gt;19 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;TCP包重传&lt;/td&gt;
-      &lt;td&gt;1-3 s&lt;/td&gt;
-      &lt;td&gt;105-317 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;OS虚拟化系统重启&lt;/td&gt;
-      &lt;td&gt;4 s&lt;/td&gt;
-      &lt;td&gt;423 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;SCSI命令超时&lt;/td&gt;
-      &lt;td&gt;30 s&lt;/td&gt;
-      &lt;td&gt;3 千年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;硬件虚拟化系统重启&lt;/td&gt;
-      &lt;td&gt;40 s&lt;/td&gt;
-      &lt;td&gt;4 千年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;物理系统重启&lt;/td&gt;
-      &lt;td&gt;5 m&lt;/td&gt;
-      &lt;td&gt;32 千年&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-</description>
-        <pubDate>Fri, 11 Feb 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/02/11/latency-summary/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/02/11/latency-summary/</guid>
-        
-        <category>latency</category>
-        
-        <category>memory</category>
-        
-        <category>cpu</category>
-        
-        <category>cache</category>
-        
-        <category>network packet</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Docker组件架构</title>
-        <description>&lt;h1 id=&quot;docker组件架构&quot;&gt;Docker组件架构&lt;/h1&gt;
-
-&lt;h2 id=&quot;总概&quot;&gt;总概&lt;/h2&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;组件类别&lt;/th&gt;
-      &lt;th&gt;组件&lt;/th&gt;
-      &lt;th&gt;介绍&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;docker相关组件&lt;/td&gt;
-      &lt;td&gt;docker&lt;/td&gt;
-      &lt;td&gt;&lt;strong&gt;docker&lt;/strong&gt;客户端，负责发送&lt;strong&gt;docker&lt;/strong&gt;操作请求。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;同上&lt;/td&gt;
-      &lt;td&gt;dockerd&lt;/td&gt;
-      &lt;td&gt;&lt;strong&gt;docker&lt;/strong&gt;服务入口，负责接受客户端请求并返回请求结果。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;同上&lt;/td&gt;
-      &lt;td&gt;docker-init&lt;/td&gt;
-      &lt;td&gt;当业务主进程没有回收能力时，docker-init可以作为容器的1号进程，负责管理容器内的子进程。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;同上&lt;/td&gt;
-      &lt;td&gt;docker-proxy&lt;/td&gt;
-      &lt;td&gt;&lt;strong&gt;docker&lt;/strong&gt;的网络实现，通过设置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iptables&lt;/code&gt;规则使得访问主机的流量可以发送至容器内。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;containerd相关&lt;/td&gt;
-      &lt;td&gt;containerd&lt;/td&gt;
-      &lt;td&gt;负责管理容器的生命周期， 通过接收dockerd的请求，执行启动或者销毁容器。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;同上&lt;/td&gt;
-      &lt;td&gt;contianerd-shim&lt;/td&gt;
-      &lt;td&gt;将containerd和真正的容器进程解耦。使用containerd-shim作为容器的父进程，可以实现重启containerd而不影响已经启动的容器进程。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;同上&lt;/td&gt;
-      &lt;td&gt;ctr&lt;/td&gt;
-      &lt;td&gt;containerd的客户端， 可以向containerd发送容器请求，主要用来调试开发。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;容器运行时组件&lt;/td&gt;
-      &lt;td&gt;runc&lt;/td&gt;
-      &lt;td&gt;命令行工具，通过调用&lt;strong&gt;namespace&lt;/strong&gt;、&lt;strong&gt;cgroup&lt;/strong&gt;等系统接口，实现容器的创建和销毁。&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;center&gt;
-    &lt;img style=&quot;border-radius: 0.3125em;
-    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/docker-arch.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
-    &lt;br /&gt;
-    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
-    display: inline-block;
-    color: #999;
-    padding: 2px;&quot;&gt;
-      图1 docker组建架构
-  	&lt;/div&gt;
-&lt;/center&gt;
-</description>
-        <pubDate>Mon, 17 Jan 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/01/17/docker-component/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/01/17/docker-component/</guid>
-        
-        <category>Docker</category>
-        
-        <category>dockerd</category>
-        
-        <category>docker-init</category>
-        
-        <category>docker-proxy</category>
-        
-        <category>containerd</category>
-        
-        <category>containerd-shim</category>
-        
-        <category>ctr</category>
-        
-        <category>runc</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>DNS服务与配置</title>
-        <description>&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;用于查询和更新域名。&lt;/p&gt;
-
-&lt;p&gt;其中&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;要配合&lt;strong&gt;bind&lt;/strong&gt;服务器使用。&lt;/p&gt;
-
-&lt;h1 id=&quot;1-bind域名服务器简易配置&quot;&gt;1 &lt;strong&gt;bind&lt;/strong&gt;域名服务器简易配置&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.org.cn/Bind9%E5%AE%89%E8%A3%85%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%8D%97#HOWTO_Setup_BIND9_DNS_Server_.EF.BC.88.E5.A6.82.E4.BD.95.E5.AE.89.E8.A3.85.E8.AE.BE.E7.BD.AEBind9_DNS.E6.9C.8D.E5.8A.A1.E5.99.A8.EF.BC.89&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;接下来，将说明如何在&lt;strong&gt;Ubuntu 20.04.1 LTS&lt;/strong&gt;安装配置&lt;strong&gt;bind&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; bind9
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;安装相关工具，&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; dnsutils bind9-host
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;配置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.conf&lt;/code&gt;。如下为示例文件内容：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;// this configuration file.
-//
-// If you are just adding zones, please &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;that &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /etc/bind/named.conf.local
-
-include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.options&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.default-zones&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-logging &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-	channel access_log &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-		file &lt;span class=&quot;s2&quot;&gt;&quot;/var/log/named.log&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		severity dynamic&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		print-category &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		print-severity &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		print-time &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	category default &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-		access_log&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-zone &lt;span class=&quot;s2&quot;&gt;&quot;etcd.com&quot;&lt;/span&gt; IN &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;master&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	file &lt;span class=&quot;s2&quot;&gt;&quot;/var/lib/bind/db.etcd.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	allow-query &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-		any&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	allow-update &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-		any&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;该文件中配置了两部分&lt;a href=&quot;http://www.hangdaowangluo.com/archives/1615&quot;&gt;日志&lt;/a&gt;及区域两部分内容，其中区域部分更加规范的方法实在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.conf.local&lt;/code&gt;配置。这里，配置了名为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;etcd.com&lt;/code&gt;的区域，它允许任意查询和更新，其数据文件为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/lib/bind/db.etcd.com&lt;/code&gt;，如下是示例内容。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nv&quot;&gt;$TTL&lt;/span&gt; 604800	&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 1 week
-@		IN SOA	dns.etcd.com. admin.etcd.com. &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
-				100000     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; serial
-				604800     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; refresh &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 week&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-				86400      &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; retry &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 day&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-				2419200    &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; expire &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4 weeks&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-				604800     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; minimum &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 week&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-				&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-		IN	NS	dns
-dns		IN	A	192.168.100.50
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@		IN SOA	dns.etcd.com. admin.etcd.com. &lt;/code&gt;中，需要配置域名服务器、和管理员邮箱。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin.etcd.com&lt;/code&gt;可转化为邮箱地址&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin@etcd.com&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;常见的记录类型见下表：&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;类型&lt;/th&gt;
-      &lt;th&gt;说明&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;A&lt;/td&gt;
-      &lt;td&gt;地址记录&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;CNAME&lt;/td&gt;
-      &lt;td&gt;别名&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;MX&lt;/td&gt;
-      &lt;td&gt;邮件交换记录&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;NS&lt;/td&gt;
-      &lt;td&gt;域名服务器记录&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://fasionchan.com/network/dns/record-types/&quot;&gt;更多的可参考该资料&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;配置好上述文件后，执行如下命令启动&lt;strong&gt;bind&lt;/strong&gt;服务器。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;named
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如下命令可以查看日志。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;tail&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; /var/log/named.log
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;2-nslookup和nsupdate&quot;&gt;2 nslookup和nsupdate&lt;/h1&gt;
-&lt;p&gt;用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;命令进行一下测试。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nslookup dns.etcd.com 192.168.100.50
-Server:		192.168.100.50
-Address:	192.168.100.50#53
-
-Name:	dns.etcd.com
-Address: 192.168.100.50
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;命令可以添加新记录。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;
-server 192.168.100.50
-zone etcd.com
-update add n0.etcd.com 80000 IN A 192.168.100.120
-update add n1.etcd.com 80000 IN A 192.168.100.121
-update add n2.etcd.com 80000 IN A 192.168.100.122
-send
-quit
-&apos;&lt;/span&gt; | nsupdate
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;最后使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;验证是否添加成功。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nslookup n0.etcd.com 192.168.100.50
-Server:		192.168.100.50
-Address:	192.168.100.50#53
-
-Name:	n0.etcd.com
-Address: 192.168.100.120
-
-
-nslookup n1.etcd.com 192.168.100.50
-Server:		192.168.100.50
-Address:	192.168.100.50#53
-
-Name:	n1.etcd.com
-Address: 192.168.100.121
-
-
-nslookup n2.etcd.com 192.168.100.50
-Server:		192.168.100.50
-Address:	192.168.100.50#53
-
-Name:	n2.etcd.com
-Address: 192.168.100.122
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;bind&lt;/strong&gt;为数据文件开启了&lt;strong&gt;journal&lt;/strong&gt;模式用于保护数据安全，例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/lib/bind/db.etcd.com&lt;/code&gt;文件的目录下会生成&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;db.etcd.com.jnl&lt;/code&gt;文件，所以随意绕过&lt;strong&gt;bind&lt;/strong&gt;修改数据文件，会导致&lt;strong&gt;bind&lt;/strong&gt;启动失败。虽然删除&lt;strong&gt;jnl&lt;/strong&gt;文件可以恢复启动，但是会造成数据丢失。&lt;/p&gt;
-</description>
-        <pubDate>Sun, 05 Dec 2021 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2021/12/05/dns/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2021/12/05/dns/</guid>
-        
-        <category>DNS</category>
-        
-        <category>nslookup</category>
-        
-        <category>nsupdate</category>
-        
-        <category>bind</category>
+        <category>build</category>
         
         
       </item>

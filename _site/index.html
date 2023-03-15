@@ -52,12 +52,12 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
     <!-- ga & ba script hoook -->
     <script></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-</head>
-
+ </head>
 
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="">
@@ -242,6 +242,120 @@
     <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
       col-xs-12 postlist-container">
       
+<div class="post-preview">
+    <a href="/2022/07/11/distrcmp-pas-1/">
+        <h2 class="post-title">
+            《分布式计算--原理、算法与系统》第二章 分布式计算模型 
+        </h2>
+        
+        <h3 class="post-subtitle">
+            本文概况了分布式计算的基本抽象，包括分布式事件、通信信道、全局状态的数学模型。
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                
+  本文为《分布式计算–原理、算法与系统》第二章“分布式计算模型”的读书笔记。本文概况了分布式计算的基本抽象，包括分布式事件、通信信道、全局状态的数学模型。
+
+
+1 基本假设
+
+假设，一个分布式程序由\(n\)个异步进程\(p_1\)，\(p_2\)，\(...\)，\(p_i\)，\(...\)，\(p_n\)组成，进程之间使用通信网络进行消息传递。
+
+
+  为了保证一般性，各个进程之间...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on July 11, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2022/07/02/out-of-memory-error/">
+        <h2 class="post-title">
+            常见的Out of Memory Error
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍几种常见的导致OOM的场景
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                Out of Memory Error
+
+Heap内存OOM
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+import java.util.ArrayList;
+import java.util.List;
+
+//  "java.debug.settings.vmArgs": "-Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMem...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on July 2, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2022/06/25/sudo-and-wheel-group/">
+        <h2 class="post-title">
+            sudo和wheel用户组
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍wheel用户组的用途
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                sudo 和 wheel组
+
+查看docker用户信息，
+
+1
+2
+id docker
+uid=1001(docker) gid=1001(docker) groups=1001(docker)
+
+
+docker用户没有加入/etc/sudoers，因此sudo命令失败。
+
+1
+2
+3
+[docker@cheney-hp etc]$ sudo ip addr
+[sudo] password ...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on June 25, 2022
+    </p>
+</div>
+<hr>
+
 <div class="post-preview">
     <a href="/2022/06/21/docker-privilege-escalating/">
         <h2 class="post-title">
@@ -496,168 +610,44 @@ docker create -it --name=busybox busybox
 <hr>
 
 <div class="post-preview">
-    <a href="/2022/03/15/chroot/">
+    <a href="/2022/04/09/make-introduction/">
         <h2 class="post-title">
-            chroot
+            Make使用总结
         </h2>
         
         <h3 class="post-subtitle">
-            介绍chroot使用方法
+            简单介绍了Make的使用基本方法
         </h3>
         
         <div class="post-content-preview">
             
-                chroot
-
-1 什么是chroot
-
-chroot是在Unix和Linux系统的一个操作，针对正在运作的软件进程和子进程，改变其外显的根目录。由chroot设置根目录的程序是不能够对这个指定根目录之外的文件进行访问、读取、更改。
-
-2 实例
-
-这里，使用现成的busybox镜像来创建一个系统的基础文件目录，其中包含了一些常用的二进制文件。
-
+                makefile介绍
+1 书写规则
+规则包括两部分：(1)依赖关系，(2)生成目标的方法。
+语法
+语法1
 1
 2
 3
-4
-5
-6
-7
-8
-# 创建roo...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on March 15, 2022
-    </p>
-</div>
-<hr>
+targets : prerequisites
+    command
+    ...
 
-<div class="post-preview">
-    <a href="/2022/02/11/latency-summary/">
-        <h2 class="post-title">
-            计算机系统各类延时概况
-        </h2>
-        
-        <div class="post-content-preview">
-            
-                计算机系统各类延时概况
-
-
-  
-    
-      事件
-      延时
-      相对时间比例
-    
-  
-  
-    
-      1个CPU周期
-      0.3 ns
-      1 s
-    
-    
-      L1缓存访问
-      0.9 ns
-      3 s
-    
-    
-      L2缓存访问
-      2.8 ns
-      9 s...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on February 11, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2022/01/17/docker-component/">
-        <h2 class="post-title">
-            Docker组件架构
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍docker架构中的常见组成部分
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                Docker组件架构
-
-总概
-
-
-  
-    
-      组件类别
-      组件
-      介绍
-    
-  
-  
-    
-      docker相关组件
-      docker
-      docker客户端，负责发送docker操作请求。
-    
-    
-      同上
-      dockerd
-      docker服务入口，负责接受客户端请求并返回请求结...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on January 17, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/12/05/dns/">
-        <h2 class="post-title">
-            DNS服务与配置
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍DNS相关概念和常用命令
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                nslookup、nsupdate用于查询和更新域名。
-
-其中nsupdate要配合bind服务器使用。
-
-1 bind域名服务器简易配置
-
-参考
-
-接下来，将说明如何在Ubuntu 20.04.1 LTS安装配置bind。
-
+语法2
 1
-apt install -y bind9
+2
+3
+targets : prerequisites ; command
+    command
+    ...
 
 
-安装相关工具，
-
-1
-apt install -y dnsutils bind9-host
-
-
-配置/etc/bin...
+  targets是文件名，可以是一个或者多个文件名（...
             
         </div>
     </a>
     <p class="post-meta">
-        Posted by Cheney.Yin on December 5, 2021
+        Posted by Cheney.Yin on April 9, 2022
     </p>
 </div>
 <hr>
@@ -693,35 +683,50 @@ apt install -y dnsutils bind9-host
         
         
         
-                <a data-sort="0011" 
+                <a data-sort="0016" 
                     href="/archive/?tag=Linux"
                     title="Linux"
-                    rel="3">Linux</a>
+                    rel="4">Linux</a>
         
-                <a data-sort="0008" 
+                <a data-sort="0013" 
                     href="/archive/?tag=Docker"
                     title="Docker"
-                    rel="6">Docker</a>
+                    rel="7">Docker</a>
         
-                <a data-sort="0011" 
+                <a data-sort="0017" 
                     href="/archive/?tag=docker"
                     title="docker"
                     rel="3">docker</a>
         
-                <a data-sort="0012" 
+                <a data-sort="0018" 
+                    href="/archive/?tag=JVM"
+                    title="JVM"
+                    rel="2">JVM</a>
+        
+                <a data-sort="0018" 
+                    href="/archive/?tag=Java"
+                    title="Java"
+                    rel="2">Java</a>
+        
+                <a data-sort="0018" 
                     href="/archive/?tag=container"
                     title="container"
                     rel="2">container</a>
         
-                <a data-sort="0012" 
+                <a data-sort="0018" 
                     href="/archive/?tag=docker+image"
                     title="docker image"
                     rel="2">docker image</a>
         
-                <a data-sort="0012" 
+                <a data-sort="0018" 
                     href="/archive/?tag=nsenter"
                     title="nsenter"
                     rel="2">nsenter</a>
+        
+                <a data-sort="0018" 
+                    href="/archive/?tag=sudo"
+                    title="sudo"
+                    rel="2">sudo</a>
     </div>
 </section>
 
@@ -787,26 +792,7 @@ apt install -y dnsutils bind9-host
   </div>
 </div>
 
-
-<!-- Add support for Mathjax by Voleking-->
-<!-- If you want to see formulars well in post preview, Maybe you should add this.-->
-<!-- However, most of the time formulars may not appear in the post preview, you can delete it.-->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      equationNumbers: {
-        autoNumber: "AMS"
-      }
-    },
-    tex2jax: {
-      inlineMath: [ ['$','$'] ],
-      displayMath: [ ['$$','$$'] ],
-      processEscapes: true,
-    }
-  });
-</script>
-<script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- add support for mathjax by voleking-->
 
 
 

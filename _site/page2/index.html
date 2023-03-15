@@ -52,12 +52,12 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
     <!-- ga & ba script hoook -->
     <script></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
-</head>
-
+ </head>
 
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="">
@@ -243,6 +243,241 @@
       col-xs-12 postlist-container">
       
 <div class="post-preview">
+    <a href="/2022/03/15/chroot/">
+        <h2 class="post-title">
+            chroot
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍chroot使用方法
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                chroot
+
+1 什么是chroot
+
+chroot是在Unix和Linux系统的一个操作，针对正在运作的软件进程和子进程，改变其外显的根目录。由chroot设置根目录的程序是不能够对这个指定根目录之外的文件进行访问、读取、更改。
+
+2 实例
+
+这里，使用现成的busybox镜像来创建一个系统的基础文件目录，其中包含了一些常用的二进制文件。
+
+1
+2
+3
+4
+5
+6
+7
+8
+# 创建roo...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on March 15, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2022/02/11/latency-summary/">
+        <h2 class="post-title">
+            计算机系统各类延时概况
+        </h2>
+        
+        <div class="post-content-preview">
+            
+                计算机系统各类延时概况
+
+
+  
+    
+      事件
+      延时
+      相对时间比例
+    
+  
+  
+    
+      1个CPU周期
+      0.3 ns
+      1 s
+    
+    
+      L1缓存访问
+      0.9 ns
+      3 s
+    
+    
+      L2缓存访问
+      2.8 ns
+      9 s...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on February 11, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2022/01/17/docker-component/">
+        <h2 class="post-title">
+            Docker组件架构
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍docker架构中的常见组成部分
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                Docker组件架构
+
+总概
+
+
+  
+    
+      组件类别
+      组件
+      介绍
+    
+  
+  
+    
+      docker相关组件
+      docker
+      docker客户端，负责发送docker操作请求。
+    
+    
+      同上
+      dockerd
+      docker服务入口，负责接受客户端请求并返回请求结...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on January 17, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2021/12/22/debug-hotspot/">
+        <h2 class="post-title">
+            调试Hotspot
+        </h2>
+        
+        <h3 class="post-subtitle">
+            记录调试Hotspot的环境和过程
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                调试Hotspot
+
+容器环境
+
+1
+docker run -itd -v /home/cheney/expr/jvm/openjdk12/:/opt/ --hostname openjdk.com --name openjdk ubuntu:18.04 /bin/bash
+
+
+安装依赖
+
+1
+2
+3
+4
+5
+6
+7
+apt install build-essential
+apt insta...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on December 22, 2021
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2021/12/06/transplant-pixyll-theme-on-mpe/">
+        <h2 class="post-title">
+            transplant pixyll theme on MPE
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍pixyll移植方法
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                为MPE移植pixyll主题
+
+最近Typora发布了正式版，然而Typora开启了收费模式。于是决定在vscode上配置新的markdown环境。
+
+Typora拥有出色的预览能力，vscode平台上的MPE（Markdown Preview Enhanced）刚好满足需要。但是，MPE的默认主题并不包含pixyll。所以尝试将Typora的pixyll移植到MPE。
+
+MPE默认提供了g...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on December 6, 2021
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2021/12/05/dns/">
+        <h2 class="post-title">
+            DNS服务与配置
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍DNS相关概念和常用命令
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                nslookup、nsupdate用于查询和更新域名。
+
+其中nsupdate要配合bind服务器使用。
+
+1 bind域名服务器简易配置
+
+参考
+
+接下来，将说明如何在Ubuntu 20.04.1 LTS安装配置bind。
+
+1
+apt install -y bind9
+
+
+安装相关工具，
+
+1
+apt install -y dnsutils bind9-host
+
+
+配置/etc/bin...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on December 5, 2021
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2021/11/11/cgroup-v2/">
         <h2 class="post-title">
             Cgroup v2
@@ -423,35 +658,50 @@ echo '[hello]&lt;-&gt;[wo...
         
         
         
-                <a data-sort="0011" 
+                <a data-sort="0016" 
                     href="/archive/?tag=Linux"
                     title="Linux"
-                    rel="3">Linux</a>
+                    rel="4">Linux</a>
         
-                <a data-sort="0008" 
+                <a data-sort="0013" 
                     href="/archive/?tag=Docker"
                     title="Docker"
-                    rel="6">Docker</a>
+                    rel="7">Docker</a>
         
-                <a data-sort="0011" 
+                <a data-sort="0017" 
                     href="/archive/?tag=docker"
                     title="docker"
                     rel="3">docker</a>
         
-                <a data-sort="0012" 
+                <a data-sort="0018" 
+                    href="/archive/?tag=JVM"
+                    title="JVM"
+                    rel="2">JVM</a>
+        
+                <a data-sort="0018" 
+                    href="/archive/?tag=Java"
+                    title="Java"
+                    rel="2">Java</a>
+        
+                <a data-sort="0018" 
                     href="/archive/?tag=container"
                     title="container"
                     rel="2">container</a>
         
-                <a data-sort="0012" 
+                <a data-sort="0018" 
                     href="/archive/?tag=docker+image"
                     title="docker image"
                     rel="2">docker image</a>
         
-                <a data-sort="0012" 
+                <a data-sort="0018" 
                     href="/archive/?tag=nsenter"
                     title="nsenter"
                     rel="2">nsenter</a>
+        
+                <a data-sort="0018" 
+                    href="/archive/?tag=sudo"
+                    title="sudo"
+                    rel="2">sudo</a>
     </div>
 </section>
 
@@ -517,26 +767,7 @@ echo '[hello]&lt;-&gt;[wo...
   </div>
 </div>
 
-
-<!-- Add support for Mathjax by Voleking-->
-<!-- If you want to see formulars well in post preview, Maybe you should add this.-->
-<!-- However, most of the time formulars may not appear in the post preview, you can delete it.-->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      equationNumbers: {
-        autoNumber: "AMS"
-      }
-    },
-    tex2jax: {
-      inlineMath: [ ['$','$'] ],
-      displayMath: [ ['$$','$$'] ],
-      processEscapes: true,
-    }
-  });
-</script>
-<script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- add support for mathjax by voleking-->
 
 
 
