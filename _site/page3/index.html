@@ -12,29 +12,17 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="Graph easy工具 - Cheney.Yin的博客 | Cheney Blog">
+        content="Cheney.Yin的博客 | Cheney Blog">
     
-    <meta property="og:type" content="article">
-    <meta property="og:description" content="基本语法
-graph-easy兼容graphviz语法
-">
-    
-    <meta property="article:published_time" content=" 2021-06-22T00:00:00Z">
-    
-    
-    <meta property="article:author" content="Cheney.Yin">
-    
-    
-    <meta property="article:tag" content="Cli">
-    
-    <meta property="article:tag" content="graphviz">
-    
+    <meta property="og:type" content="website">
+    <meta property="og:description"
+        content="「To explore or to exploite is a question.」">
     
     <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/2021/06/22/graph-easy/">
+    <meta property="og:url" content="https://cheneyyin.github.io/page3/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>Graph easy工具 - Cheney.Yin的博客 | Cheney Blog</title>
+    <title>Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -43,7 +31,7 @@ graph-easy兼容graphviz语法
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/2021/06/22/graph-easy/">
+    <link rel="canonical" href="https://cheneyyin.github.io/page3/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -208,14 +196,14 @@ graph-easy兼容graphviz语法
   </div>
 </div>
 
-    <!-- Post Header -->
+    <!-- Page Header -->
 
 
 
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/img/bg-material.jpg');
+        background-image: url('/img/home-bg.jpg');
         background: ;
     }
 
@@ -225,226 +213,98 @@ graph-easy兼容graphviz语法
 
 
 
-<header class="intro-header" >
 
-    <div class="header-mask"></div>
-    
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <div class="tags">
-                        
-                        <a class="tag" href="/archive/?tag=Cli" title="Cli">Cli</a>
-                        
-                        <a class="tag" href="/archive/?tag=graphviz" title="graphviz">graphviz</a>
-                        
-                    </div>
-                    <h1>Graph easy工具</h1>
-                    
-                    <h2 class="subheading">Graph easy是一种用于在Cli下的绘图工具</h2>
-                    <span class="meta">Posted by Cheney.Yin on June 22, 2021</span>
-                </div>
-            </div>
+
+
+<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+  <div class="header-mask"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        
+        <div class="site-heading">
+        
+          <h1>Cheney.Yin Blog</h1>
+          <span class="subheading">「To explore or to exploite is a question.」</span>
         </div>
+      </div>
     </div>
+  </div>
 </header>
 
 
 
+<!-- Main Content -->
+<div class="container">
+  <div class="row">
+    
 
-
-
-
-<!-- Post Content -->
-<article>
-    <div class="container">
-        <div class="row">
-
-    <!-- Post Container -->
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                post-container">
-
-                <!-- Multi-Lingual -->
-                
-
-				<h1 id="基本语法">基本语法</h1>
-<p><code class="language-plaintext highlighter-rouge">graph-easy</code>兼容graphviz语法</p>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'[hello]&lt;-&gt;[world]'</span> | graph-easy
-+-------+      +-------+
-| hello | &lt;<span class="nt">--</span><span class="o">&gt;</span> | world |
-+-------+      +-------+
-</pre></td></tr></tbody></table></code></pre></div></div>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'[hello]&lt;-&gt;[world]-&gt;[OK]\n'</span> | graph-easy
-+-------+      +-------+     +----+
-| hello | &lt;<span class="nt">--</span><span class="o">&gt;</span> | world | <span class="nt">--</span><span class="o">&gt;</span> | OK |
-+-------+      +-------+     +----+
-</pre></td></tr></tbody></table></code></pre></div></div>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'[hello]&lt;-&gt;[world]-&gt;[OK]\n[good]-&gt;[world]'</span> | graph-easy
-+------+     +-------+     +----+
-| good | <span class="nt">--</span><span class="o">&gt;</span> | world | <span class="nt">--</span><span class="o">&gt;</span> | OK |
-+------+     +-------+     +----+
-               ^
-               |
-               |
-               v
-             +-------+
-             | hello |
-             +-------+
-</pre></td></tr></tbody></table></code></pre></div></div>
-
-<h1 id="嵌入子图">嵌入子图</h1>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'(ns0-1: [veth1]) [veth0]&lt;-&gt;[veth1] [veth0]&lt;-&gt;[brt]'</span> | graph-easy
-  +-------+        +-----+
-  | veth0 |   &lt;<span class="nt">--</span><span class="o">&gt;</span> | brt |
-  +-------+        +-----+
-    ^
-    |
-    |
-    v
-+ - - - - - +
-<span class="s1">' ns0-1:    '</span>
-<span class="s1">'           '</span>
-<span class="s1">' +-------+ '</span>
-<span class="s1">' | veth1 | '</span>
-<span class="s1">' +-------+ '</span>
-<span class="s1">'           '</span>
-+ - - - - - +
-</pre></td></tr></tbody></table></code></pre></div></div>
-
-<h1 id="连接线加标签">连接线加标签</h1>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'(ns0-1: [veth1]) [veth0]&lt;-&gt;{label:"pair"}[veth1] [veth0]&lt;-&gt;[brt]'</span> | graph-easy
-  +-------+        +-----+
-  | veth0 |   &lt;<span class="nt">--</span><span class="o">&gt;</span> | brt |
-  +-------+        +-----+
-    ^
-    |
-    | pair
-    v
-+ - - - - - +
-<span class="s1">' ns0-1:    '</span>
-<span class="s1">'           '</span>
-<span class="s1">' +-------+ '</span>
-<span class="s1">' | veth1 | '</span>
-<span class="s1">' +-------+ '</span>
-<span class="s1">'           '</span>
-+ - - - - - +
-</pre></td></tr></tbody></table></code></pre></div></div>
-
-
-                <hr style="visibility: hidden;">
-                <ul class="pager">
-                    
-                    
-                    <li class="next">
-                        <a href="/2021/10/14/cfssl/" data-toggle="tooltip" data-placement="top" title="数字证书与cfssl工具链">
-                        Next<br>
-                        <span>数字证书与cfssl工具链</span>
-                        </a>
-                    </li>
-                    
-                </ul>
-                <hr style="visibility: hidden;">
-
-                
-                <!-- disqus 评论框 start -->
-                <div class="comment">
-                    <div id="disqus_thread" class="disqus-thread"></div>
-                </div>
-                <!-- disqus 评论框 end -->
-                
-
-                
-            </div>  
-
-    <!-- Side Catalog Container -->
+    <!-- USE SIDEBAR -->
+    <!-- PostList Container -->
+    <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
+      col-xs-12 postlist-container">
+      
+<div class="post-preview">
+    <a href="/2021/06/22/graph-easy/">
+        <h2 class="post-title">
+            Graph easy工具
+        </h2>
         
-            <div class="
-                col-lg-2 col-lg-offset-0
-                visible-lg-block
-                sidebar-container
-                catalog-container">
-                <div class="side-catalog">
-                    <hr class="hidden-sm hidden-xs">
-                    <h5>
-                        <a class="catalog-toggle" href="#">CATALOG</a>
-                    </h5>
-                    <ul class="catalog-body"></ul>
-                </div>
-            </div>
+        <h3 class="post-subtitle">
+            Graph easy是一种用于在Cli下的绘图工具
+        </h3>
         
+        <div class="post-content-preview">
+            
+                基本语法
+graph-easy兼容graphviz语法
 
+1
+2
+3
+4
+echo '[hello]&lt;-&gt;[world]' | graph-easy
++-------+      +-------+
+| hello | &lt;--&gt; | world |
++-------+      +-------+
+
+
+1
+2
+3
+4
+echo '[hello]&lt;-&gt;[wo...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on June 22, 2021
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+    <li class="previous">
+        <a href="/page2">&larr; Newer Posts</a>
+    </li>
+    
+    
+</ul>
+
+
+    </div>
     <!-- Sidebar Container -->
-            <div class="
-                col-lg-8 col-lg-offset-2
-                col-md-10 col-md-offset-1
-                sidebar-container">
-
-                <!-- Featured Tags -->
-                
+    <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12
+      col-xs-12 sidebar-container">
+      <!-- Featured Tags -->
+      
 
 
 <section>
-    
-        <hr class="hidden-sm hidden-xs">
     
     <h5><a href="/archive/">FEATURED TAGS</a></h5>
     <div class="tags">
@@ -507,77 +367,68 @@ graph-easy兼容graphviz语法
 </section>
 
 
-                <!-- Friends Blog -->
-                
+      <!-- Short About -->
+      <section class="visible-md visible-lg">
+  <hr>
+  <h5><a href="/about/">ABOUT ME</a></h5>
+  <div class="short-about">
+    
+    <img src="/img/cheney.jpg" />
+    
+    
+    <p>呆若MUJI</p>
+    
+    <!-- SNS Link -->
+    
+
+
+<ul class="list-inline">
+
+
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://www.zhihu.com/people/cheney-yin-77">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa  fa-stack-1x fa-inverse">知</i>
+      </span>
+    </a>
+  </li>
+  
+  
+  
+  
+  <li>
+    <a target="_blank" href="https://github.com/CheneyYin">
+      <span class="fa-stack fa-lg">
+        <i class="fa fa-circle fa-stack-2x"></i>
+        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+      </span>
+    </a>
+  </li>
+  
+  
+</ul>
+  </div>
+</section>
+
+      <!-- Friends Blog -->
+      
 <hr>
 <h5>FRIENDS</h5>
 <ul class="list-inline">
   
 </ul>
 
-            </div>
-        </div>
+
     </div>
-</article>
+    
+  </div>
+</div>
 
 <!-- add support for mathjax by voleking-->
-
-
-
-
-
-
-<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "cheneyyin";
-    var disqus_identifier = "/2021/06/22/graph-easy";
-    var disqus_url = "https://cheneyyin.github.io/2021/06/22/graph-easy/";
-
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<!-- disqus 公共JS代码 end -->
-
-
-
-
-<!-- async load function -->
-<script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
-<script>
-    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
-        anchors.options = {
-          visible: 'hover',
-          placement: 'right',
-          // icon: '#'
-        };
-        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
-    })
-</script>
-<style>
-    /* place left on bigger screen */
-    @media all and (min-width: 800px) {
-        .anchorjs-link{
-            position: absolute;
-            left: -0.75em;
-            font-size: 1.1em;
-            margin-top : -0.1em;
-        }
-    }
-</style>
 
 
 

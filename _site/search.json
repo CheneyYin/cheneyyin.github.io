@@ -1,7 +1,15 @@
 [
   
     {
-      "title"    : "《分布式计算--原理、算法与系统》第二章 分布式计算模型 ",
+      "title"    : "《分布式计算--原理、算法与系统》--- 逻辑时间",
+      "subtitle" : "介绍与逻辑时间相关的原理、算法",
+      "tags"     : "《分布式计算--原理、算法与系统》, 逻辑时间, 分布式计算, 因果关系",
+      "url"      : "/2022/07/12/distrcmp-pas-2/",
+      "date"     : "2022-07-12 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "《分布式计算--原理、算法与系统》--- 分布式计算模型",
       "subtitle" : "本文概况了分布式计算的基本抽象，包括分布式事件、通信信道、全局状态的数学模型。",
       "tags"     : "《分布式计算--原理、算法与系统》, 分布式计算, 分布式事件, 通信信道, 全局状态, 数学模型",
       "url"      : "/2022/07/11/distrcmp-pas-1/",
@@ -59,7 +67,7 @@
     {
       "title"    : "Docker构建镜像",
       "subtitle" : "介绍如何构建一个简单的docker镜像",
-      "tags"     : "docker, docker image, docker build, Dockerfile",
+      "tags"     : "Docker, docker image, docker build, Dockerfile",
       "url"      : "/2022/05/04/docker-build-image/",
       "date"     : "2022-05-04 00:00:00 +0800"
     } ,
@@ -83,7 +91,7 @@
     {
       "title"    : "chroot",
       "subtitle" : "介绍chroot使用方法",
-      "tags"     : "chroot, Linux, busybox, docker, 隔离",
+      "tags"     : "chroot, Linux, busybox, Docker, 隔离",
       "url"      : "/2022/03/15/chroot/",
       "date"     : "2022-03-15 00:00:00 +0800"
     } ,
@@ -139,7 +147,7 @@
     {
       "title"    : "Linux Namespace",
       "subtitle" : "介绍Linux的几种常见Namespace",
-      "tags"     : "Linux, Linux Namespace, docker, container, nsenter, unshare",
+      "tags"     : "Linux, Linux Namespace, Docker, container, nsenter, unshare",
       "url"      : "/2021/11/04/linux-namespace/",
       "date"     : "2021-11-04 00:00:00 +0800"
     } ,
