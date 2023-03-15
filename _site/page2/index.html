@@ -245,6 +245,182 @@
       col-xs-12 postlist-container">
       
 <div class="post-preview">
+    <a href="/2022/05/22/docker-volume/">
+        <h2 class="post-title">
+            Docker数据卷
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍Docker数据卷的相关概念和使用方法
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                docker数据卷
+
+管理数据卷
+
+docker volume help
+
+Usage:  docker volume COMMAND
+
+Manage volumes
+
+Commands:
+  create      Create a volume
+  inspect     Display detailed information on one or more volumes
+  ls  ...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on May 22, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2022/05/12/docker-image-command/">
+        <h2 class="post-title">
+            Docker image常用命令
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍与docker image相关的常用命令
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                Docker image常用命令
+
+1 简介
+
+docker image命令用于管理镜像，常见使用方式如下。
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+❯ docker image --help
+
+Usage:  docker image COMMAND
+
+Manage images
+
+Commands:
+  build       B...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on May 12, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2022/05/04/docker-build-image/">
+        <h2 class="post-title">
+            Docker构建镜像
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍如何构建一个简单的docker镜像
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                Docker构建镜像
+
+1 build镜像方式
+
+docker提供的镜像构建方式包括两种：
+
+
+  使用docker commit命令从运行中的容器提交为镜像。
+  使用docker build命令从Dockerfile文件构建镜像。
+
+
+第一种方式这里不做赘述，第二种方式是最重要、最常用的方式。
+
+2 Dockerfile构建镜像
+
+Dockerfile常用指令如下，
+
+
+  
+    
+...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on May 4, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2022/04/25/docker-container-command/">
+        <h2 class="post-title">
+            Docker container常用命令
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍与container相关的常用命令
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                Docker container常用命令
+
+1 docker container状态图
+
+    
+    
+    
+      图1 docker容器状态变化
+  	
+
+
+2 命令详解
+
+2.1 容器启动
+
+首先创建容器，
+
+1
+2
+3
+4
+5
+docker create -it --name=busybox busybox
+2dad99a1a04cd4adccfad768ac19389...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on April 25, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2022/04/09/make-introduction/">
         <h2 class="post-title">
             Make使用总结
@@ -480,159 +656,6 @@ MPE默认提供了g...
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="/2021/12/05/dns/">
-        <h2 class="post-title">
-            DNS服务与配置
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍DNS相关概念和常用命令
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                nslookup、nsupdate用于查询和更新域名。
-
-其中nsupdate要配合bind服务器使用。
-
-1 bind域名服务器简易配置
-
-参考
-
-接下来，将说明如何在Ubuntu 20.04.1 LTS安装配置bind。
-
-1
-apt install -y bind9
-
-
-安装相关工具，
-
-1
-apt install -y dnsutils bind9-host
-
-
-配置/etc/bin...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on December 5, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/11/11/cgroup-v2/">
-        <h2 class="post-title">
-            Cgroup v2
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍Cgroup相关概念和常用命令
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                cgroup v2
-
-详细参考
-
-概况
-
-cgroup是一个目录树，每层目录下都可以创建子目录，子目录默认继承父目录的属性，具有层级结构。
-
-cgroup把一个cgroup目录中的资源划分给它的子目录，子目录可以把资源继续划分给它的子目录，子目录分配的资源之和不能超过父目录，进程或者线程可以使用的资源受到它们委身的目录中的资源的限制。
-
-cgroup v2和cgroup v1区别很大，这一点...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on November 11, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/11/04/linux-namespace/">
-        <h2 class="post-title">
-            Linux Namespace
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍Linux的几种常见Namespace
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                概况
-
-
-  
-    
-      名称
-      作用
-      版本
-    
-  
-  
-    
-      Mount (mnt)
-      隔离挂载点
-      2.4.19
-    
-    
-      Process ID (pid)
-      隔离进程ID
-      2.6.24
-    
-    
-      Network (net)
-      隔离网...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on November 4, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/10/14/cfssl/">
-        <h2 class="post-title">
-            数字证书与cfssl工具链
-        </h2>
-        
-        <h3 class="post-subtitle">
-            分析数字证书原理，记录cfssl常用命令。
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                1 什么是根证书？
-
-参考
-
-根证书是证书颁发机构(CA)的公钥证书，是在公开密钥基础建设中，信任链的起点。根证书没有上层机构再为其本身作数字签名，所以都是自签证书。
-
-2 X.509证书规范
-
-参考
-
-一般的，一个数字证书内容可能包括基本数据（版本、序列号）、所签名对象信息（签名算法类型、签发者信息、有效期、被签发人、签发的公开密钥）、CA 的数字签名等等。
-
-目前使用最广泛的标准为 IT...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on October 14, 2021
-    </p>
-</div>
-<hr>
-
 
 <!-- Pager -->
 
@@ -668,52 +691,62 @@ cgroup v2和cgroup v1区别很大，这一点...
         
         
         
-                <a data-sort="0017" 
+                <a data-sort="0021" 
                     href="/archive/?tag=Linux"
                     title="Linux"
                     rel="4">Linux</a>
         
-                <a data-sort="0011" 
+                <a data-sort="0015" 
                     href="/archive/?tag=Docker"
                     title="Docker"
                     rel="10">Docker</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0021" 
+                    href="/archive/?tag=Vert.x"
+                    title="Vert.x"
+                    rel="4">Vert.x</a>
+        
+                <a data-sort="0021" 
+                    href="/archive/?tag=vertx-core"
+                    title="vertx-core"
+                    rel="4">vertx-core</a>
+        
+                <a data-sort="0023" 
                     href="/archive/?tag=%E3%80%8A%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97--%E5%8E%9F%E7%90%86%E3%80%81%E7%AE%97%E6%B3%95%E4%B8%8E%E7%B3%BB%E7%BB%9F%E3%80%8B"
                     title="《分布式计算--原理、算法与系统》"
                     rel="2">《分布式计算--原理、算法与系统》</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"
                     title="分布式计算"
                     rel="2">分布式计算</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=JVM"
                     title="JVM"
                     rel="2">JVM</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=Java"
                     title="Java"
                     rel="2">Java</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=container"
                     title="container"
                     rel="2">container</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=docker+image"
                     title="docker image"
                     rel="2">docker image</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=nsenter"
                     title="nsenter"
                     rel="2">nsenter</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=sudo"
                     title="sudo"
                     rel="2">sudo</a>

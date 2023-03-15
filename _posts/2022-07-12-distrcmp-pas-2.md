@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "《分布式计算--原理、算法与系统》--- 逻辑时间"
+title: "《分布式计算--原理、算法与系统》2 --- 逻辑时间"
 subtitle: "介绍与逻辑时间相关的原理、算法"
 date: 2022-07-12
 author: "Cheney.Yin"
@@ -29,9 +29,11 @@ tags:
 ## 定义
 
 逻辑时钟系统由一个时间域$$T$$和一个逻辑时钟$$C$$组成。时间域$$T$$上存在偏序关系$$<$$，这种关系表示事件发生优先或因果优先。逻辑时钟$$C$$是一个函数，该函数将分布式系统中的事件$$e$$映射到时间域$$T$$，得到的时间戳记为$$C(e)$$，其定义如下：
+
 $$
 C:\ H\mapsto T
 $$
+
 并满足如下性质：
 
 - **时钟一致性条件**：对任意两个事件$$e_i$$和$$e_j$$，$$e_i \to e_j \Rightarrow C(e_i) < C(e_j)$$。
@@ -65,6 +67,7 @@ $$
 1. **R1规则**。
 
    在执行一个事件之前，进程$$p_i$$执行如下动作：
+   
    $$
    C_i\ :=\ C_i + d,\qquad d>0
    $$
@@ -99,6 +102,7 @@ $$
 ### 一致性（Consistency）
 
 对于标量时钟满足单调性，即：
+
 $$
 \forall e_i,e_j \qquad e_i \to e_j \Rightarrow C(e_i) < C(e_j)
 $$
@@ -118,10 +122,12 @@ $$
 > 由于$$d > 0$$，所以假设不成立。故此，可证$$C(e_i)=C(e_j) \Rightarrow e_i \parallel e_j$$。
 
 一个事件的时间戳用$$(t,i)$$表示，其中$$t$$表示发生时间，$$i$$为事件在进程上的标识。若事件$$x$$的时间戳为$$(h,i)$$，事件$$y$$的时间戳为$$(k,j)$$，事件$$x$$和$$y$$的全序关系$$\prec$$定义如下：
+
 $$
-x \prec y \Leftrightarrow (h < k) \quad \or \quad (h = k \ \and \ i < j)
+x \prec y \Leftrightarrow (h < k) \quad \lor \quad (h = k \ \land \ i < j)
 $$
-另外，$$x \prec y \Rightarrow x \to y \or x \parallel y$$。
+
+另外，$$x \prec y \Rightarrow x \to y \lor x \parallel y$$。
 
 > **为什么$$h < k \Rightarrow x \prec y$$？**
 >
@@ -160,6 +166,7 @@ $$
 - **R1规则**。
 
   在执行一个事件之前，进程$$p_i$$更新其本地逻辑时间规则如下：
+  
   $$
   vt_i[i]\ :=\ vt_i[i] + d, \qquad d > 0
   $$
@@ -169,9 +176,11 @@ $$
   消息发送方进程，在发送消息时将其向量时钟附加在消息$$m$$上。进程接收到消息$$(m,vt)$$时，进程$$p_i$$执行如下动作：
 
   （1）更新它的全局逻辑时间，如下：
+  
   $$
   1 \leqslant k \leqslant n:\quad vt_i[k] \ := \ max(vt_i[k], vt[k])
   $$
+  
   （2）执行**R1规则**；
 
   （3）传递消息$$m$$。
@@ -197,21 +206,23 @@ $$vh = vk \Leftrightarrow \forall x:\ vh[x] = vk[x]$$
 
 $$vh \leqslant vk \Leftrightarrow \forall x: vh[x] \leqslant vk[x]$$
 
-$$vh < vk \Leftrightarrow vh \leqslant vk\ \and\ \exists x:\ vh[x] < vk[x]$$
+$$vh < vk \Leftrightarrow vh \leqslant vk\ \land\ \exists x:\ vh[x] < vk[x]$$
 
-$$vh \parallel vk \Leftrightarrow \neg(vh < vk)\ \and\ \neg(vk < vh)$$
+$$vh \parallel vk \Leftrightarrow \neg(vh < vk)\ \land\ \neg(vk < vh)$$
 
 ## 基本性质
 
 ### 同构（Isomorphism）
 
 如果两个事件$$x$$和$$y$$，分别有时间戳$$vh$$和$$vk$$，那么
+
 $$
 \begin{align*}
 & x \to y \Leftrightarrow vh < vk \\
 & x \parallel y \Leftrightarrow vh \parallel vk
 \end{align*}
 $$
+
 这样，由分布式计算产生的偏序事件集合（由因果关系$$\to$$归纳出的事件集合）与它们的向量时间戳是**同构关系**。
 
 如果发生一个事件的过程是已知的，那么比较两个时间戳可以被简化为：若事件$$x$$和$$y$$分别发生在进程$$p_i$$和$$p_j$$，并且事件的时间戳分别为$$vh$$和$$vk$$，那么
@@ -219,7 +230,7 @@ $$
 $$
 \begin{align*}
 & x \to y \Leftrightarrow vh[i] \leqslant vk[i] \\
-& x \parallel y \Leftrightarrow vh[i] > vk[i]\quad \and \quad vh[j] < vk[j]
+& x \parallel y \Leftrightarrow vh[i] > vk[i]\quad \land \quad vh[j] < vk[j]
 \end{align*}
 $$
 
@@ -228,9 +239,11 @@ $$
 > 证明：
 >
 > （1）当$$x \to y$$，根据**R2规则**可知，
+> 
 > $$
-> vk[z]\ := max(vk[z], vh[z]),\qquad z \in [1,n]\ \and z \neq j
+> vk[z]\ := max(vk[z], vh[z]),\qquad z \in [1,n]\ \land z \neq j
 > $$
+> 
 > 那么，$$vk[i]\ := max(vk[i],vh[i])$$，所以$$x \to y \Rightarrow vh[i] \leqslant vk[i]$$。
 >
 > （2）当$$vh[i] \leqslant vk[i]$$时，
@@ -272,19 +285,23 @@ $$
 > （2）当$$x$$和$$y$$发生在不同进程上，
 >
 > 进程分别为$$p_i$$、$$p_j$$，那么
+> 
 > $$
 > x \to y \Leftrightarrow C(x)[i] \leqslant C(y)[i]
 > $$
-> 若$$C(x)<C(y)$$，则$$C(x) \leqslant C(y)\ \and \exists k: C(x)[k]<C(y)[k]$$。由$$C(x) \leqslant C(y)$$可知$$C(x)[i] \leqslant C(y)[i]$$，所以$$C(x)<C(y) \Rightarrow x \to y$$。
+> 
+> 若$$C(x)<C(y)$$，则$$C(x) \leqslant C(y)\ \land \exists k: C(x)[k]<C(y)[k]$$。由$$C(x) \leqslant C(y)$$可知$$C(x)[i] \leqslant C(y)[i]$$，所以$$C(x)<C(y) \Rightarrow x \to y$$。
 >
 > 若$$x \to y$$，则根据**R1、R2规则**可知，
+> 
 > $$
 > \begin{align*}
-> & C(y)[z] := max(C(y)[z], C(x)[z]), \qquad &z \in [1,n]\ \and\ z \neq j \\
+> & C(y)[z] := max(C(y)[z], C(x)[z]), \qquad &z \in [1,n]\ \land\ z \neq j \\
 > & C(y)[j] := C(y)[j] + d, \qquad &d>0
 > \end{align*}
 > $$
-> 故而，$$C(x) \leqslant C(y)\ \and\ C(x)[j] < C(y)[j]$$，即$$C(x)<C(y)$$。
+> 
+> 故而，$$C(x) \leqslant C(y)\ \land\ C(x)[j] < C(y)[j]$$，即$$C(x)<C(y)$$。
 >
 > 所以$$x \to y \Rightarrow C(x) <C(y)$$。
 >
@@ -305,9 +322,11 @@ $$
 为了优化消息开销，Singhal和Kshemkalyani提出来差量技术。**在进程接收消息后更新向量时，并非向量的全部项都会被更新，**所以一个进程$$p_i$$发送一个消息给进程$$p_j$$时，消息中只需要包含自上次向$$p_j$$发送消息以来，向量时钟中被更新的部分项即可，并不需要发送整个向量时钟。
 
 从上次发送给$$p_j$$消息以来，$$p_i$$向量时钟的项$$i_1$$，$$i_2$$，$$\cdots$$，$$i_{n_i}$$已经更新为$$v_1$$，$$v_2$$，$$\cdots$$，$$v_{n_i}$$，则进程$$p_i$$可把$$\{(i_1,v_1),(i_2,v_2),\cdots,(i_{n_i},v_{n_i})\}$$这样的压缩时间戳附加在发往$$p_j$$的消息中。当$$p_j$$接收到消息时，更新它的向量时钟：
+
 $$
 vt_i[i_k]=max(vt_i[i_k],v_k),\quad k=1,2,\cdots,n_i
 $$
+
 该技术消减了消息大小、通信带宽的需求。在最坏情况下，整个向量时钟都要被发送，一般情况下消息中时间戳尺寸是小于$$n$$的。
 
 因为发送消息前要筛选出向量时间戳的被更新向量，所以每个进程中要记住它上一次发送给其它所有进程的向量时间戳，这导致每个进程上要有$$\mathbb{O}(n^2)$$的存储空间。
@@ -323,6 +342,7 @@ $$
 LS_i[j] < LU_i[k] \Leftrightarrow vt_i[k]被更新
 $$
 因此，当$$p_i$$发送一个消息给$$p_j$$时，它需要附加如下压缩的向量时间戳：
+
 $$
 \{(x,vt_i[x])\ \lvert \ LS_i[j] < LU_i[x]\}
 $$

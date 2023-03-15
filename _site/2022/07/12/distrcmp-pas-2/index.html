@@ -12,7 +12,7 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="《分布式计算--原理、算法与系统》--- 逻辑时间 - Cheney.Yin的博客 | Cheney Blog">
+        content="《分布式计算--原理、算法与系统》2 --- 逻辑时间 - Cheney.Yin的博客 | Cheney Blog">
     
     <meta property="og:type" content="article">
     <meta property="og:description" content="
@@ -39,7 +39,7 @@
     <meta property="og:url" content="https://cheneyyin.github.io/2022/07/12/distrcmp-pas-2/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>《分布式计算--原理、算法与系统》--- 逻辑时间 - Cheney.Yin的博客 | Cheney Blog</title>
+    <title>《分布式计算--原理、算法与系统》2 --- 逻辑时间 - Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -249,7 +249,7 @@
                         <a class="tag" href="/archive/?tag=%E5%9B%A0%E6%9E%9C%E5%85%B3%E7%B3%BB" title="因果关系">因果关系</a>
                         
                     </div>
-                    <h1>《分布式计算--原理、算法与系统》--- 逻辑时间</h1>
+                    <h1>《分布式计算--原理、算法与系统》2 --- 逻辑时间</h1>
                     
                     <h2 class="subheading">介绍与逻辑时间相关的原理、算法</h2>
                     <span class="meta">Posted by Cheney.Yin on July 12, 2022</span>
@@ -299,9 +299,11 @@
 
 <h2 id="定义">定义</h2>
 
-<p>逻辑时钟系统由一个时间域\(T\)和一个逻辑时钟\(C\)组成。时间域\(T\)上存在偏序关系\(&lt;\)，这种关系表示事件发生优先或因果优先。逻辑时钟\(C\)是一个函数，该函数将分布式系统中的事件\(e\)映射到时间域\(T\)，得到的时间戳记为\(C(e)\)，其定义如下：
-\(C:\ H\mapsto T\)
-并满足如下性质：</p>
+<p>逻辑时钟系统由一个时间域\(T\)和一个逻辑时钟\(C\)组成。时间域\(T\)上存在偏序关系\(&lt;\)，这种关系表示事件发生优先或因果优先。逻辑时钟\(C\)是一个函数，该函数将分布式系统中的事件\(e\)映射到时间域\(T\)，得到的时间戳记为\(C(e)\)，其定义如下：</p>
+
+\[C:\ H\mapsto T\]
+
+<p>并满足如下性质：</p>
 
 <ul>
   <li><strong>时钟一致性条件</strong>：对任意两个事件\(e_i\)和\(e_j\)，\(e_i \to e_j \Rightarrow C(e_i) &lt; C(e_j)\)。</li>
@@ -346,8 +348,9 @@
   <li>
     <p><strong>R1规则</strong>。</p>
 
-    <p>在执行一个事件之前，进程\(p_i\)执行如下动作：
-\(C_i\ :=\ C_i + d,\qquad d&gt;0\)</p>
+    <p>在执行一个事件之前，进程\(p_i\)执行如下动作：</p>
+
+\[C_i\ :=\ C_i + d,\qquad d&gt;0\]
   </li>
   <li>
     <p><strong>R2规则</strong>。</p>
@@ -380,8 +383,9 @@
 
 <h3 id="一致性consistency">一致性（Consistency）</h3>
 
-<p>对于标量时钟满足单调性，即：
-\(\forall e_i,e_j \qquad e_i \to e_j \Rightarrow C(e_i) &lt; C(e_j)\)</p>
+<p>对于标量时钟满足单调性，即：</p>
+
+\[\forall e_i,e_j \qquad e_i \to e_j \Rightarrow C(e_i) &lt; C(e_j)\]
 
 <h3 id="全序total-ordering">全序（Total Ordering）</h3>
 
@@ -399,9 +403,11 @@
   <p>由于\(d &gt; 0\)，所以假设不成立。故此，可证\(C(e_i)=C(e_j) \Rightarrow e_i \parallel e_j\)。</p>
 </blockquote>
 
-<p>一个事件的时间戳用\((t,i)\)表示，其中\(t\)表示发生时间，\(i\)为事件在进程上的标识。若事件\(x\)的时间戳为\((h,i)\)，事件\(y\)的时间戳为\((k,j)\)，事件\(x\)和\(y\)的全序关系\(\prec\)定义如下：
-\(x \prec y \Leftrightarrow (h &lt; k) \quad \or \quad (h = k \ \and \ i &lt; j)\)
-另外，\(x \prec y \Rightarrow x \to y \or x \parallel y\)。</p>
+<p>一个事件的时间戳用\((t,i)\)表示，其中\(t\)表示发生时间，\(i\)为事件在进程上的标识。若事件\(x\)的时间戳为\((h,i)\)，事件\(y\)的时间戳为\((k,j)\)，事件\(x\)和\(y\)的全序关系\(\prec\)定义如下：</p>
+
+\[x \prec y \Leftrightarrow (h &lt; k) \quad \lor \quad (h = k \ \land \ i &lt; j)\]
+
+<p>另外，\(x \prec y \Rightarrow x \to y \lor x \parallel y\)。</p>
 
 <blockquote>
   <p><strong>为什么\(h &lt; k \Rightarrow x \prec y\)？</strong></p>
@@ -443,17 +449,20 @@
   <li>
     <p><strong>R1规则</strong>。</p>
 
-    <p>在执行一个事件之前，进程\(p_i\)更新其本地逻辑时间规则如下：
-\(vt_i[i]\ :=\ vt_i[i] + d, \qquad d &gt; 0\)</p>
+    <p>在执行一个事件之前，进程\(p_i\)更新其本地逻辑时间规则如下：</p>
+
+\[vt_i[i]\ :=\ vt_i[i] + d, \qquad d &gt; 0\]
   </li>
   <li>
     <p><strong>R2规则</strong>。</p>
 
     <p>消息发送方进程，在发送消息时将其向量时钟附加在消息\(m\)上。进程接收到消息\((m,vt)\)时，进程\(p_i\)执行如下动作：</p>
 
-    <p>（1）更新它的全局逻辑时间，如下：
-\(1 \leqslant k \leqslant n:\quad vt_i[k] \ := \ max(vt_i[k], vt[k])\)
-（2）执行<strong>R1规则</strong>；</p>
+    <p>（1）更新它的全局逻辑时间，如下：</p>
+
+\[1 \leqslant k \leqslant n:\quad vt_i[k] \ := \ max(vt_i[k], vt[k])\]
+
+    <p>（2）执行<strong>R1规则</strong>；</p>
 
     <p>（3）传递消息\(m\)。</p>
   </li>
@@ -479,26 +488,28 @@
 
 \[vh \leqslant vk \Leftrightarrow \forall x: vh[x] \leqslant vk[x]\]
 
-\[vh &lt; vk \Leftrightarrow vh \leqslant vk\ \and\ \exists x:\ vh[x] &lt; vk[x]\]
+\[vh &lt; vk \Leftrightarrow vh \leqslant vk\ \land\ \exists x:\ vh[x] &lt; vk[x]\]
 
-\[vh \parallel vk \Leftrightarrow \neg(vh &lt; vk)\ \and\ \neg(vk &lt; vh)\]
+\[vh \parallel vk \Leftrightarrow \neg(vh &lt; vk)\ \land\ \neg(vk &lt; vh)\]
 
 <h2 id="基本性质-1">基本性质</h2>
 
 <h3 id="同构isomorphism">同构（Isomorphism）</h3>
 
-<p>如果两个事件\(x\)和\(y\)，分别有时间戳\(vh\)和\(vk\)，那么
-\(\begin{align*}
+<p>如果两个事件\(x\)和\(y\)，分别有时间戳\(vh\)和\(vk\)，那么</p>
+
+\[\begin{align*}
 &amp; x \to y \Leftrightarrow vh &lt; vk \\
 &amp; x \parallel y \Leftrightarrow vh \parallel vk
-\end{align*}\)
-这样，由分布式计算产生的偏序事件集合（由因果关系\(\to\)归纳出的事件集合）与它们的向量时间戳是<strong>同构关系</strong>。</p>
+\end{align*}\]
+
+<p>这样，由分布式计算产生的偏序事件集合（由因果关系\(\to\)归纳出的事件集合）与它们的向量时间戳是<strong>同构关系</strong>。</p>
 
 <p>如果发生一个事件的过程是已知的，那么比较两个时间戳可以被简化为：若事件\(x\)和\(y\)分别发生在进程\(p_i\)和\(p_j\)，并且事件的时间戳分别为\(vh\)和\(vk\)，那么</p>
 
 \[\begin{align*}
 &amp; x \to y \Leftrightarrow vh[i] \leqslant vk[i] \\
-&amp; x \parallel y \Leftrightarrow vh[i] &gt; vk[i]\quad \and \quad vh[j] &lt; vk[j]
+&amp; x \parallel y \Leftrightarrow vh[i] &gt; vk[i]\quad \land \quad vh[j] &lt; vk[j]
 \end{align*}\]
 
 <blockquote>
@@ -506,9 +517,11 @@
 
   <p>证明：</p>
 
-  <p>（1）当\(x \to y\)，根据<strong>R2规则</strong>可知，
-\(vk[z]\ := max(vk[z], vh[z]),\qquad z \in [1,n]\ \and z \neq j\)
-那么，\(vk[i]\ := max(vk[i],vh[i])\)，所以\(x \to y \Rightarrow vh[i] \leqslant vk[i]\)。</p>
+  <p>（1）当\(x \to y\)，根据<strong>R2规则</strong>可知，</p>
+
+\[vk[z]\ := max(vk[z], vh[z]),\qquad z \in [1,n]\ \land z \neq j\]
+
+  <p>那么，\(vk[i]\ := max(vk[i],vh[i])\)，所以\(x \to y \Rightarrow vh[i] \leqslant vk[i]\)。</p>
 
   <p>（2）当\(vh[i] \leqslant vk[i]\)时，</p>
 
@@ -550,16 +563,20 @@
 
   <p>（2）当\(x\)和\(y\)发生在不同进程上，</p>
 
-  <p>进程分别为\(p_i\)、\(p_j\)，那么
-\(x \to y \Leftrightarrow C(x)[i] \leqslant C(y)[i]\)
-若\(C(x)&lt;C(y)\)，则\(C(x) \leqslant C(y)\ \and \exists k: C(x)[k]&lt;C(y)[k]\)。由\(C(x) \leqslant C(y)\)可知\(C(x)[i] \leqslant C(y)[i]\)，所以\(C(x)&lt;C(y) \Rightarrow x \to y\)。</p>
+  <p>进程分别为\(p_i\)、\(p_j\)，那么</p>
 
-  <p>若\(x \to y\)，则根据<strong>R1、R2规则</strong>可知，
-\(\begin{align*}
-&amp; C(y)[z] := max(C(y)[z], C(x)[z]), \qquad &amp;z \in [1,n]\ \and\ z \neq j \\
+\[x \to y \Leftrightarrow C(x)[i] \leqslant C(y)[i]\]
+
+  <p>若\(C(x)&lt;C(y)\)，则\(C(x) \leqslant C(y)\ \land \exists k: C(x)[k]&lt;C(y)[k]\)。由\(C(x) \leqslant C(y)\)可知\(C(x)[i] \leqslant C(y)[i]\)，所以\(C(x)&lt;C(y) \Rightarrow x \to y\)。</p>
+
+  <p>若\(x \to y\)，则根据<strong>R1、R2规则</strong>可知，</p>
+
+\[\begin{align*}
+&amp; C(y)[z] := max(C(y)[z], C(x)[z]), \qquad &amp;z \in [1,n]\ \land\ z \neq j \\
 &amp; C(y)[j] := C(y)[j] + d, \qquad &amp;d&gt;0
-\end{align*}\)
-故而，\(C(x) \leqslant C(y)\ \and\ C(x)[j] &lt; C(y)[j]\)，即\(C(x)&lt;C(y)\)。</p>
+\end{align*}\]
+
+  <p>故而，\(C(x) \leqslant C(y)\ \land\ C(x)[j] &lt; C(y)[j]\)，即\(C(x)&lt;C(y)\)。</p>
 
   <p>所以\(x \to y \Rightarrow C(x) &lt;C(y)\)。</p>
 
@@ -580,9 +597,11 @@
 
 <p>为了优化消息开销，Singhal和Kshemkalyani提出来差量技术。<strong>在进程接收消息后更新向量时，并非向量的全部项都会被更新，</strong>所以一个进程\(p_i\)发送一个消息给进程\(p_j\)时，消息中只需要包含自上次向\(p_j\)发送消息以来，向量时钟中被更新的部分项即可，并不需要发送整个向量时钟。</p>
 
-<p>从上次发送给\(p_j\)消息以来，\(p_i\)向量时钟的项\(i_1\)，\(i_2\)，\(\cdots\)，\(i_{n_i}\)已经更新为\(v_1\)，\(v_2\)，\(\cdots\)，\(v_{n_i}\)，则进程\(p_i\)可把\(\{(i_1,v_1),(i_2,v_2),\cdots,(i_{n_i},v_{n_i})\}\)这样的压缩时间戳附加在发往\(p_j\)的消息中。当\(p_j\)接收到消息时，更新它的向量时钟：
-\(vt_i[i_k]=max(vt_i[i_k],v_k),\quad k=1,2,\cdots,n_i\)
-该技术消减了消息大小、通信带宽的需求。在最坏情况下，整个向量时钟都要被发送，一般情况下消息中时间戳尺寸是小于\(n\)的。</p>
+<p>从上次发送给\(p_j\)消息以来，\(p_i\)向量时钟的项\(i_1\)，\(i_2\)，\(\cdots\)，\(i_{n_i}\)已经更新为\(v_1\)，\(v_2\)，\(\cdots\)，\(v_{n_i}\)，则进程\(p_i\)可把\(\{(i_1,v_1),(i_2,v_2),\cdots,(i_{n_i},v_{n_i})\}\)这样的压缩时间戳附加在发往\(p_j\)的消息中。当\(p_j\)接收到消息时，更新它的向量时钟：</p>
+
+\[vt_i[i_k]=max(vt_i[i_k],v_k),\quad k=1,2,\cdots,n_i\]
+
+<p>该技术消减了消息大小、通信带宽的需求。在最坏情况下，整个向量时钟都要被发送，一般情况下消息中时间戳尺寸是小于\(n\)的。</p>
 
 <p>因为发送消息前要筛选出向量时间戳的被更新向量，所以每个进程中要记住它上一次发送给其它所有进程的向量时间戳，这导致每个进程上要有\(\mathbb{O}(n^2)\)的存储空间。</p>
 
@@ -594,8 +613,9 @@
 
 <p>当进程\(p_i\)接收到消息后，捕获到进程\(p_j\)新进展后，更新\(vt_i[j]\)，\(LU_i[j]\)也将更新。当进程\(p_i\)向\(p_j\)发送消息时，\(LS_i[j]\)将更新。<strong>如果从上次\(p_i\)到\(p_j\)通信以来，向量时钟的部分项被更新，如\(vt_i[k]\)被更新，那么\(LS_i[j]&lt;LU_i[k]\)必然成立。</strong>进一步来看，
 \(LS_i[j] &lt; LU_i[k] \Leftrightarrow vt_i[k]被更新\)
-因此，当\(p_i\)发送一个消息给\(p_j\)时，它需要附加如下压缩的向量时间戳：
-\(\{(x,vt_i[x])\ \lvert \ LS_i[j] &lt; LU_i[x]\}\)</p>
+因此，当\(p_i\)发送一个消息给\(p_j\)时，它需要附加如下压缩的向量时间戳：</p>
+
+\[\{(x,vt_i[x])\ \lvert \ LS_i[j] &lt; LU_i[x]\}\]
 
 <center>
     <img style="border-radius: 0.3125em;
@@ -619,12 +639,19 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2022/07/11/distrcmp-pas-1/" data-toggle="tooltip" data-placement="top" title="《分布式计算--原理、算法与系统》--- 分布式计算模型">
+                        <a href="/2022/07/11/distrcmp-pas-1/" data-toggle="tooltip" data-placement="top" title="《分布式计算--原理、算法与系统》1 --- 分布式计算模型">
                         Previous<br>
-                        <span>《分布式计算--原理、算法与系统》--- 分布式计算模型</span>
+                        <span>《分布式计算--原理、算法与系统》1 --- 分布式计算模型</span>
                         </a>
                     </li>
                     
+                    
+                    <li class="next">
+                        <a href="/2022/07/30/vertx-core-0-vertx-object/" data-toggle="tooltip" data-placement="top" title="Vert.x core 0 --- Vertx对象">
+                        Next<br>
+                        <span>Vert.x core 0 --- Vertx对象</span>
+                        </a>
+                    </li>
                     
                 </ul>
                 <hr style="visibility: hidden;">
@@ -679,52 +706,62 @@
         
         
         
-                <a data-sort="0017" 
+                <a data-sort="0021" 
                     href="/archive/?tag=Linux"
                     title="Linux"
                     rel="4">Linux</a>
         
-                <a data-sort="0011" 
+                <a data-sort="0015" 
                     href="/archive/?tag=Docker"
                     title="Docker"
                     rel="10">Docker</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0021" 
+                    href="/archive/?tag=Vert.x"
+                    title="Vert.x"
+                    rel="4">Vert.x</a>
+        
+                <a data-sort="0021" 
+                    href="/archive/?tag=vertx-core"
+                    title="vertx-core"
+                    rel="4">vertx-core</a>
+        
+                <a data-sort="0023" 
                     href="/archive/?tag=%E3%80%8A%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97--%E5%8E%9F%E7%90%86%E3%80%81%E7%AE%97%E6%B3%95%E4%B8%8E%E7%B3%BB%E7%BB%9F%E3%80%8B"
                     title="《分布式计算--原理、算法与系统》"
                     rel="2">《分布式计算--原理、算法与系统》</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"
                     title="分布式计算"
                     rel="2">分布式计算</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=JVM"
                     title="JVM"
                     rel="2">JVM</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=Java"
                     title="Java"
                     rel="2">Java</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=container"
                     title="container"
                     rel="2">container</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=docker+image"
                     title="docker image"
                     rel="2">docker image</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=nsenter"
                     title="nsenter"
                     rel="2">nsenter</a>
         
-                <a data-sort="0019" 
+                <a data-sort="0023" 
                     href="/archive/?tag=sudo"
                     title="sudo"
                     rel="2">sudo</a>

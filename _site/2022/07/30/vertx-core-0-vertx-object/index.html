@@ -12,17 +12,28 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="Cheney.Yin的博客 | Cheney Blog">
+        content="Vert.x core 0 --- Vertx对象 - Cheney.Yin的博客 | Cheney Blog">
     
-    <meta property="og:type" content="website">
-    <meta property="og:description"
-        content="「To explore or to exploite is a question.」">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Vert.x Core
+">
+    
+    <meta property="article:published_time" content=" 2022-07-30T00:00:00Z">
+    
+    
+    <meta property="article:author" content="Cheney.Yin">
+    
+    
+    <meta property="article:tag" content="Vert.x">
+    
+    <meta property="article:tag" content="vertx-core">
+    
     
     <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/page3/">
+    <meta property="og:url" content="https://cheneyyin.github.io/2022/07/30/vertx-core-0-vertx-object/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>Cheney.Yin的博客 | Cheney Blog</title>
+    <title>Vert.x core 0 --- Vertx对象 - Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -31,7 +42,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/page3/">
+    <link rel="canonical" href="https://cheneyyin.github.io/2022/07/30/vertx-core-0-vertx-object/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -196,14 +207,14 @@
   </div>
 </div>
 
-    <!-- Page Header -->
+    <!-- Post Header -->
 
 
 
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/img/home-bg.jpg');
+        background-image: url('/img/bg-material.jpg');
         background: ;
     }
 
@@ -213,251 +224,197 @@
 
 
 
+<header class="intro-header" >
 
-
-
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
-  <div class="header-mask"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-        <div class="site-heading">
-        
-          <h1>Cheney.Yin Blog</h1>
-          <span class="subheading">「To explore or to exploite is a question.」</span>
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=Vert.x" title="Vert.x">Vert.x</a>
+                        
+                        <a class="tag" href="/archive/?tag=vertx-core" title="vertx-core">vertx-core</a>
+                        
+                    </div>
+                    <h1>Vert.x core 0 --- Vertx对象</h1>
+                    
+                    <h2 class="subheading">vertx-core配置使用</h2>
+                    <span class="meta">Posted by Cheney.Yin on July 30, 2022</span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
 
 
-<!-- Main Content -->
-<div class="container">
-  <div class="row">
-    
-
-    <!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
-      col-xs-12 postlist-container">
-      
-<div class="post-preview">
-    <a href="/2021/12/05/dns/">
-        <h2 class="post-title">
-            DNS服务与配置
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍DNS相关概念和常用命令
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                nslookup、nsupdate用于查询和更新域名。
-
-其中nsupdate要配合bind服务器使用。
-
-1 bind域名服务器简易配置
-
-参考
-
-接下来，将说明如何在Ubuntu 20.04.1 LTS安装配置bind。
-
-1
-apt install -y bind9
 
 
-安装相关工具，
-
-1
-apt install -y dnsutils bind9-host
 
 
-配置/etc/bin...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on December 5, 2021
-    </p>
-</div>
-<hr>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-<div class="post-preview">
-    <a href="/2021/11/11/cgroup-v2/">
-        <h2 class="post-title">
-            Cgroup v2
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍Cgroup相关概念和常用命令
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                cgroup v2
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-详细参考
+                <!-- Multi-Lingual -->
+                
 
-概况
+				<h1 id="vertx-core">Vert.x Core</h1>
 
-cgroup是一个目录树，每层目录下都可以创建子目录，子目录默认继承父目录的属性，具有层级结构。
+<blockquote>
+  <p>Vert.x Core中的功能相当底层，不包含诸如数据库访问、授权和高层Web应用的功能。这些功能见Vert.x ext。</p>
+</blockquote>
 
-cgroup把一个cgroup目录中的资源划分给它的子目录，子目录可以把资源继续划分给它的子目录，子目录分配的资源之和不能超过父目录，进程或者线程可以使用的资源受到它们委身的目录中的资源的限制。
+<p><strong>Vert.x Core</strong>小巧轻便，可以嵌入现存应用中；没有强制要求使用特定的方式构造应用；支持多种语言编写(JavaScript、Ruby等)。</p>
 
-cgroup v2和cgroup v1区别很大，这一点...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on November 11, 2021
-    </p>
-</div>
-<hr>
+<p>通过如下maven配置，可在项目中加入<strong>Vert.x Core</strong>依赖。</p>
 
-<div class="post-preview">
-    <a href="/2021/11/04/linux-namespace/">
-        <h2 class="post-title">
-            Linux Namespace
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍Linux的几种常见Namespace
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                概况
-
-
-  
-    
-      名称
-      作用
-      版本
-    
-  
-  
-    
-      Mount (mnt)
-      隔离挂载点
-      2.4.19
-    
-    
-      Process ID (pid)
-      隔离进程ID
-      2.6.24
-    
-    
-      Network (net)
-      隔离网...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on November 4, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/10/14/cfssl/">
-        <h2 class="post-title">
-            数字证书与cfssl工具链
-        </h2>
-        
-        <h3 class="post-subtitle">
-            分析数字证书原理，记录cfssl常用命令。
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                1 什么是根证书？
-
-参考
-
-根证书是证书颁发机构(CA)的公钥证书，是在公开密钥基础建设中，信任链的起点。根证书没有上层机构再为其本身作数字签名，所以都是自签证书。
-
-2 X.509证书规范
-
-参考
-
-一般的，一个数字证书内容可能包括基本数据（版本、序列号）、所签名对象信息（签名算法类型、签发者信息、有效期、被签发人、签发的公开密钥）、CA 的数字签名等等。
-
-目前使用最广泛的标准为 IT...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on October 14, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/06/22/graph-easy/">
-        <h2 class="post-title">
-            Graph easy工具
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Graph easy是一种用于在Cli下的绘图工具
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                基本语法
-graph-easy兼容graphviz语法
-
-1
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
-echo '[hello]&lt;-&gt;[world]' | graph-easy
-+-------+      +-------+
-| hello | &lt;--&gt; | world |
-+-------+      +-------+
+5
+</pre></td><td class="rouge-code"><pre><span class="nt">&lt;dependency&gt;</span>
+ <span class="nt">&lt;groupId&gt;</span>io.vertx<span class="nt">&lt;/groupId&gt;</span>
+ <span class="nt">&lt;artifactId&gt;</span>vertx-core<span class="nt">&lt;/artifactId&gt;</span>
+ <span class="nt">&lt;version&gt;</span>4.2.7<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
+<h2 id="多线程">多线程</h2>
 
-1
-2
-3
-4
-echo '[hello]&lt;-&gt;[wo...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on June 22, 2021
-    </p>
-</div>
-<hr>
+<ul>
+  <li>
+    <p>单个进程内创建多个线程，线程间共享内存。</p>
+  </li>
+  <li>
+    <p>线程内阻塞IO操作使得线程被挂起；创建线程很多时(处理</p>
 
-
-<!-- Pager -->
-
-<ul class="pager">
-    
-    <li class="previous">
-        <a href="/page2">&larr; Newer Posts</a>
-    </li>
-    
-    
+    <p>)，OS调度延迟增加；另外，每次创建新线程大约消耗1MB内存。</p>
+  </li>
 </ul>
 
+<h2 id="vertx对象">Vertx对象</h2>
 
-    </div>
+<p><code class="language-plaintext highlighter-rouge">Vertx</code>对象是Vert.x的控制中心，负责几乎一切事情的基础，如创建客户端、服务器、获取时间总线的引用、设置定时器等等。</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nc">Vertx</span> <span class="n">vertx</span> <span class="o">=</span> <span class="nc">Vertx</span><span class="o">.</span><span class="na">vertx</span><span class="o">();</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<blockquote>
+  <p>大部分应用只需要一个Vert.x实例，如果需要也可以创建多个Vert.x实例，如：隔离的事件总线或不同组的客户端和服务器。</p>
+</blockquote>
+
+<h3 id="创建vertx对象时指定配置项">创建Vertx对象时指定配置项</h3>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nc">Vertx</span> <span class="n">vertx</span> <span class="o">=</span> <span class="nc">Vertx</span><span class="o">.</span><span class="na">vertx</span><span class="o">(</span><span class="k">new</span> <span class="nc">VertxOptions</span><span class="o">().</span><span class="na">setWorkerPoolSize</span><span class="o">(</span><span class="mi">40</span><span class="o">));</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">VertxOptions</code>对象有很多配置，包括集群、高可用、池大小等。</p>
+
+<h3 id="创建集群模式的vertx对象">创建集群模式的Vertx对象</h3>
+
+<p>创建集群模式<code class="language-plaintext highlighter-rouge">Vertx</code>对象一般需要异步方式来创建。</p>
+
+<blockquote>
+  <p>让不同的Vertx实例组成一个集群需要一些时间，Vert.x在这段时间内没有阻塞调用线程，会以异步方式返回结果。</p>
+</blockquote>
+
+<p>示例如下：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre><span class="nc">VertxOptions</span> <span class="n">options</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">VertxOptions</span><span class="o">();</span>
+<span class="nc">Vertx</span><span class="o">.</span><span class="na">clusterVertx</span><span class="o">(</span><span class="n">options</span><span class="o">,</span> <span class="n">res</span> <span class="o">-&gt;</span> <span class="o">{</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">res</span><span class="o">.</span><span class="na">succeeded</span><span class="o">())</span> <span class="o">{</span>
+        <span class="nc">Vertx</span> <span class="n">vertx</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="na">result</span><span class="o">();</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="o">...</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2022/07/12/distrcmp-pas-2/" data-toggle="tooltip" data-placement="top" title="《分布式计算--原理、算法与系统》2 --- 逻辑时间">
+                        Previous<br>
+                        <span>《分布式计算--原理、算法与系统》2 --- 逻辑时间</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2022/08/01/vertx-core-1-fluent-api/" data-toggle="tooltip" data-placement="top" title="Vert.x core 1 --- Fluent API">
+                        Next<br>
+                        <span>Vert.x core 1 --- Fluent API</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <hr style="visibility: hidden;">
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
     <!-- Sidebar Container -->
-    <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12
-      col-xs-12 sidebar-container">
-      <!-- Featured Tags -->
-      
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
 
 
 <section>
+    
+        <hr class="hidden-sm hidden-xs">
     
     <h5><a href="/archive/">FEATURED TAGS</a></h5>
     <div class="tags">
@@ -530,68 +487,77 @@ echo '[hello]&lt;-&gt;[wo...
 </section>
 
 
-      <!-- Short About -->
-      <section class="visible-md visible-lg">
-  <hr>
-  <h5><a href="/about/">ABOUT ME</a></h5>
-  <div class="short-about">
-    
-    <img src="/img/cheney.jpg" />
-    
-    
-    <p>呆若MUJI</p>
-    
-    <!-- SNS Link -->
-    
-
-
-<ul class="list-inline">
-
-
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://www.zhihu.com/people/cheney-yin-77">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa  fa-stack-1x fa-inverse">知</i>
-      </span>
-    </a>
-  </li>
-  
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://github.com/CheneyYin">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-      </span>
-    </a>
-  </li>
-  
-  
-</ul>
-  </div>
-</section>
-
-      <!-- Friends Blog -->
-      
+                <!-- Friends Blog -->
+                
 <hr>
 <h5>FRIENDS</h5>
 <ul class="list-inline">
   
 </ul>
 
-
+            </div>
+        </div>
     </div>
-    
-  </div>
-</div>
+</article>
 
 <!-- add support for mathjax by voleking-->
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "cheneyyin";
+    var disqus_identifier = "/2022/07/30/vertx-core-0-vertx-object";
+    var disqus_url = "https://cheneyyin.github.io/2022/07/30/vertx-core-0-vertx-object/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'right',
+          // icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
 
