@@ -3,11 +3,2018 @@
   <channel>
     <title>Cheney.Yin Blog</title>
     <description>这里是 Cheney.Yin 的个人博客</description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 14 Mar 2023 16:49:17 +0800</pubDate>
-    <lastBuildDate>Tue, 14 Mar 2023 16:49:17 +0800</lastBuildDate>
+    <link>https://cheneyyin.github.io/</link>
+    <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 15 Mar 2023 11:07:19 +0800</pubDate>
+    <lastBuildDate>Wed, 15 Mar 2023 11:07:19 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
+    
+      <item>
+        <title>Docker container常用命令</title>
+        <description>&lt;h1 id=&quot;docker-container操作&quot;&gt;docker container操作&lt;/h1&gt;
+&lt;h2 id=&quot;1-docker-container状态图&quot;&gt;1 docker container状态图&lt;/h2&gt;
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/docker-container-state.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图1 docker容器状态变化
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;2-命令详解&quot;&gt;2 命令详解&lt;/h2&gt;
+
+&lt;h3 id=&quot;21-容器启动&quot;&gt;2.1 容器启动&lt;/h3&gt;
+
+&lt;p&gt;首先创建容器，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker create &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;busybox busybox
+2dad99a1a04cd4adccfad768ac19389acbba4362090087fec8f587d5b9874abd
+docker ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS    PORTS     NAMES
+2dad99a1a04c   busybox   &lt;span class=&quot;s2&quot;&gt;&quot;sh&quot;&lt;/span&gt;      5 seconds ago   Created             busybox
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;docker容器处于&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Created&lt;/code&gt;状态，并未运行。&lt;/p&gt;
+
+&lt;p&gt;然后，执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker start&lt;/code&gt;启动容器。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker start busybox
+busybox
+docker ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS         PORTS     NAMES
+2dad99a1a04c   busybox   &lt;span class=&quot;s2&quot;&gt;&quot;sh&quot;&lt;/span&gt;      2 minutes ago   Up 3 seconds             busybox
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;现在，容器处于运行状态。&lt;/p&gt;
+
+&lt;p&gt;这个过程可以通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker run&lt;/code&gt;简化过程。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker run &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; busybox busybox
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Docker后台启动流程为：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Docker检查本地是否存在busybox镜像，如果镜像不存在则从Docker Hub拉取镜像。&lt;/li&gt;
+  &lt;li&gt;使用busybox镜像创建并启动一个容器。&lt;/li&gt;
+  &lt;li&gt;分配文件系统，并且在镜像只读层外创建一个读写层。&lt;/li&gt;
+  &lt;li&gt;从Docker IP池中分配一个IP给容器。&lt;/li&gt;
+  &lt;li&gt;执行用户启动命令运行镜像。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上述命令中，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-t&lt;/code&gt;参数作用是分配一个伪终端，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-i&lt;/code&gt;参数表示打开&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;STDIN&lt;/code&gt;，因此&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-it&lt;/code&gt;表示进入交互模式。在交互模式下可以输入命令，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh
+    8 root      0:00 ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;可以看到&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PID&lt;/code&gt;为1的进程&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sh&lt;/code&gt;。在交互模式下执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;exit&lt;/code&gt;，意味着杀死了1号进程，等同于容器被杀死。&lt;strong&gt;杀死容器主进程，则容器也会被杀死&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;/ &lt;span class=&quot;c&quot;&gt;# ps -a&lt;/span&gt;
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh
+    8 root      0:00 ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+/ &lt;span class=&quot;c&quot;&gt;# exit&lt;/span&gt;
+docker ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+CONTAINER ID   IMAGE     COMMAND   CREATED         STATUS                     PORTS     NAMES
+e27bbc62b96c   busybox   &lt;span class=&quot;s2&quot;&gt;&quot;sh&quot;&lt;/span&gt;      3 minutes ago   Exited &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 4 seconds ago             busybox
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;22-终止容器&quot;&gt;2.2 终止容器&lt;/h3&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker stop&lt;/code&gt;命令终止容器。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker stop &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;
+
+Usage:  docker stop &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;OPTIONS] CONTAINER &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;CONTAINER...]
+
+Stop one or more running containers
+
+Options:
+  &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt;, &lt;span class=&quot;nt&quot;&gt;--time&lt;/span&gt; int   Seconds to &lt;span class=&quot;nb&quot;&gt;wait &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;stop before killing it &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default 10&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;改命令首先向运行中的容器发送&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SIGTERM&lt;/code&gt;信号，如果容器内1号进程接受并能处理，则等待1号进程处理完毕后退出；如果等待一段时间后，容器仍然没有退出，则会发送&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SIGKILL&lt;/code&gt;强制终止容器。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker stop busybox
+busybox
+
+docker ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+CONTAINER ID   IMAGE     COMMAND   CREATED          STATUS                       PORTS     NAMES
+e27bbc62b96c   busybox   &lt;span class=&quot;s2&quot;&gt;&quot;sh&quot;&lt;/span&gt;      15 minutes ago   Exited &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;137&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 5 seconds ago             busybox
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;23-进入容器&quot;&gt;2.3 进入容器&lt;/h3&gt;
+
+&lt;p&gt;进入运行状态的容器可以通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker attach&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker exec&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsenter&lt;/code&gt;等多种方式进入。&lt;/p&gt;
+
+&lt;p&gt;（1）使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker attach&lt;/code&gt;进入容器&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;c&quot;&gt;# tm1&lt;/span&gt;
+docker attach busybox
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;Hello&apos;&lt;/span&gt;
+Hello
+
+&lt;span class=&quot;c&quot;&gt;# tm2&lt;/span&gt;
+docker attach busybox
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;Hello&apos;&lt;/span&gt;
+Hello
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker attach&lt;/code&gt;命令同时在多个终端运行时，所有的终端将会同步显示相同内容，当某个命令行窗口阻塞时，其它命令行窗口也将无法操作。&lt;/p&gt;
+
+&lt;p&gt;（2）使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker exec&lt;/code&gt;进入容器&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-it&lt;/span&gt; busybox /bin/sh
+ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh
+    7 root      0:00 /bin/sh
+   14 root      0:00 ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;进入容器后，可以看到容器内有两个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sh&lt;/code&gt;进程，7号进程是以&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;exec&lt;/code&gt;的方式进入容器启动的，每个命令窗口都是独立互不干扰的。&lt;/p&gt;
+
+&lt;p&gt;（3）使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsenter&lt;/code&gt;进入容器&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://mozillazg.com/2020/04/nsenter-usage.html&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsenter&lt;/code&gt; 可以访问另一个进程的名称空间，并执行程序。&lt;/p&gt;
+
+&lt;p&gt;首先获取容器的主进程&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PID&lt;/code&gt;，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker inspect &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\{\{&lt;/span&gt;.State.Pid&lt;span class=&quot;se&quot;&gt;\}\}&lt;/span&gt; busybox
+11147
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;获取进程&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PID&lt;/code&gt;后，使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsenter&lt;/code&gt;进入容器。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nsenter &lt;span class=&quot;nt&quot;&gt;--target&lt;/span&gt; 11147 &lt;span class=&quot;nt&quot;&gt;--mount&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--pid&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--uts&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--ipc&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--net&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;/bin/sh&apos;&lt;/span&gt;
+/bin/ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh
+   22 root      0:00 /bin/sh
+   23 root      0:00 /bin/ps &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;或者，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nsenter &lt;span class=&quot;nt&quot;&gt;--target&lt;/span&gt; 11147 &lt;span class=&quot;nt&quot;&gt;--all&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;/bin/sh&apos;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;24-删除容器&quot;&gt;2.4 删除容器&lt;/h3&gt;
+
+&lt;p&gt;删除停止状态的容器，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker &lt;span class=&quot;nb&quot;&gt;rm &lt;/span&gt;busybox
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;强制删除运行中的容器，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker &lt;span class=&quot;nb&quot;&gt;rm&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; busybox
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;25-导出导入容器&quot;&gt;2.5 导出导入容器&lt;/h3&gt;
+
+&lt;p&gt;（1）导出&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker export&lt;/code&gt;命令导出一个容器到文件，不管容器是否处于运行状态。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;busybox &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; busybox.tar
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;容器被打包进了&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;busybox.tar&lt;/code&gt;文件。&lt;/p&gt;
+
+&lt;p&gt;（2）导入&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker import&lt;/code&gt;命令可将&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker export&lt;/code&gt;导出文件转化为本地镜像，最后使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker run&lt;/code&gt;重新创建启动新的容器。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;docker import busybox.tar busybox:test
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+</description>
+        <pubDate>Mon, 25 Apr 2022 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2022/04/25/docker-container-command/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/04/25/docker-container-command/</guid>
+        
+        <category>State Machine</category>
+        
+        <category>Docker</category>
+        
+        <category>container</category>
+        
+        <category>nsenter</category>
+        
+        <category>docker import</category>
+        
+        <category>docker export</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>chroot</title>
+        <description>&lt;h1 id=&quot;chroot&quot;&gt;chroot&lt;/h1&gt;
+
+&lt;h2 id=&quot;1-什么是chroot&quot;&gt;1 什么是chroot&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;是在Unix和Linux系统的一个操作，针对正在运作的软件进程和子进程，改变其外显的根目录。由&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;设置根目录的程序是不能够对这个指定根目录之外的文件进行访问、读取、更改。&lt;/p&gt;
+
+&lt;h2 id=&quot;2-实例&quot;&gt;2 实例&lt;/h2&gt;
+
+&lt;p&gt;这里，使用现成的busybox镜像来创建一个系统的基础文件目录，其中包含了一些常用的二进制文件。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;c&quot;&gt;# 创建rootfs目录&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;mkdir &lt;/span&gt;rootfs
+
+&lt;span class=&quot;c&quot;&gt;# 将busybox image的目录文件打包进压缩文件&lt;/span&gt;
+docker &lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;docker create busybox&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; busybox.tar
+
+&lt;span class=&quot;c&quot;&gt;# busybox文件解压至rootfs&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;tar&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-xvf&lt;/span&gt; ./busybox.tar &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; ./rootfs
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;操作完成后，进入&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rootfs&lt;/code&gt;目录，目录下会出现类似宿主系统的目录和文件。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;❯ &lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; ./
+bin  dev  etc  home  proc  root  sys  tmp  usr  var
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;❯ tree &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt; 2 ./
+./
+├── bin
+│   ├── &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+│   ├── &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt;
+│   ├── acpid
+│   ├── addgroup
+│   ├── add-shell
+│   ├── adduser
+......
+├── dev
+│   ├── console
+│   ├── pts
+│   └── shm
+├── etc
+│   ├── group
+│   ├── &lt;span class=&quot;nb&quot;&gt;hostname&lt;/span&gt;
+│   ├── hosts
+│   ├── localtime
+│   ├── mtab -&amp;gt; /proc/mounts
+│   ├── network
+│   ├── passwd
+│   ├── resolv.conf
+│   └── shadow
+├── home
+├── proc
+├── root
+├── sys
+├── tmp
+├── usr
+│   └── sbin
+└── var
+    ├── spool
+    └── www
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;下面可以通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;切换至准备好的根目录，并启动&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo chroot&lt;/span&gt; ./ /bin/sh
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;执行完毕后，查看根目录，可以看到根目录已经变成了&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;busybox&lt;/code&gt;根目录。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-she&quot;&gt;/ # ls
+bin   dev   etc   home  proc  root  sys   tmp   usr   var
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此刻，进程&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;已经与它的父进程在目录空间上隔离开了。&lt;/p&gt;
+
+&lt;h2 id=&quot;3-chroot的隔离局限性&quot;&gt;3 chroot的隔离局限性&lt;/h2&gt;
+
+&lt;p&gt;上文，已经提到&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;可以改变进程的根目录，那么其它内核资源（如网络、PID等）是否隔离？&lt;/p&gt;
+
+&lt;p&gt;如下是在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;启动的子进程）输出的网络信息。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;/ &lt;span class=&quot;c&quot;&gt;# ip addr&lt;/span&gt;
+1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eno1: &amp;lt;NO-CARRIER,BROADCAST,MULTICAST,UP&amp;gt; mtu 1500 qdisc fq_codel qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether c4:34:6b:02:34:dd brd ff:ff:ff:ff:ff:ff
+3: wlo1: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc mq qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether 00:71:cc:22:cc:bb brd ff:ff:ff:ff:ff:ff
+    inet 192.168.2.142/24 brd 192.168.2.255 scope global dynamic noprefixroute wlo1
+       valid_lft 42010sec preferred_lft 42010sec
+    inet6 fe80::5ce6:a689:8d04:a0b3/64 scope &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;noprefixroute
+       valid_lft forever preferred_lft forever
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如下实在宿主系统下输出的网络信息。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;❯ ip addr
+1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eno1: &amp;lt;NO-CARRIER,BROADCAST,MULTICAST,UP&amp;gt; mtu 1500 qdisc fq_codel state DOWN group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether c4:34:6b:02:34:dd brd ff:ff:ff:ff:ff:ff
+    altname enp14s0
+3: wlo1: &amp;lt;BROADCAST,MULTICAST,UP,LOWER_UP&amp;gt; mtu 1500 qdisc mq state UP group default qlen 1000
+    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/ether 00:71:cc:22:cc:bb brd ff:ff:ff:ff:ff:ff
+    altname wlp7s0f0
+    inet 192.168.2.142/24 brd 192.168.2.255 scope global dynamic noprefixroute wlo1
+       valid_lft 41641sec preferred_lft 41641sec
+    inet6 fe80::5ce6:a689:8d04:a0b3/64 scope &lt;span class=&quot;nb&quot;&gt;link &lt;/span&gt;noprefixroute
+       valid_lft forever preferred_lft forever
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;通过对比，可以发现网络没有隔离。&lt;/p&gt;
+
+&lt;p&gt;接下来，对比PID有没有隔离。由于&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;需要执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps&lt;/code&gt;，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps&lt;/code&gt;依赖&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;procfs&lt;/code&gt;，所以需要先挂载&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/proc&lt;/code&gt;目录，操作命令如下。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-she&quot;&gt;mount -t proc proc /proc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;执行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ps&lt;/code&gt;命令后，可以看到全部宿主系统的进程。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;PID   USER     TIME  COMMAND
+    1 root      0:01 &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;systemd&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; /sbin/init
+    2 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;kthreadd]
+    3 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;rcu_gp]
+    4 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;rcu_par_gp]
+    8 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;mm_percpu_wq]
+    ......
+13806 1000      0:00 alacritty
+13808 1000      0:01 /usr/bin/zsh
+13817 1000      0:00 /usr/bin/zsh
+13910 1000      0:00 /usr/bin/zsh
+13911 1000      0:00 /usr/bin/zsh
+13913 1000      0:00 /usr/share/zsh-theme-powerlevel10k/gitstatus/usrbin/gitstatusd
+13945 root      0:00 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;kworker/0:1H]
+13954 root      0:00 ps
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;综上，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;chroot&lt;/code&gt;的确只隔离了根目录，其它内核资源并未涉及。&lt;/p&gt;
+</description>
+        <pubDate>Tue, 15 Mar 2022 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2022/03/15/chroot/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/03/15/chroot/</guid>
+        
+        <category>chroot</category>
+        
+        <category>Linux</category>
+        
+        <category>busybox</category>
+        
+        <category>docker</category>
+        
+        <category>隔离</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>计算机系统各类延时概况</title>
+        <description>&lt;h1 id=&quot;计算机系统各类延时概况&quot;&gt;计算机系统各类延时概况&lt;/h1&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;事件&lt;/th&gt;
+      &lt;th&gt;延时&lt;/th&gt;
+      &lt;th&gt;相对时间比例&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1个CPU周期&lt;/td&gt;
+      &lt;td&gt;0.3 ns&lt;/td&gt;
+      &lt;td&gt;1 s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;L1缓存访问&lt;/td&gt;
+      &lt;td&gt;0.9 ns&lt;/td&gt;
+      &lt;td&gt;3 s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;L2缓存访问&lt;/td&gt;
+      &lt;td&gt;2.8 ns&lt;/td&gt;
+      &lt;td&gt;9 s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;L3缓存访问&lt;/td&gt;
+      &lt;td&gt;12.9 ns&lt;/td&gt;
+      &lt;td&gt;43 s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;主存访问（从CPU访问DRAM）&lt;/td&gt;
+      &lt;td&gt;120 ns&lt;/td&gt;
+      &lt;td&gt;6 分钟&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;固态硬盘I/O（闪存）&lt;/td&gt;
+      &lt;td&gt;50-150 us&lt;/td&gt;
+      &lt;td&gt;2-6 天&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;旋转磁盘I/O&lt;/td&gt;
+      &lt;td&gt;1-10 ms&lt;/td&gt;
+      &lt;td&gt;1-12 月&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;互联网：从旧金山到纽约&lt;/td&gt;
+      &lt;td&gt;40 ms&lt;/td&gt;
+      &lt;td&gt;4 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;互联网：从旧金山到英国&lt;/td&gt;
+      &lt;td&gt;81 ms&lt;/td&gt;
+      &lt;td&gt;8 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;互联网：从旧金山到澳大利亚&lt;/td&gt;
+      &lt;td&gt;183 ms&lt;/td&gt;
+      &lt;td&gt;19 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;TCP包重传&lt;/td&gt;
+      &lt;td&gt;1-3 s&lt;/td&gt;
+      &lt;td&gt;105-317 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;OS虚拟化系统重启&lt;/td&gt;
+      &lt;td&gt;4 s&lt;/td&gt;
+      &lt;td&gt;423 年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;SCSI命令超时&lt;/td&gt;
+      &lt;td&gt;30 s&lt;/td&gt;
+      &lt;td&gt;3 千年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;硬件虚拟化系统重启&lt;/td&gt;
+      &lt;td&gt;40 s&lt;/td&gt;
+      &lt;td&gt;4 千年&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;物理系统重启&lt;/td&gt;
+      &lt;td&gt;5 m&lt;/td&gt;
+      &lt;td&gt;32 千年&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+</description>
+        <pubDate>Fri, 11 Feb 2022 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2022/02/11/latency-summary/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/02/11/latency-summary/</guid>
+        
+        <category>latency</category>
+        
+        <category>memory</category>
+        
+        <category>cpu</category>
+        
+        <category>cache</category>
+        
+        <category>network packet</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Docker组件架构</title>
+        <description>&lt;h1 id=&quot;docker组件&quot;&gt;docker组件&lt;/h1&gt;
+
+&lt;h2 id=&quot;总概&quot;&gt;总概&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;组件类别&lt;/th&gt;
+      &lt;th&gt;组件&lt;/th&gt;
+      &lt;th&gt;介绍&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;docker相关组件&lt;/td&gt;
+      &lt;td&gt;docker&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;docker&lt;/strong&gt;客户端，负责发送&lt;strong&gt;docker&lt;/strong&gt;操作请求。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;同上&lt;/td&gt;
+      &lt;td&gt;dockerd&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;docker&lt;/strong&gt;服务入口，负责接受客户端请求并返回请求结果。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;同上&lt;/td&gt;
+      &lt;td&gt;docker-init&lt;/td&gt;
+      &lt;td&gt;当业务主进程没有回收能力时，docker-init可以作为容器的1号进程，负责管理容器内的子进程。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;同上&lt;/td&gt;
+      &lt;td&gt;docker-proxy&lt;/td&gt;
+      &lt;td&gt;&lt;strong&gt;docker&lt;/strong&gt;的网络实现，通过设置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;iptables&lt;/code&gt;规则使得访问主机的流量可以发送至容器内。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;containerd相关&lt;/td&gt;
+      &lt;td&gt;containerd&lt;/td&gt;
+      &lt;td&gt;负责管理容器的生命周期， 通过接收dockerd的请求，执行启动或者销毁容器。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;同上&lt;/td&gt;
+      &lt;td&gt;contianerd-shim&lt;/td&gt;
+      &lt;td&gt;将containerd和真正的容器进程解耦。使用containerd-shim作为容器的父进程，可以实现重启containerd而不影响已经启动的容器进程。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;同上&lt;/td&gt;
+      &lt;td&gt;ctr&lt;/td&gt;
+      &lt;td&gt;containerd的客户端， 可以向containerd发送容器请求，主要用来调试开发。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;容器运行时组件&lt;/td&gt;
+      &lt;td&gt;runc&lt;/td&gt;
+      &lt;td&gt;命令行工具，通过调用&lt;strong&gt;namespace&lt;/strong&gt;、&lt;strong&gt;cgroup&lt;/strong&gt;等系统接口，实现容器的创建和销毁。&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/docker-arch.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图1 docker组建架构
+  	&lt;/div&gt;
+&lt;/center&gt;
+</description>
+        <pubDate>Mon, 17 Jan 2022 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2022/01/17/docker-component/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/01/17/docker-component/</guid>
+        
+        <category>Docker</category>
+        
+        <category>dockerd</category>
+        
+        <category>docker-init</category>
+        
+        <category>docker-proxy</category>
+        
+        <category>containerd</category>
+        
+        <category>containerd-shim</category>
+        
+        <category>ctr</category>
+        
+        <category>runc</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>DNS服务与配置</title>
+        <description>&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;用于查询和更新域名。&lt;/p&gt;
+
+&lt;p&gt;其中&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;要配合&lt;strong&gt;bind&lt;/strong&gt;服务器使用。&lt;/p&gt;
+
+&lt;h1 id=&quot;1-bind域名服务器简易配置&quot;&gt;1 &lt;strong&gt;bind&lt;/strong&gt;域名服务器简易配置&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.org.cn/Bind9%E5%AE%89%E8%A3%85%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%8D%97#HOWTO_Setup_BIND9_DNS_Server_.EF.BC.88.E5.A6.82.E4.BD.95.E5.AE.89.E8.A3.85.E8.AE.BE.E7.BD.AEBind9_DNS.E6.9C.8D.E5.8A.A1.E5.99.A8.EF.BC.89&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;接下来，将说明如何在&lt;strong&gt;Ubuntu 20.04.1 LTS&lt;/strong&gt;安装配置&lt;strong&gt;bind&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; bind9
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;安装相关工具，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; dnsutils bind9-host
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;配置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.conf&lt;/code&gt;。如下为示例文件内容：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;// this configuration file.
+//
+// If you are just adding zones, please &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;that &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /etc/bind/named.conf.local
+
+include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.options&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.default-zones&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+logging &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	channel access_log &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		file &lt;span class=&quot;s2&quot;&gt;&quot;/var/log/named.log&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		severity dynamic&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		print-category &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		print-severity &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+		print-time &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	category default &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		access_log&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+zone &lt;span class=&quot;s2&quot;&gt;&quot;etcd.com&quot;&lt;/span&gt; IN &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;master&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	file &lt;span class=&quot;s2&quot;&gt;&quot;/var/lib/bind/db.etcd.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	allow-query &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		any&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	allow-update &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		any&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;该文件中配置了两部分&lt;a href=&quot;http://www.hangdaowangluo.com/archives/1615&quot;&gt;日志&lt;/a&gt;及区域两部分内容，其中区域部分更加规范的方法实在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.conf.local&lt;/code&gt;配置。这里，配置了名为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;etcd.com&lt;/code&gt;的区域，它允许任意查询和更新，其数据文件为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/lib/bind/db.etcd.com&lt;/code&gt;，如下是示例内容。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nv&quot;&gt;$TTL&lt;/span&gt; 604800	&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 1 week
+@		IN SOA	dns.etcd.com. admin.etcd.com. &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+				100000     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; serial
+				604800     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; refresh &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 week&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+				86400      &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; retry &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 day&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+				2419200    &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; expire &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4 weeks&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+				604800     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; minimum &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 week&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+				&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+		IN	NS	dns
+dns		IN	A	192.168.100.50
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@		IN SOA	dns.etcd.com. admin.etcd.com. &lt;/code&gt;中，需要配置域名服务器、和管理员邮箱。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin.etcd.com&lt;/code&gt;可转化为邮箱地址&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin@etcd.com&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;常见的记录类型见下表：&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;类型&lt;/th&gt;
+      &lt;th&gt;说明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;A&lt;/td&gt;
+      &lt;td&gt;地址记录&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CNAME&lt;/td&gt;
+      &lt;td&gt;别名&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;MX&lt;/td&gt;
+      &lt;td&gt;邮件交换记录&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;NS&lt;/td&gt;
+      &lt;td&gt;域名服务器记录&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://fasionchan.com/network/dns/record-types/&quot;&gt;更多的可参考该资料&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;配置好上述文件后，执行如下命令启动&lt;strong&gt;bind&lt;/strong&gt;服务器。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;named
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如下命令可以查看日志。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;tail&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; /var/log/named.log
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;2-nslookup和nsupdate&quot;&gt;2 nslookup和nsupdate&lt;/h1&gt;
+&lt;p&gt;用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;命令进行一下测试。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nslookup dns.etcd.com 192.168.100.50
+Server:		192.168.100.50
+Address:	192.168.100.50#53
+
+Name:	dns.etcd.com
+Address: 192.168.100.50
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;命令可以添加新记录。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;
+server 192.168.100.50
+zone etcd.com
+update add n0.etcd.com 80000 IN A 192.168.100.120
+update add n1.etcd.com 80000 IN A 192.168.100.121
+update add n2.etcd.com 80000 IN A 192.168.100.122
+send
+quit
+&apos;&lt;/span&gt; | nsupdate
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;最后使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;验证是否添加成功。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nslookup n0.etcd.com 192.168.100.50
+Server:		192.168.100.50
+Address:	192.168.100.50#53
+
+Name:	n0.etcd.com
+Address: 192.168.100.120
+
+
+nslookup n1.etcd.com 192.168.100.50
+Server:		192.168.100.50
+Address:	192.168.100.50#53
+
+Name:	n1.etcd.com
+Address: 192.168.100.121
+
+
+nslookup n2.etcd.com 192.168.100.50
+Server:		192.168.100.50
+Address:	192.168.100.50#53
+
+Name:	n2.etcd.com
+Address: 192.168.100.122
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;bind&lt;/strong&gt;为数据文件开启了&lt;strong&gt;journal&lt;/strong&gt;模式用于保护数据安全，例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/lib/bind/db.etcd.com&lt;/code&gt;文件的目录下会生成&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;db.etcd.com.jnl&lt;/code&gt;文件，所以随意绕过&lt;strong&gt;bind&lt;/strong&gt;修改数据文件，会导致&lt;strong&gt;bind&lt;/strong&gt;启动失败。虽然删除&lt;strong&gt;jnl&lt;/strong&gt;文件可以恢复启动，但是会造成数据丢失。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 05 Dec 2021 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2021/12/05/dns/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2021/12/05/dns/</guid>
+        
+        <category>DNS</category>
+        
+        <category>nslookup</category>
+        
+        <category>nsupdate</category>
+        
+        <category>bind</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Cgroup v2</title>
+        <description>&lt;h1 id=&quot;cgroup-v2&quot;&gt;cgroup v2&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html&quot;&gt;详细参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;概况&quot;&gt;概况&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;cgroup&lt;/strong&gt;是一个目录树，每层目录下都可以创建子目录，子目录默认继承父目录的属性，具有层级结构。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;cgroup&lt;/strong&gt;把一个&lt;strong&gt;cgroup&lt;/strong&gt;目录中的资源划分给它的子目录，子目录可以把资源继续划分给它的子目录，&lt;strong&gt;子目录分配的资源之和不能超过父目录&lt;/strong&gt;，进程或者线程可以使用的资源受到它们委身的目录中的资源的限制。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;cgroup v2&lt;/strong&gt;和&lt;strong&gt;cgroup v1&lt;/strong&gt;区别很大，这一点可以反映在目录结构下，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;ll /sys/fs/cgroup
+total 0
+  1 0 dr-xr-xr-x 12 root root 0 11月 24 09:34 &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+  2 0 drwxr-xr-x  7 root root 0 11月 24 09:09 ..
+  4 0 &lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 root root 0 11月 24 09:09 cgroup.controllers
+  7 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 cgroup.max.depth
+  6 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 cgroup.max.descendants
+  2 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:09 cgroup.procs
+  8 0 &lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 cgroup.stat
+  5 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:09 cgroup.subtree_control
+  3 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 cgroup.threads
+ 12 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 cpu.pressure
+ 13 0 &lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 cpuset.cpus.effective
+ 14 0 &lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 cpuset.mems.effective
+  9 0 &lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 cpu.stat
+213 0 drwxr-xr-x  2 root root 0 11月 24 09:09 dev-hugepages.mount
+245 0 drwxr-xr-x  2 root root 0 11月 24 09:09 dev-mqueue.mount
+ 21 0 drwxr-xr-x  2 root root 0 11月 24 09:09 init.scope
+ 20 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 io.cost.model
+ 19 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 io.cost.qos
+ 10 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 io.pressure
+ 15 0 &lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 io.stat
+ 17 0 &lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 memory.numa_stat
+ 11 0 &lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 memory.pressure
+ 16 0 &lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 memory.stat
+ 18 0 &lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 root root 0 11月 24 09:25 misc.capacity
+725 0 drwxr-xr-x  2 root root 0 11月 24 09:09 proc-sys-fs-binfmt_misc.mount
+661 0 drwxr-xr-x  2 root root 0 11月 24 09:09 sys-fs-fuse-connections.mount
+693 0 drwxr-xr-x  2 root root 0 11月 24 09:09 sys-kernel-config.mount
+277 0 drwxr-xr-x  2 root root 0 11月 24 09:09 sys-kernel-debug.mount
+309 0 drwxr-xr-x  2 root root 0 11月 24 09:09 sys-kernel-tracing.mount
+ 53 0 drwxr-xr-x 25 root root 0 11月 24 09:38 system.slice
+181 0 drwxr-xr-x  3 root root 0 11月 24 09:11 user.slice
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;目录下的文件用来设置控制器，这些文件被称作&lt;strong&gt;cgroup控制器的文件接口&lt;/strong&gt;。其中，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cgroup.controllers&lt;/code&gt;中存放了支持的&lt;strong&gt;cgroup Controller&lt;/strong&gt;类型，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /sys/fs/cgroup/cgroup.controllers
+cpuset cpu io memory hugetlb pids rdma misc
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;controller默认是为开启的。通过向&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cgroup.subtree_control&lt;/code&gt;文件写数据，来子目录可用的资源控制器。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /sys/fs/cgroup/cgroup.subtree_control
+memory pids
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;这说明子目录的内存控制器、pids控制器是开启的。&lt;/p&gt;
+
+&lt;p&gt;开启&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cpu&lt;/code&gt;控制器(&lt;strong&gt;以root用户操作&lt;/strong&gt;)，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;+cpu&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/cgroup.subtree_control
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /sys/fs/cgroup/cgroup.subtree_control
+cpu memory pids
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;关闭&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cpu&lt;/code&gt;控制器，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;-cpu&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/cgroup.subtree_control
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /sys/fs/cgroup/cgroup.subtree_control
+memory pids
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Only controllers which are listed in “cgroup.controllers” can be enabled. When multiple operations are specified as above, either they &lt;strong&gt;all succeed or fail&lt;/strong&gt;. If &lt;strong&gt;multiple&lt;/strong&gt; operations on the &lt;strong&gt;same controller&lt;/strong&gt; are specified, &lt;strong&gt;the last one is effective&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;子目录的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cgroup.controllers&lt;/code&gt;受限于父目录的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cgroup.subtree_control&lt;/code&gt;&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;例如父目录开启了&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cpu&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;memory&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pids&lt;/code&gt;，则子目录仅能开启&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cpu&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;memory&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pids&lt;/code&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; /sys/fs/cgroup/A                                                               &lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /sys/fs/cgroup/A/cgroup.controllers                                             cpu memory pids
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /sys/fs/cgroup/A/cgroup.subtree_control                                         &lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; /sys/fs/cgroup/A/B 
+&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /sys/fs/cgroup/A/B/cgroup.controllers                                           &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;+cpu&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/A/cgroup.subtree_control                               &lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /sys/fs/cgroup/A/B/cgroup.controllers                                           cpu
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;(A:[ACtrl]{label:&quot;controllers:cpu memory pids&quot;}[ASubCtrl]{label:&quot;subtree control:cpu&quot;}) (B:[BCtrl]{label:&quot;controllers:cpu&quot;}[BSubCtrl]{label:&quot;subtree control:&quot;}) [ASubCtrl]-&amp;gt;[ACtrl] [BCtrl]-&amp;gt;[ASubCtrl] {flow:south}&apos;&lt;/span&gt; | graph-easy
++ - - - - - - - - - - -+     +- - - - - - - - - - - - - - - - -+
+&lt;span class=&quot;s1&quot;&gt;&apos; B:                   &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos; A:                              &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;                      &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos;                                 &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +------------------+ &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos; +-----------------------------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; | controllers:cpu  | &apos;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos; |     subtree control:cpu     | &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +------------------+ &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos; +-----------------------------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;                      &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos;   |                             &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;                      &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos;   |                             &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;                      &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos;   v                             &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +------------------+ &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos; +-----------------------------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; | subtree control: | &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos; | controllers:cpu memory pids | &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +------------------+ &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos; +-----------------------------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;                      &apos;&lt;/span&gt;     &lt;span class=&quot;s1&quot;&gt;&apos;                                 &apos;&lt;/span&gt;
++ - - - - - - - - - - -+     +- - - - - - - - - - - - - - - - -+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;挂载cgroup-controller&quot;&gt;挂载cgroup Controller&lt;/h2&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;mkdir &lt;/span&gt;mnt_cgroup
+&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;mount &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt; cgroup2 cgroup2 ./mnt_cgroup
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mnt_cgroup&lt;/code&gt;目录下，可以看到类似与&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/sys/fs/cgroup&lt;/code&gt;结构。&lt;/p&gt;
+
+&lt;h2 id=&quot;控制器目录结构&quot;&gt;控制器目录结构&lt;/h2&gt;
+
+&lt;p&gt;在cgroup v2中，进程只能加入到&lt;strong&gt;叶子目录节点&lt;/strong&gt;（&lt;strong&gt;*除cgroup根节点外&lt;/strong&gt;）。&lt;/p&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/cgroupv2-case1.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图1 cgroup v2目录结构1
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/cgroupv2-case2.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图2 cgroup v2目录结构2
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/cgroupv2-case3.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图3 cgroup v2目录结构3
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;p&gt;然而，CPU控制器和内存控制器判定子目录的方法稍有区别。&lt;/p&gt;
+
+&lt;p&gt;在图1中，A、B目录均&lt;strong&gt;没有追加任何进程&lt;/strong&gt;（初始状态）。受CPU控制器影响，&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果B目录追加了进程，那么B目录将成为子目录，那么A目录将无法追加任何进程。&lt;/li&gt;
+  &lt;li&gt;如果A目录先追加进程，那么A目录将成为子目录，那么B目录将废弃，无法追加任何进程。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在图2中，A、B目录均&lt;strong&gt;没有追加任何进程&lt;/strong&gt;（初始状态）。受内存控制器影响，&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;B目录为子目录，A目录不能追加任何进程。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;在图3中，A、B目录均&lt;strong&gt;没有追加任何进程&lt;/strong&gt;（初始状态）。虽然，B目录同时支持CPU控制器、内存控制器，但是B目录会默认成为子目录。A、B并不会根据追加进程先后判断子目录，因为受内存控制器作用，A目录是无法追加任何进程。&lt;/p&gt;
+
+&lt;p&gt;本质上，&lt;strong&gt;&lt;em&gt;一个cgroup目录如果绑定了进程，那么它的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cgroup.subtree_control&lt;/code&gt;必须为空，或者反过来必须不绑定进程，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cgroup.subtree_control&lt;/code&gt;中才可以有内容。&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;More precisely, the rule is that a (nonroot) cgroup can’t both (1) have member processes, and (2) distribute resources into child cgroups—that is, have a nonempty cgroup.subtree_control file.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/cgroupv2-case4.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      图4 cgroup v2目录结构4
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;p&gt;如果，中间目录的控制器规则满足某个进程的需要，那么应该如何处理呢？&lt;/p&gt;
+
+&lt;p&gt;参考图4，假如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cg1&lt;/code&gt;满足进程的需要，可以在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cg1&lt;/code&gt;建立一个&lt;strong&gt;叶子子目录&lt;/strong&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;leaf_cg1&lt;/code&gt;，该目录下的控制其规则默认继承自&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cg1&lt;/code&gt;，可以将进程绑定在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;leaf_cg1&lt;/code&gt;上。&lt;/p&gt;
+
+&lt;h2 id=&quot;进程控制器和线程控制器&quot;&gt;进程控制器和线程控制器&lt;/h2&gt;
+
+&lt;p&gt;从&lt;strong&gt;Linux kernel 4.14&lt;/strong&gt;开始，&lt;strong&gt;cgroup v2&lt;/strong&gt; 引入了&lt;strong&gt;&lt;em&gt;thread mode&lt;/em&gt;&lt;/strong&gt;（线程模式），controller被分为&lt;strong&gt;domain controller&lt;/strong&gt;（cgroup进程控制器）和&lt;strong&gt;threaded controller&lt;/strong&gt;（cgroup线程控制器）。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;cgroup&lt;/strong&gt;目录有了类型之分：只管理进程的&lt;strong&gt;cgroup&lt;/strong&gt;目录是&lt;strong&gt;domain cgroup&lt;/strong&gt;，称为&lt;strong&gt;进程(子)目录&lt;/strong&gt;；新增的管理线程的&lt;strong&gt;cgroup&lt;/strong&gt;目录是&lt;strong&gt;threaded cgroup&lt;/strong&gt;，称为&lt;strong&gt;线程子目录&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;cgroup控制器core接口文件&quot;&gt;cgroup控制器core接口文件&lt;/h2&gt;
+
+&lt;h3 id=&quot;cgrouptype&quot;&gt;cgroup.type&lt;/h3&gt;
+
+&lt;p&gt;当前&lt;strong&gt;cgroup&lt;/strong&gt;的类型，&lt;strong&gt;cgroup&lt;/strong&gt;类型包括：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;domain&lt;/strong&gt;：默认类型。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;domain threaded&lt;/strong&gt;：作为threaded类型&lt;strong&gt;cgroup&lt;/strong&gt;的根结点。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;domain invalid&lt;/strong&gt;：无效状态&lt;strong&gt;cgroup&lt;/strong&gt;。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;threaded&lt;/strong&gt;：threaded类型的&lt;strong&gt;cgroup&lt;/strong&gt;组。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cgroupprocs&quot;&gt;cgroup.procs&lt;/h3&gt;
+
+&lt;p&gt;该文件是当前&lt;strong&gt;cgroup&lt;/strong&gt;的PID列表，向该文件&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;echo $pid&lt;/code&gt;，可以使&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$pid&lt;/code&gt;加入组。&lt;/p&gt;
+
+&lt;p&gt;一个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pid&lt;/code&gt;可以从一个组迁移到另一个组，但要满足以下两项条件，&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;进程对新组有写访问权限。&lt;/li&gt;
+  &lt;li&gt;源组和目的组拥有共同的祖先。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cgroupthreads&quot;&gt;cgroup.threads&lt;/h3&gt;
+
+&lt;p&gt;该文件是当前&lt;strong&gt;cgroup&lt;/strong&gt;的TID列表，可以控制组内线程。&lt;/p&gt;
+
+&lt;h3 id=&quot;cgroupcontrollers&quot;&gt;cgroup.controllers&lt;/h3&gt;
+
+&lt;p&gt;该文件是当前组支持的控制器类型列表。&lt;/p&gt;
+
+&lt;h3 id=&quot;cgroupsubtree_control&quot;&gt;cgroup.subtree_control&lt;/h3&gt;
+
+&lt;p&gt;该文件是子目录组开启的控制器类型列表。&lt;/p&gt;
+
+&lt;h3 id=&quot;cgroupevents&quot;&gt;cgroup.events&lt;/h3&gt;
+
+&lt;p&gt;该文件包含两个只读的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;key-value&lt;/code&gt;。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;populated&lt;/code&gt;：1表示当前&lt;strong&gt;cgroup&lt;/strong&gt;内有进程，0表示没有。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;frozen&lt;/code&gt;：1表示当前&lt;strong&gt;cgroup&lt;/strong&gt;为frozen状态，0表示非此状态。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cgroupmaxdescendants&quot;&gt;cgroup.max.descendants&lt;/h3&gt;
+
+&lt;p&gt;当前&lt;strong&gt;cgroup&lt;/strong&gt;目录中可以允许的最大子&lt;strong&gt;cgroup&lt;/strong&gt;个数。默认值为max。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If the actual number of descendants is equal or larger, an attempt to create a new cgroup in the hierarchy will fail.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;子组数量超过该值，该目录下创建新的组会失败。&lt;/p&gt;
+
+&lt;h3 id=&quot;cgroupmaxdepth&quot;&gt;cgroup.max.depth&lt;/h3&gt;
+
+&lt;p&gt;当前&lt;strong&gt;cgroup&lt;/strong&gt;目录中可以允许的最大&lt;strong&gt;cgroup&lt;/strong&gt;层级数。默认值为max。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If the actual descent depth is equal or larger, an attempt to create a new child cgroup will fail.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;cgroupstat&quot;&gt;cgroup.stat&lt;/h3&gt;
+
+&lt;p&gt;包含两个只读的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;key-value&lt;/code&gt;。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nr_descendants&lt;/code&gt;：当前&lt;strong&gt;cgroup&lt;/strong&gt;下可见的子孙&lt;strong&gt;cgroup&lt;/strong&gt;个数。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nr_dying_descendants&lt;/code&gt;：这个&lt;strong&gt;cgroup&lt;/strong&gt;下曾被创建但是已被删除的子孙&lt;strong&gt;cgroup&lt;/strong&gt;个数。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cgroupfreeze&quot;&gt;cgroup.freeze&lt;/h3&gt;
+
+&lt;p&gt;值为1可以将组置为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;freeze&lt;/code&gt;状态。默认值为0。&lt;/p&gt;
+
+&lt;h3 id=&quot;cgroupkill&quot;&gt;cgroup.kill&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;A write-only single value file which exists in non-root cgroups. The only allowed value is “1”.&lt;/p&gt;
+
+  &lt;p&gt;Writing “1” to the file causes the cgroup and all descendant cgroups to be killed. This means that all processes located in the affected cgroup tree will be killed via SIGKILL.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;只写单值文件，向该文件写1可以杀死该组和该组的子组。&lt;/p&gt;
+
+&lt;h2 id=&quot;cpu控制器&quot;&gt;CPU控制器&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;可压缩资源&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;cpu接口文件&quot;&gt;CPU接口文件&lt;/h3&gt;
+
+&lt;h4 id=&quot;cpustat&quot;&gt;cpu.stat&lt;/h4&gt;
+
+&lt;p&gt;当前&lt;strong&gt;cgroup&lt;/strong&gt;的CPU消耗统计。该文件的存在意味着CPU控制器是否开启。显示的内容包括：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;usage_usec&lt;/code&gt;：占用CPU总时间。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user_usec&lt;/code&gt;：用户态占用时间。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;system_usec&lt;/code&gt;：内核态占用时间。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nr_periods&lt;/code&gt;：周期计数。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nr_throttled&lt;/code&gt;：周期内的限制计数。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;throttled_usec&lt;/code&gt;：限制执行的时间。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;cpuweight&quot;&gt;cpu.weight&lt;/h4&gt;
+
+&lt;p&gt;可以通过&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cpu.weight&lt;/code&gt;文件来设置本&lt;strong&gt;cgroup&lt;/strong&gt;的权重值。默认为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;100&lt;/code&gt;。取值范围为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[1,10000]&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h4 id=&quot;cpuweightnice&quot;&gt;cpu.weight.nice&lt;/h4&gt;
+
+&lt;p&gt;该接口文件是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cpu.weight&lt;/code&gt;的替代接口，允许使用 nice 使用的相同值读取和设置权重。 因为对于 nice 值（CPU调度优先级），范围更小且粒度更粗，所以读取值是当前权重的最接近的近似值。&lt;/p&gt;
+
+&lt;h4 id=&quot;cpumax&quot;&gt;cpu.max&lt;/h4&gt;
+
+&lt;p&gt;带宽最大限制，默认&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;max 100000&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;文件遵循如下格式&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nv&quot;&gt;$MAX&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$PERIOD&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;表示在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$PERIOD&lt;/code&gt;周期内，该组可以消耗最多&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$MAX&lt;/code&gt;周期。&lt;/p&gt;
+
+&lt;h4 id=&quot;cpumaxburst&quot;&gt;cpu.max.burst&lt;/h4&gt;
+
+&lt;p&gt;默认值0，取值范围为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[0,$MAX]&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.infoq.cn/article/y2semvajjgxj9mbg9p00&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;CPU低于配额时，burst累积；当CPU使用超出配额时，根据burst累积量，允许CPU短时超额使用。&lt;/p&gt;
+
+&lt;h4 id=&quot;cpupressure&quot;&gt;cpu.pressure&lt;/h4&gt;
+
+&lt;p&gt;显示当前&lt;strong&gt;cgroup&lt;/strong&gt;的CPU使用压力状态。&lt;/p&gt;
+
+&lt;h4 id=&quot;cpuuclampmin&quot;&gt;cpu.uclamp.min&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.cxybb.com/article/qq_52358151/112558800&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;默认值0。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;uclamp&lt;/strong&gt;提供了一种用户空间对于&lt;strong&gt;task util&lt;/strong&gt;进行限制的机制。&lt;/p&gt;
+
+&lt;h4 id=&quot;cpuuclampmax&quot;&gt;cpu.uclamp.max&lt;/h4&gt;
+
+&lt;p&gt;默认值max。&lt;/p&gt;
+
+&lt;h3 id=&quot;cpu配额实例&quot;&gt;CPU配额实例&lt;/h3&gt;
+&lt;p&gt;创建控制组A，CPU配额50%的CPU核。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; /sys/fs/cgroup/A
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;+cpu&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/cgroup.subtree_control
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;50000 100000&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/A/cpu.max
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;空转任务如下：&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$$&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; :
+&lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+	:
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+./loop.sh
+11762
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;空转任务CPU使用率为100%，&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;top &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 11762
+
+...
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+  11762 cheney    20   0   10336   3132   2800 R 100.0   0.0   0:25.89 loop.sh
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;为进程&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;11762&lt;/code&gt;分配控制组A，&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;11762&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/A/cgroup.procs
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;再次查看CPU使用率为50%。&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;top &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 11762
+
+...
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+  11762 cheney    20   0   10336   3184   2848 R  50.0   0.0   1:15.85 loop.sh
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;内存控制器&quot;&gt;内存控制器&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;不可压缩资源&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;内存接口文件&quot;&gt;内存接口文件&lt;/h3&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;All memory amounts are in bytes. If a value which is not aligned to PAGE_SIZE is written, the value may be rounded up to the closest PAGE_SIZE multiple when read back.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;内存量按照内存页大小向上对齐。&lt;/p&gt;
+
+&lt;h4 id=&quot;memorymax&quot;&gt;memory.max&lt;/h4&gt;
+
+&lt;p&gt;默认值为max，不限制。如果需要做限制，则写一个内存字节数上限到文件内就可以了。cgroup的内存使用量超过该阈值，会触发OOM。&lt;/p&gt;
+
+&lt;h4 id=&quot;memorymin&quot;&gt;memory.min&lt;/h4&gt;
+
+&lt;p&gt;这是内存的硬保护机制。如果当前&lt;strong&gt;cgroup&lt;/strong&gt;的内存使用量在min值以内，则任何情况下都不会对这部分内存进行回收。如果没有可用的不受保护的可回收内存，则将oom。这个值会受到上层&lt;strong&gt;cgroup&lt;/strong&gt;的min限制影响，如果所有子一级的min限制总数大于上一级&lt;strong&gt;cgroup&lt;/strong&gt;的min限制，当这些子一级&lt;strong&gt;cgroup&lt;/strong&gt;都要使用申请内存的时候，其总量不能超过上一级&lt;strong&gt;cgroup&lt;/strong&gt;的min。这种情况下，各个&lt;strong&gt;cgroup&lt;/strong&gt;的受保护内存按照min值的比率分配。如果将min值设置的比你当前可用内存还大，可能将导致持续不断的oom。如果&lt;strong&gt;cgroup&lt;/strong&gt;中没有进程，这个值将被忽略。&lt;/p&gt;
+
+&lt;h4 id=&quot;memoryhigh&quot;&gt;memory.high&lt;/h4&gt;
+
+&lt;p&gt;内存使用的预警值，当内存使用量超出该值，并不会出发OOM。而是，内核会尽量回收该cgroup下的内存，使内存使用量尽量回落在该值之下。&lt;/p&gt;
+
+&lt;h4 id=&quot;memorylow&quot;&gt;memory.low&lt;/h4&gt;
+
+&lt;p&gt;内存使用下限限制，当内存使用量低于该值时，内核会尽量不回收该cgroup下的内存。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;memory.high&lt;/code&gt;和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;memory.low&lt;/code&gt;目的是用于控制内存回收的优先级。&lt;/p&gt;
+
+&lt;p&gt;（其余有待补充）&lt;/p&gt;
+
+&lt;h3 id=&quot;内存配额实例&quot;&gt;内存配额实例&lt;/h3&gt;
+
+&lt;p&gt;创建控制组A，内存配额512MB。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;+memory&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/cgroup.subtree_control
+&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; /sys/fs/cgroup/A/
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;536870912&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/A/memory.max
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;memtester&lt;/code&gt;申请内存，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;memtester 1G 1
+memtester version 4.5.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;64-bit&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Copyright &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 2001-2020 Charles Cazabon.
+Licensed under the GNU General Public License version 2 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;only&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+
+pagesize is 4096
+pagesizemask is 0xfffffffffffff000
+want 1024MB &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1073741824 bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+got  1024MB &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1073741824 bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, trying mlock ...locked.
+Loop 1/1:
+  Stuck Address       : ok
+  Random Value        : ok
+  Compare XOR         : ok
+  Compare SUB         : ok
+  Compare MUL         : ok
+  Compare DIV         : ok
+  Compare OR          : ok
+  Compare AND         : ok
+  Sequential Increment: ok
+  Solid Bits          : ok
+  Block Sequential    : ok
+  Checkerboard        : ok
+  Bit Spread          : ok
+  Bit Flip            : ok
+  Walking Ones        : ok
+  Walking Zeroes      : ok
+  8-bit Writes        : ok
+  16-bit Writes       : ok
+
+Done.
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;说明进程可以申请到1GB内存。&lt;/p&gt;
+
+&lt;p&gt;打开新的shell，查看PID，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$$&lt;/span&gt;
+11110
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;将该进程加入到用户组A，然后测试内存申请。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;11110&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/A/cgroup.procs
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PID:11110&lt;/code&gt;的shell中执行内存测试，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;memtester 1G 1
+memtester version 4.5.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;64-bit&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Copyright &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;C&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 2001-2020 Charles Cazabon.
+Licensed under the GNU General Public License version 2 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;only&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+
+pagesize is 4096
+pagesizemask is 0xfffffffffffff000
+want 1024MB &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1073741824 bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+got  1024MB &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1073741824 bytes&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, trying mlock ...[1]    8270 killed     &lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;memtester 1G 1
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;io控制器&quot;&gt;IO控制器&lt;/h2&gt;
+
+&lt;h3 id=&quot;io接口文件&quot;&gt;IO接口文件&lt;/h3&gt;
+
+&lt;h4 id=&quot;iomax&quot;&gt;io.max&lt;/h4&gt;
+
+&lt;p&gt;限制读写最大速率，如下配额中包括5部分，分别为设备编号（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$MAJ:$MIN&lt;/code&gt;）、读速率&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rbps&lt;/code&gt;（每秒可读字节数）、写速率&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wbps&lt;/code&gt;（每秒可写字节数）、读请求速率&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;riops&lt;/code&gt;（每秒读请求的数量）、写请求速率&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wiops&lt;/code&gt;（每秒写请求的数量）。如下规则可以解释为“设备&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;8：0&lt;/code&gt;将写速率限制在2MB/s内”。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;8：0 &lt;span class=&quot;nv&quot;&gt;rbps&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;max &lt;span class=&quot;nv&quot;&gt;wbps&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2097152 &lt;span class=&quot;nv&quot;&gt;riops&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;max &lt;span class=&quot;nv&quot;&gt;wiops&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;max
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;iolatency&quot;&gt;io.latency&lt;/h4&gt;
+
+&lt;p&gt;这是cgroup v2实现的一种对io负载保护的机制。可以给一个磁盘设置一个预期延时目标。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;8:0 &lt;span class=&quot;nv&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;如上规则可以解释为“设备&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;8：0&lt;/code&gt;将延时预期限制在了100ms内”。&lt;/p&gt;
+
+&lt;p&gt;如果cgroup检测到当前cgroup内的io响应延迟时间超过了这个target，那么cgroup可能会限制同一个父级cgroup下的其他同级别cgroup的io负载，以尽量让当前cgroup的target达到预期。&lt;/p&gt;
+
+&lt;h3 id=&quot;io配额实例&quot;&gt;IO配额实例&lt;/h3&gt;
+
+&lt;h4 id=&quot;iomax-1&quot;&gt;io.max&lt;/h4&gt;
+
+&lt;p&gt;查看本地设备，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;fdisk &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;cheney:
+Disk /dev/sda: 931.51 GiB, 1000204886016 bytes, 1953525168 sectors
+Disk model: HGST HTS541010A9
+Units: sectors of 1 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; 512 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 512 bytes
+Sector size &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;logical/physical&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: 512 bytes / 4096 bytes
+I/O size &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;minimum/optimal&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: 4096 bytes / 4096 bytes
+Disklabel &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;: gpt
+Disk identifier: 7855E321-8FE0-364B-8FF4-A8786BD52E33
+
+Device          Start        End    Sectors   Size Type
+/dev/sda1        4096     618495     614400   300M EFI System
+/dev/sda2      618496 1926796144 1926177649 918.5G Linux filesystem
+/dev/sda3  1926796145 1953520064   26723920  12.7G Linux swap
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;查看设备&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/dev/sda&lt;/code&gt;的编号，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;stat&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; %t:%T /dev/sda
+8:0
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;创建新的cgroup并开启IO控制器，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;+io&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ./cgroup.subtree_control
+&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; ./A
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;8:0 wbps=2097152&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ./A/io.max
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;在新的shell中测试速率，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;dd &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/zero &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~/testfile &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1M &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;200 &lt;span class=&quot;nv&quot;&gt;oflag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;direct
+200+0 records &lt;span class=&quot;k&quot;&gt;in
+&lt;/span&gt;200+0 records out
+209715200 bytes &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;210 MB, 200 MiB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; copied, 2.25754 s, 92.9 MB/s
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/A/cgroup.procs
+&lt;span class=&quot;nb&quot;&gt;dd &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/zero &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~/testfile &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1M &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;200 &lt;span class=&quot;nv&quot;&gt;oflag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;direct
+200+0 records &lt;span class=&quot;k&quot;&gt;in
+&lt;/span&gt;200+0 records out
+209715200 bytes &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;210 MB, 200 MiB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; copied, 100.019 s, 2.1 MB/s
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;进入cgroup A后，IO速率被限制在了2MB/s。&lt;/p&gt;
+
+&lt;h4 id=&quot;iolatency-1&quot;&gt;io.latency&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fio&lt;/code&gt;工具可以测试IO延时，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt; fio &lt;span class=&quot;nt&quot;&gt;-filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;testfile &lt;span class=&quot;nt&quot;&gt;-direct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nt&quot;&gt;-iodepth&lt;/span&gt; 1 &lt;span class=&quot;nt&quot;&gt;-thread&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;write &lt;span class=&quot;nt&quot;&gt;-ioengine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sync&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1M &lt;span class=&quot;nt&quot;&gt;-size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2000M &lt;span class=&quot;nt&quot;&gt;-numjobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nt&quot;&gt;-group_reporting&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;sqe_2000_1M
+sqe_2000_1M: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;rw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;write, &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;R&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024KiB-1024KiB, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;W&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024KiB-1024KiB, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;T&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024KiB-1024KiB, &lt;span class=&quot;nv&quot;&gt;ioengine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sync&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;iodepth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+fio-3.28
+Starting 1 thread
+Jobs: 1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;W&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)][&lt;/span&gt;100.0%][w&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;94.0MiB/s][w&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;94 IOPS][eta 00m:00s]
+sqe_2000_1M: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;groupid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nb&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0: &lt;span class=&quot;nv&quot;&gt;pid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9403: Fri Nov 26 11:02:27 2021
+  write: &lt;span class=&quot;nv&quot;&gt;IOPS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;94, &lt;span class=&quot;nv&quot;&gt;BW&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;94.5MiB/s &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;99.0MB/s&lt;span class=&quot;o&quot;&gt;)(&lt;/span&gt;2000MiB/21174msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 0 zone resets
+    clat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;usec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2362, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;98388, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10515.88, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3383.55
+     lat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;usec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2397, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;98449, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10573.54, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3384.18
+    clat percentiles &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;usec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+     |  1.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt; 8356],  5.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt; 8586], 10.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt; 8586], 20.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;10159],
+     | 30.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;10290], 40.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;10421], 50.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;10421], 60.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;10552],
+     | 70.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;10683], 80.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;10683], 90.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;10814], 95.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;10945],
+     | 99.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;22676], 99.50th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;31851], 99.90th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;69731], 99.95th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;98042],
+     | 99.99th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;98042]
+   bw &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;  KiB/s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;51200, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;104448, &lt;span class=&quot;nv&quot;&gt;per&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.00%, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;96792.38, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8701.39, &lt;span class=&quot;nv&quot;&gt;samples&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;42
+   iops        : &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;   50, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  102, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;94.52, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 8.50, &lt;span class=&quot;nv&quot;&gt;samples&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;42
+  lat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   : &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.05%, &lt;span class=&quot;nv&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;19.70%, &lt;span class=&quot;nv&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;79.00%, &lt;span class=&quot;nv&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.15%, &lt;span class=&quot;nv&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.10%
+  cpu          : &lt;span class=&quot;nv&quot;&gt;usr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.83%, &lt;span class=&quot;nv&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.38%, &lt;span class=&quot;nv&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2005, &lt;span class=&quot;nv&quot;&gt;majf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;minf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
+  IO depths    : &lt;span class=&quot;nv&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.0%, &lt;span class=&quot;nv&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%
+     submit    : &lt;span class=&quot;nv&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.0%, &lt;span class=&quot;nv&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%
+     &lt;span class=&quot;nb&quot;&gt;complete&lt;/span&gt;  : &lt;span class=&quot;nv&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.0%, &lt;span class=&quot;nv&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%
+     issued rwts: &lt;span class=&quot;nv&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0,2000,0,0 &lt;span class=&quot;nv&quot;&gt;short&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0,0,0,0 &lt;span class=&quot;nv&quot;&gt;dropped&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0,0,0,0
+     latency   : &lt;span class=&quot;nv&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;percentile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.00%, &lt;span class=&quot;nv&quot;&gt;depth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+
+Run status group 0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;all &lt;span class=&quot;nb&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  WRITE: &lt;span class=&quot;nv&quot;&gt;bw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;94.5MiB/s &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;99.0MB/s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 94.5MiB/s-94.5MiB/s &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;99.0MB/s-99.0MB/s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2000MiB &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2097MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;21174-21174msec
+
+Disk stats &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt;/write&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  sda: &lt;span class=&quot;nv&quot;&gt;ios&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0/2046, &lt;span class=&quot;nv&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0/22, &lt;span class=&quot;nv&quot;&gt;ticks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0/21494, &lt;span class=&quot;nv&quot;&gt;in_queue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;21985, &lt;span class=&quot;nv&quot;&gt;util&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;99.62%
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;clat (usec): min=2362, max=98388, avg=10515.88, stdev=3383.55&lt;/code&gt;反映了延时情况。&lt;/p&gt;
+
+&lt;p&gt;创建cgroup A，并开启IO控制器，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;io.latency&lt;/code&gt;的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;target=50&lt;/code&gt;。&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;+io&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ./cgroup.subtree_control
+&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; ./A
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;8:0 target=50&apos;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ./A/io.latency
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;开启两个&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shell&lt;/code&gt;（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shell-1&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shell-2&lt;/code&gt;），&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shell-1&lt;/code&gt;加入到A组，两个shell同时运行&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fio&lt;/code&gt;测试工具。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shell-1&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;c&quot;&gt;# shell-1&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$$&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; /sys/fs/cgroup/A/cgroup.procs
+fio &lt;span class=&quot;nt&quot;&gt;-filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;testfile-1 &lt;span class=&quot;nt&quot;&gt;-direct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nt&quot;&gt;-iodepth&lt;/span&gt; 1 &lt;span class=&quot;nt&quot;&gt;-thread&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;write &lt;span class=&quot;nt&quot;&gt;-ioengine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sync&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1M &lt;span class=&quot;nt&quot;&gt;-size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2000M &lt;span class=&quot;nt&quot;&gt;-numjobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nt&quot;&gt;-group_reporting&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;sqe_2000_1M
+sqe_2000_1M: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;rw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;write, &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;R&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024KiB-1024KiB, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;W&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024KiB-1024KiB, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;T&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024KiB-1024KiB, &lt;span class=&quot;nv&quot;&gt;ioengine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sync&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;iodepth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+fio-3.28
+Starting 1 thread
+sqe_2000_1M: Laying out IO file &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 file / 2000MiB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Jobs: 1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;W&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)][&lt;/span&gt;100.0%][w&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;24.0MiB/s][w&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;24 IOPS][eta 00m:00s]
+sqe_2000_1M: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;groupid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nb&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0: &lt;span class=&quot;nv&quot;&gt;pid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9996: Fri Nov 26 11:15:49 2021
+  write: &lt;span class=&quot;nv&quot;&gt;IOPS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;23, &lt;span class=&quot;nv&quot;&gt;BW&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;23.9MiB/s &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;25.1MB/s&lt;span class=&quot;o&quot;&gt;)(&lt;/span&gt;2000MiB/83529msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 0 zone resets
+    clat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;13, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;285, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;41.69, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;11.32
+     lat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;13, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;285, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;41.75, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;11.32
+    clat percentiles &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+     |  1.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   23],  5.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   27], 10.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   36], 20.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   37],
+     | 30.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   37], 40.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   39], 50.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   40], 60.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   41],
+     | 70.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   42], 80.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   51], 90.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   53], 95.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   59],
+     | 99.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   70], 99.50th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   75], 99.90th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  174], 99.95th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  284],
+     | 99.99th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  284]
+   bw &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;  KiB/s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;14336, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;28672, &lt;span class=&quot;nv&quot;&gt;per&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.00%, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;24538.99, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2120.84, &lt;span class=&quot;nv&quot;&gt;samples&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;166
+   iops        : &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;   14, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;   28, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;23.96, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 2.07, &lt;span class=&quot;nv&quot;&gt;samples&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;166
+  lat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   : &lt;span class=&quot;nv&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.20%, &lt;span class=&quot;nv&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;78.55%, &lt;span class=&quot;nv&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;21.05%, &lt;span class=&quot;nv&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.15%, &lt;span class=&quot;nv&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.05%
+  cpu          : &lt;span class=&quot;nv&quot;&gt;usr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.24%, &lt;span class=&quot;nv&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.43%, &lt;span class=&quot;nv&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2022, &lt;span class=&quot;nv&quot;&gt;majf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;minf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
+  IO depths    : &lt;span class=&quot;nv&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.0%, &lt;span class=&quot;nv&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%
+     submit    : &lt;span class=&quot;nv&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.0%, &lt;span class=&quot;nv&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%
+     &lt;span class=&quot;nb&quot;&gt;complete&lt;/span&gt;  : &lt;span class=&quot;nv&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.0%, &lt;span class=&quot;nv&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%
+     issued rwts: &lt;span class=&quot;nv&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0,2000,0,0 &lt;span class=&quot;nv&quot;&gt;short&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0,0,0,0 &lt;span class=&quot;nv&quot;&gt;dropped&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0,0,0,0
+     latency   : &lt;span class=&quot;nv&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;percentile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.00%, &lt;span class=&quot;nv&quot;&gt;depth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+
+Run status group 0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;all &lt;span class=&quot;nb&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  WRITE: &lt;span class=&quot;nv&quot;&gt;bw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;23.9MiB/s &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;25.1MB/s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 23.9MiB/s-23.9MiB/s &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;25.1MB/s-25.1MB/s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2000MiB &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2097MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;83529-83529msec
+
+Disk stats &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt;/write&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  sda: &lt;span class=&quot;nv&quot;&gt;ios&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5/4224, &lt;span class=&quot;nv&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0/274, &lt;span class=&quot;nv&quot;&gt;ticks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;486/170073, &lt;span class=&quot;nv&quot;&gt;in_queue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;173056, &lt;span class=&quot;nv&quot;&gt;util&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;99.76%
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shell-2&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;c&quot;&gt;# shell-2&lt;/span&gt;
+fio &lt;span class=&quot;nt&quot;&gt;-filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;testfile-0 &lt;span class=&quot;nt&quot;&gt;-direct&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nt&quot;&gt;-iodepth&lt;/span&gt; 1 &lt;span class=&quot;nt&quot;&gt;-thread&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-rw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;write &lt;span class=&quot;nt&quot;&gt;-ioengine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sync&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1M &lt;span class=&quot;nt&quot;&gt;-size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2G &lt;span class=&quot;nt&quot;&gt;-numjobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nt&quot;&gt;-group_reporting&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;sqe_100write_4k
+sqe_100write_4k: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;g&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;rw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;write, &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=(&lt;/span&gt;R&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024KiB-1024KiB, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;W&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024KiB-1024KiB, &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;T&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1024KiB-1024KiB, &lt;span class=&quot;nv&quot;&gt;ioengine&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sync&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;iodepth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+fio-3.28
+Starting 1 thread
+sqe_100write_4k: Laying out IO file &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 file / 2048MiB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Jobs: 1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;W&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)][&lt;/span&gt;96.9%][w&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;97.0MiB/s][w&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;97 IOPS][eta 00m:03s]
+sqe_100write_4k: &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;groupid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nb&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0: &lt;span class=&quot;nv&quot;&gt;pid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;9984: Fri Nov 26 11:15:59 2021
+  write: &lt;span class=&quot;nv&quot;&gt;IOPS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;21, &lt;span class=&quot;nv&quot;&gt;BW&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;21.6MiB/s &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;22.7MB/s&lt;span class=&quot;o&quot;&gt;)(&lt;/span&gt;2048MiB/94639msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 0 zone resets
+    clat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;330, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;46.14, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;39.78
+     lat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;330, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;46.20, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;39.78
+    clat percentiles &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+     |  1.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;    9],  5.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;    9], 10.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;    9], 20.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   11],
+     | 30.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   11], 40.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   11], 50.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   11], 60.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   75],
+     | 70.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   77], 80.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   86], 90.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   88], 95.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  100],
+     | 99.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  142], 99.50th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  153], 99.90th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  257], 99.95th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  296],
+     | 99.99th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  330]
+   bw &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;  KiB/s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 4096, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;102400, &lt;span class=&quot;nv&quot;&gt;per&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.00%, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;22159.58, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;27573.21, &lt;span class=&quot;nv&quot;&gt;samples&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;189
+   iops        : &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;    4, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;  100, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;21.64, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;26.93, &lt;span class=&quot;nv&quot;&gt;samples&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;189
+  lat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   : &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.05%, &lt;span class=&quot;nv&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10.60%, &lt;span class=&quot;nv&quot;&gt;20&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;40.92%, &lt;span class=&quot;nv&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.44%, &lt;span class=&quot;nv&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;44.58%
+  lat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   : &lt;span class=&quot;nv&quot;&gt;250&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;3.27%, &lt;span class=&quot;nv&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.15%
+  cpu          : &lt;span class=&quot;nv&quot;&gt;usr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.22%, &lt;span class=&quot;nv&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.45%, &lt;span class=&quot;nv&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4171, &lt;span class=&quot;nv&quot;&gt;majf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;minf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0
+  IO depths    : &lt;span class=&quot;nv&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.0%, &lt;span class=&quot;nv&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%
+     submit    : &lt;span class=&quot;nv&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.0%, &lt;span class=&quot;nv&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%
+     &lt;span class=&quot;nb&quot;&gt;complete&lt;/span&gt;  : &lt;span class=&quot;nv&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.0%, &lt;span class=&quot;nv&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;32&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0.0%
+     issued rwts: &lt;span class=&quot;nv&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0,2048,0,0 &lt;span class=&quot;nv&quot;&gt;short&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0,0,0,0 &lt;span class=&quot;nv&quot;&gt;dropped&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0,0,0,0
+     latency   : &lt;span class=&quot;nv&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;window&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0, &lt;span class=&quot;nv&quot;&gt;percentile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;100.00%, &lt;span class=&quot;nv&quot;&gt;depth&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+
+Run status group 0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;all &lt;span class=&quot;nb&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  WRITE: &lt;span class=&quot;nv&quot;&gt;bw&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;21.6MiB/s &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;22.7MB/s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, 21.6MiB/s-21.6MiB/s &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;22.7MB/s-22.7MB/s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;io&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2048MiB &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2147MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;nv&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;94639-94639msec
+
+Disk stats &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt;/write&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  sda: &lt;span class=&quot;nv&quot;&gt;ios&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;5/6301, &lt;span class=&quot;nv&quot;&gt;merge&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0/298, &lt;span class=&quot;nv&quot;&gt;ticks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;486/181046, &lt;span class=&quot;nv&quot;&gt;in_queue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;184194, &lt;span class=&quot;nv&quot;&gt;util&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;99.70%
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;A控制组下的延时情况：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;clat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;13, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;285, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;41.69, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;11.32
+     lat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;13, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;285, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;41.75, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;11.32
+    clat percentiles &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+     |  1.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   23],  5.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   27], 10.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   36], 20.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   37],
+     | 30.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   37], 40.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   39], 50.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   40], 60.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   41],
+     | 70.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   42], 80.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   51], 90.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   53], 95.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   59],
+     | 99.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   70], 99.50th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   75], 99.90th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  174], 99.95th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  284],
+     | 99.99th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  284]
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;未加&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lo.latency&lt;/code&gt;的情况：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;clat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;330, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;46.14, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;39.78
+     lat &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;nv&quot;&gt;min&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2, &lt;span class=&quot;nv&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;330, &lt;span class=&quot;nv&quot;&gt;avg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;46.20, &lt;span class=&quot;nv&quot;&gt;stdev&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;39.78
+    clat percentiles &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;msec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+     |  1.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;    9],  5.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;    9], 10.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;    9], 20.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   11],
+     | 30.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   11], 40.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   11], 50.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   11], 60.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   75],
+     | 70.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   77], 80.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   86], 90.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;   88], 95.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  100],
+     | 99.00th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  142], 99.50th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  153], 99.90th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  257], 99.95th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  296],
+     | 99.99th&lt;span class=&quot;o&quot;&gt;=[&lt;/span&gt;  330]
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;从上可以看出，延时在50ms以上的情况，A控制组作用下的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;fio&lt;/code&gt;结果更好。&lt;/p&gt;
+</description>
+        <pubDate>Thu, 11 Nov 2021 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2021/11/11/cgroup-v2/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2021/11/11/cgroup-v2/</guid>
+        
+        <category>Linux</category>
+        
+        <category>Cgroup</category>
+        
+        <category>Cgroup v2</category>
+        
+        <category>mount</category>
+        
+        <category>Cgroup Controller</category>
+        
+        <category>CPU</category>
+        
+        <category>Memory</category>
+        
+        <category>IO</category>
+        
+        <category>fio</category>
+        
+        
+      </item>
     
       <item>
         <title>Linux Namespace</title>
@@ -925,9 +2932,9 @@ ip &lt;span class=&quot;nb&quot;&gt;link
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 </description>
-        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2023/03/14/linux-namespace/</link>
-        <guid isPermaLink="true">http://localhost:4000/2023/03/14/linux-namespace/</guid>
+        <pubDate>Thu, 04 Nov 2021 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2021/11/04/linux-namespace/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2021/11/04/linux-namespace/</guid>
         
         <category>Linux</category>
         
@@ -940,505 +2947,6 @@ ip &lt;span class=&quot;nb&quot;&gt;link
         <category>nsenter</category>
         
         <category>unshare</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>计算机系统各类延时概况</title>
-        <description>&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;事件&lt;/th&gt;
-      &lt;th&gt;延时&lt;/th&gt;
-      &lt;th&gt;相对时间比例&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;1个CPU周期&lt;/td&gt;
-      &lt;td&gt;0.3 ns&lt;/td&gt;
-      &lt;td&gt;1 s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;L1缓存访问&lt;/td&gt;
-      &lt;td&gt;0.9 ns&lt;/td&gt;
-      &lt;td&gt;3 s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;L2缓存访问&lt;/td&gt;
-      &lt;td&gt;2.8 ns&lt;/td&gt;
-      &lt;td&gt;9 s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;L3缓存访问&lt;/td&gt;
-      &lt;td&gt;12.9 ns&lt;/td&gt;
-      &lt;td&gt;43 s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;主存访问（从CPU访问DRAM）&lt;/td&gt;
-      &lt;td&gt;120 ns&lt;/td&gt;
-      &lt;td&gt;6 分钟&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;固态硬盘I/O（闪存）&lt;/td&gt;
-      &lt;td&gt;50-150 us&lt;/td&gt;
-      &lt;td&gt;2-6 天&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;旋转磁盘I/O&lt;/td&gt;
-      &lt;td&gt;1-10 ms&lt;/td&gt;
-      &lt;td&gt;1-12 月&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;互联网：从旧金山到纽约&lt;/td&gt;
-      &lt;td&gt;40 ms&lt;/td&gt;
-      &lt;td&gt;4 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;互联网：从旧金山到英国&lt;/td&gt;
-      &lt;td&gt;81 ms&lt;/td&gt;
-      &lt;td&gt;8 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;互联网：从旧金山到澳大利亚&lt;/td&gt;
-      &lt;td&gt;183 ms&lt;/td&gt;
-      &lt;td&gt;19 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;TCP包重传&lt;/td&gt;
-      &lt;td&gt;1-3 s&lt;/td&gt;
-      &lt;td&gt;105-317 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;OS虚拟化系统重启&lt;/td&gt;
-      &lt;td&gt;4 s&lt;/td&gt;
-      &lt;td&gt;423 年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;SCSI命令超时&lt;/td&gt;
-      &lt;td&gt;30 s&lt;/td&gt;
-      &lt;td&gt;3 千年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;硬件虚拟化系统重启&lt;/td&gt;
-      &lt;td&gt;40 s&lt;/td&gt;
-      &lt;td&gt;4 千年&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;物理系统重启&lt;/td&gt;
-      &lt;td&gt;5 m&lt;/td&gt;
-      &lt;td&gt;32 千年&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-</description>
-        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2023/03/14/latency-summary/</link>
-        <guid isPermaLink="true">http://localhost:4000/2023/03/14/latency-summary/</guid>
-        
-        <category>latency</category>
-        
-        <category>memory</category>
-        
-        <category>cpu</category>
-        
-        <category>cache</category>
-        
-        <category>network packet</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>Graph easy工具</title>
-        <description>&lt;h1 id=&quot;基本语法&quot;&gt;基本语法&lt;/h1&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;graph-easy&lt;/code&gt;兼容graphviz语法&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[hello]&amp;lt;-&amp;gt;[world]&apos;&lt;/span&gt; | graph-easy
-+-------+      +-------+
-| hello | &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | world |
-+-------+      +-------+
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[hello]&amp;lt;-&amp;gt;[world]-&amp;gt;[OK]\n&apos;&lt;/span&gt; | graph-easy
-+-------+      +-------+     +----+
-| hello | &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | world | &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | OK |
-+-------+      +-------+     +----+
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[hello]&amp;lt;-&amp;gt;[world]-&amp;gt;[OK]\n[good]-&amp;gt;[world]&apos;&lt;/span&gt; | graph-easy
-+------+     +-------+     +----+
-| good | &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | world | &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | OK |
-+------+     +-------+     +----+
-               ^
-               |
-               |
-               v
-             +-------+
-             | hello |
-             +-------+
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;嵌入子图&quot;&gt;嵌入子图&lt;/h1&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;(ns0-1: [veth1]) [veth0]&amp;lt;-&amp;gt;[veth1] [veth0]&amp;lt;-&amp;gt;[brt]&apos;&lt;/span&gt; | graph-easy
-  +-------+        +-----+
-  | veth0 |   &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | brt |
-  +-------+        +-----+
-    ^
-    |
-    |
-    v
-+ - - - - - +
-&lt;span class=&quot;s1&quot;&gt;&apos; ns0-1:    &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos; | veth1 | &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
-+ - - - - - +
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;连接线加标签&quot;&gt;连接线加标签&lt;/h1&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;(ns0-1: [veth1]) [veth0]&amp;lt;-&amp;gt;{label:&quot;pair&quot;}[veth1] [veth0]&amp;lt;-&amp;gt;[brt]&apos;&lt;/span&gt; | graph-easy
-  +-------+        +-----+
-  | veth0 |   &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | brt |
-  +-------+        +-----+
-    ^
-    |
-    | pair
-    v
-+ - - - - - +
-&lt;span class=&quot;s1&quot;&gt;&apos; ns0-1:    &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos; | veth1 | &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
-&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
-+ - - - - - +
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-</description>
-        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2023/03/14/graph-easy/</link>
-        <guid isPermaLink="true">http://localhost:4000/2023/03/14/graph-easy/</guid>
-        
-        <category>Cli</category>
-        
-        <category>graphviz</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>DNS服务与配置</title>
-        <description>&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;用于查询和更新域名。&lt;/p&gt;
-
-&lt;p&gt;其中&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;要配合&lt;strong&gt;bind&lt;/strong&gt;服务器使用。&lt;/p&gt;
-
-&lt;h1 id=&quot;1-bind域名服务器简易配置&quot;&gt;1 &lt;strong&gt;bind&lt;/strong&gt;域名服务器简易配置&lt;/h1&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://wiki.ubuntu.org.cn/Bind9%E5%AE%89%E8%A3%85%E8%AE%BE%E7%BD%AE%E6%8C%87%E5%8D%97#HOWTO_Setup_BIND9_DNS_Server_.EF.BC.88.E5.A6.82.E4.BD.95.E5.AE.89.E8.A3.85.E8.AE.BE.E7.BD.AEBind9_DNS.E6.9C.8D.E5.8A.A1.E5.99.A8.EF.BC.89&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;接下来，将说明如何在&lt;strong&gt;Ubuntu 20.04.1 LTS&lt;/strong&gt;安装配置&lt;strong&gt;bind&lt;/strong&gt;。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; bind9
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;安装相关工具，&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;apt &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; dnsutils bind9-host
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;配置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.conf&lt;/code&gt;。如下为示例文件内容：&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;// this configuration file.
-//
-// If you are just adding zones, please &lt;span class=&quot;k&quot;&gt;do &lt;/span&gt;that &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /etc/bind/named.conf.local
-
-include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.options&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.local&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-include &lt;span class=&quot;s2&quot;&gt;&quot;/etc/bind/named.conf.default-zones&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-logging &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-	channel access_log &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-		file &lt;span class=&quot;s2&quot;&gt;&quot;/var/log/named.log&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		severity dynamic&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		print-category &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		print-severity &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-		print-time &lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	category default &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-		access_log&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-zone &lt;span class=&quot;s2&quot;&gt;&quot;etcd.com&quot;&lt;/span&gt; IN &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;master&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	file &lt;span class=&quot;s2&quot;&gt;&quot;/var/lib/bind/db.etcd.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	allow-query &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-		any&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	allow-update &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-		any&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;该文件中配置了两部分&lt;a href=&quot;http://www.hangdaowangluo.com/archives/1615&quot;&gt;日志&lt;/a&gt;及区域两部分内容，其中区域部分更加规范的方法实在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/bind/named.conf.local&lt;/code&gt;配置。这里，配置了名为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;etcd.com&lt;/code&gt;的区域，它允许任意查询和更新，其数据文件为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/lib/bind/db.etcd.com&lt;/code&gt;，如下是示例内容。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nv&quot;&gt;$TTL&lt;/span&gt; 604800	&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; 1 week
-@		IN SOA	dns.etcd.com. admin.etcd.com. &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
-				100000     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; serial
-				604800     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; refresh &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 week&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-				86400      &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; retry &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 day&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-				2419200    &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; expire &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4 weeks&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-				604800     &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; minimum &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1 week&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-				&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-		IN	NS	dns
-dns		IN	A	192.168.100.50
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;@		IN SOA	dns.etcd.com. admin.etcd.com. &lt;/code&gt;中，需要配置域名服务器、和管理员邮箱。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin.etcd.com&lt;/code&gt;可转化为邮箱地址&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;admin@etcd.com&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;常见的记录类型见下表：&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;类型&lt;/th&gt;
-      &lt;th&gt;说明&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;A&lt;/td&gt;
-      &lt;td&gt;地址记录&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;CNAME&lt;/td&gt;
-      &lt;td&gt;别名&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;MX&lt;/td&gt;
-      &lt;td&gt;邮件交换记录&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;NS&lt;/td&gt;
-      &lt;td&gt;域名服务器记录&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://fasionchan.com/network/dns/record-types/&quot;&gt;更多的可参考该资料&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;配置好上述文件后，执行如下命令启动&lt;strong&gt;bind&lt;/strong&gt;服务器。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;named
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;如下命令可以查看日志。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;tail&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; /var/log/named.log
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h1 id=&quot;2-nslookup和nsupdate&quot;&gt;2 nslookup和nsupdate&lt;/h1&gt;
-&lt;p&gt;用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;命令进行一下测试。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nslookup dns.etcd.com 192.168.100.50
-Server:		192.168.100.50
-Address:	192.168.100.50#53
-
-Name:	dns.etcd.com
-Address: 192.168.100.50
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nsupdate&lt;/code&gt;命令可以添加新记录。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;
-server 192.168.100.50
-zone etcd.com
-update add n0.etcd.com 80000 IN A 192.168.100.120
-update add n1.etcd.com 80000 IN A 192.168.100.121
-update add n2.etcd.com 80000 IN A 192.168.100.122
-send
-quit
-&apos;&lt;/span&gt; | nsupdate
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;最后使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nslookup&lt;/code&gt;验证是否添加成功。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;nslookup n0.etcd.com 192.168.100.50
-Server:		192.168.100.50
-Address:	192.168.100.50#53
-
-Name:	n0.etcd.com
-Address: 192.168.100.120
-
-
-nslookup n1.etcd.com 192.168.100.50
-Server:		192.168.100.50
-Address:	192.168.100.50#53
-
-Name:	n1.etcd.com
-Address: 192.168.100.121
-
-
-nslookup n2.etcd.com 192.168.100.50
-Server:		192.168.100.50
-Address:	192.168.100.50#53
-
-Name:	n2.etcd.com
-Address: 192.168.100.122
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;bind&lt;/strong&gt;为数据文件开启了&lt;strong&gt;journal&lt;/strong&gt;模式用于保护数据安全，例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/lib/bind/db.etcd.com&lt;/code&gt;文件的目录下会生成&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;db.etcd.com.jnl&lt;/code&gt;文件，所以随意绕过&lt;strong&gt;bind&lt;/strong&gt;修改数据文件，会导致&lt;strong&gt;bind&lt;/strong&gt;启动失败。虽然删除&lt;strong&gt;jnl&lt;/strong&gt;文件可以恢复启动，但是会造成数据丢失。&lt;/p&gt;
-</description>
-        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2023/03/14/dns/</link>
-        <guid isPermaLink="true">http://localhost:4000/2023/03/14/dns/</guid>
-        
-        <category>DNS</category>
-        
-        <category>nslookup</category>
-        
-        <category>nsupdate</category>
-        
-        <category>bind</category>
         
         
       </item>
@@ -1950,9 +3458,9 @@ Chain:
 
 &lt;p&gt;&lt;strong&gt;注意，更新可信CA后，只有执行命令的当前进程和新的进程生效。&lt;/strong&gt;&lt;/p&gt;
 </description>
-        <pubDate>Tue, 14 Mar 2023 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2023/03/14/cfssl/</link>
-        <guid isPermaLink="true">http://localhost:4000/2023/03/14/cfssl/</guid>
+        <pubDate>Thu, 14 Oct 2021 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2021/10/14/cfssl/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2021/10/14/cfssl/</guid>
         
         <category>数字证书</category>
         
@@ -1961,6 +3469,138 @@ Chain:
         <category>CA</category>
         
         <category>公开密钥认证</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Graph easy工具</title>
+        <description>&lt;h1 id=&quot;基本语法&quot;&gt;基本语法&lt;/h1&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;graph-easy&lt;/code&gt;兼容graphviz语法&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[hello]&amp;lt;-&amp;gt;[world]&apos;&lt;/span&gt; | graph-easy
++-------+      +-------+
+| hello | &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | world |
++-------+      +-------+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[hello]&amp;lt;-&amp;gt;[world]-&amp;gt;[OK]\n&apos;&lt;/span&gt; | graph-easy
++-------+      +-------+     +----+
+| hello | &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | world | &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | OK |
++-------+      +-------+     +----+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;[hello]&amp;lt;-&amp;gt;[world]-&amp;gt;[OK]\n[good]-&amp;gt;[world]&apos;&lt;/span&gt; | graph-easy
++------+     +-------+     +----+
+| good | &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | world | &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | OK |
++------+     +-------+     +----+
+               ^
+               |
+               |
+               v
+             +-------+
+             | hello |
+             +-------+
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;嵌入子图&quot;&gt;嵌入子图&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;(ns0-1: [veth1]) [veth0]&amp;lt;-&amp;gt;[veth1] [veth0]&amp;lt;-&amp;gt;[brt]&apos;&lt;/span&gt; | graph-easy
+  +-------+        +-----+
+  | veth0 |   &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | brt |
+  +-------+        +-----+
+    ^
+    |
+    |
+    v
++ - - - - - +
+&lt;span class=&quot;s1&quot;&gt;&apos; ns0-1:    &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; | veth1 | &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
++ - - - - - +
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h1 id=&quot;连接线加标签&quot;&gt;连接线加标签&lt;/h1&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;(ns0-1: [veth1]) [veth0]&amp;lt;-&amp;gt;{label:&quot;pair&quot;}[veth1] [veth0]&amp;lt;-&amp;gt;[brt]&apos;&lt;/span&gt; | graph-easy
+  +-------+        +-----+
+  | veth0 |   &amp;lt;&lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; | brt |
+  +-------+        +-----+
+    ^
+    |
+    | pair
+    v
++ - - - - - +
+&lt;span class=&quot;s1&quot;&gt;&apos; ns0-1:    &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; | veth1 | &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos; +-------+ &apos;&lt;/span&gt;
+&lt;span class=&quot;s1&quot;&gt;&apos;           &apos;&lt;/span&gt;
++ - - - - - +
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Tue, 22 Jun 2021 00:00:00 +0800</pubDate>
+        <link>https://cheneyyin.github.io/2021/06/22/graph-easy/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2021/06/22/graph-easy/</guid>
+        
+        <category>Cli</category>
+        
+        <category>graphviz</category>
         
         
       </item>

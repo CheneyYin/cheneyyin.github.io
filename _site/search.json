@@ -1,43 +1,75 @@
 [
   
     {
-      "title"    : "Linux Namespace",
-      "subtitle" : "介绍Linux的几种常见Namespace",
-      "tags"     : "Linux, Linux Namespace, docker, container, nsenter, unshare",
-      "url"      : "/2023/03/14/linux-namespace/",
-      "date"     : "2023-03-14 00:00:00 +0800"
+      "title"    : "Docker container常用命令",
+      "subtitle" : "介绍与container相关的常用命令",
+      "tags"     : "State Machine, Docker, container, nsenter, docker import, docker export",
+      "url"      : "/2022/04/25/docker-container-command/",
+      "date"     : "2022-04-25 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "chroot",
+      "subtitle" : "介绍chroot使用方法",
+      "tags"     : "chroot, Linux, busybox, docker, 隔离",
+      "url"      : "/2022/03/15/chroot/",
+      "date"     : "2022-03-15 00:00:00 +0800"
     } ,
   
     {
       "title"    : "计算机系统各类延时概况",
       "subtitle" : "",
       "tags"     : "latency, memory, cpu, cache, network packet",
-      "url"      : "/2023/03/14/latency-summary/",
-      "date"     : "2023-03-14 00:00:00 +0800"
+      "url"      : "/2022/02/11/latency-summary/",
+      "date"     : "2022-02-11 00:00:00 +0800"
     } ,
   
     {
-      "title"    : "Graph easy工具",
-      "subtitle" : "Graph easy是一种用于在Cli下的绘图工具",
-      "tags"     : "Cli, graphviz",
-      "url"      : "/2023/03/14/graph-easy/",
-      "date"     : "2023-03-14 00:00:00 +0800"
+      "title"    : "Docker组件架构",
+      "subtitle" : "介绍docker架构中的常见组成部分",
+      "tags"     : "Docker, dockerd, docker-init, docker-proxy, containerd, containerd-shim, ctr, runc",
+      "url"      : "/2022/01/17/docker-component/",
+      "date"     : "2022-01-17 00:00:00 +0800"
     } ,
   
     {
       "title"    : "DNS服务与配置",
       "subtitle" : "介绍DNS相关概念和常用命令",
       "tags"     : "DNS, nslookup, nsupdate, bind",
-      "url"      : "/2023/03/14/dns/",
-      "date"     : "2023-03-14 00:00:00 +0800"
+      "url"      : "/2021/12/05/dns/",
+      "date"     : "2021-12-05 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Cgroup v2",
+      "subtitle" : "介绍Cgroup相关概念和常用命令",
+      "tags"     : "Linux, Cgroup, Cgroup v2, mount, Cgroup Controller, CPU, Memory, IO, fio",
+      "url"      : "/2021/11/11/cgroup-v2/",
+      "date"     : "2021-11-11 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Linux Namespace",
+      "subtitle" : "介绍Linux的几种常见Namespace",
+      "tags"     : "Linux, Linux Namespace, docker, container, nsenter, unshare",
+      "url"      : "/2021/11/04/linux-namespace/",
+      "date"     : "2021-11-04 00:00:00 +0800"
     } ,
   
     {
       "title"    : "数字证书与cfssl工具链",
       "subtitle" : "分析数字证书原理，记录cfssl常用命令。",
       "tags"     : "数字证书, cfssl, CA, 公开密钥认证",
-      "url"      : "/2023/03/14/cfssl/",
-      "date"     : "2023-03-14 00:00:00 +0800"
+      "url"      : "/2021/10/14/cfssl/",
+      "date"     : "2021-10-14 00:00:00 +0800"
+    } ,
+  
+    {
+      "title"    : "Graph easy工具",
+      "subtitle" : "Graph easy是一种用于在Cli下的绘图工具",
+      "tags"     : "Cli, graphviz",
+      "url"      : "/2021/06/22/graph-easy/",
+      "date"     : "2021-06-22 00:00:00 +0800"
     } 
   
 ]

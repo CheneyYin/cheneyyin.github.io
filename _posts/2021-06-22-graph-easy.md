@@ -2,7 +2,7 @@
 layout: post
 title: "Graph easy工具"
 subtitle: "Graph easy是一种用于在Cli下的绘图工具"
-date: 2023-03-14
+date: 2021-06-22
 author: "Cheney.Yin"
 header-img: "img/bg-material.jpg"
 tags:

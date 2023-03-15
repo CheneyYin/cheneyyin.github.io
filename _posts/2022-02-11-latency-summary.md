@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "计算机系统各类延时概况"
-date: 2023-03-14
+date: 2022-02-11
 author: "Cheney.Yin"
 header-img: "img/bg-material.jpg"
 tags:
@@ -11,6 +11,8 @@ tags:
  - cache
  - network packet
 ---
+
+# 计算机系统各类延时概况
 
 | 事件                       | 延时      | 相对时间比例 |
 | -------------------------- | --------- | ------------ |
@@ -29,3 +31,4 @@ tags:
 | SCSI命令超时               | 30 s      | 3 千年       |
 | 硬件虚拟化系统重启         | 40 s      | 4 千年       |
 | 物理系统重启               | 5 m       | 32 千年      |
+

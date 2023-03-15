@@ -12,17 +12,29 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="Cheney.Yin的博客 | Cheney Blog">
+        content="Graph easy工具 - Cheney.Yin的博客 | Cheney Blog">
     
-    <meta property="og:type" content="website">
-    <meta property="og:description"
-        content="「To explore or to exploite is a question.」">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="基本语法
+graph-easy兼容graphviz语法
+">
+    
+    <meta property="article:published_time" content=" 2021-06-22T00:00:00Z">
+    
+    
+    <meta property="article:author" content="Cheney.Yin">
+    
+    
+    <meta property="article:tag" content="Cli">
+    
+    <meta property="article:tag" content="graphviz">
+    
     
     <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/">
+    <meta property="og:url" content="https://cheneyyin.github.io/2021/06/22/graph-easy/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>Cheney.Yin的博客 | Cheney Blog</title>
+    <title>Graph easy工具 - Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -31,7 +43,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/">
+    <link rel="canonical" href="https://cheneyyin.github.io/2021/06/22/graph-easy/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -192,14 +204,14 @@
   </div>
 </div>
 
-    <!-- Page Header -->
+    <!-- Post Header -->
 
 
 
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/img/home-bg.jpg');
+        background-image: url('/img/bg-material.jpg');
         background: ;
     }
 
@@ -209,106 +221,75 @@
 
 
 
+<header class="intro-header" >
 
-
-
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
-  <div class="header-mask"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-        <div class="site-heading">
-        
-          <h1>Cheney.Yin Blog</h1>
-          <span class="subheading">「To explore or to exploite is a question.」</span>
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=Cli" title="Cli">Cli</a>
+                        
+                        <a class="tag" href="/archive/?tag=graphviz" title="graphviz">graphviz</a>
+                        
+                    </div>
+                    <h1>Graph easy工具</h1>
+                    
+                    <h2 class="subheading">Graph easy是一种用于在Cli下的绘图工具</h2>
+                    <span class="meta">Posted by Cheney.Yin on June 22, 2021</span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
 
 
-<!-- Main Content -->
-<div class="container">
-  <div class="row">
-    
-
-    <!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
-      col-xs-12 postlist-container">
-      
-<div class="post-preview">
-    <a href="/2022/04/25/docker-container-command/">
-        <h2 class="post-title">
-            Docker container常用命令
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍与container相关的常用命令
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                docker container操作
-1 docker container状态图
-
-    
-    
-    
-      图1 docker容器状态变化
-  	
 
 
 
 
-2 命令详解
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-2.1 容器启动
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-首先创建容器，
+                <!-- Multi-Lingual -->
+                
 
-1
+				<h1 id="基本语法">基本语法</h1>
+<p><code class="language-plaintext highlighter-rouge">graph-easy</code>兼容graphviz语法</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
-5
-docker create -it --name=busybox busybox
-2dad99a1a04cd4adccfad768ac19389a...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on April 25, 2022
-    </p>
-</div>
-<hr>
+</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'[hello]&lt;-&gt;[world]'</span> | graph-easy
++-------+      +-------+
+| hello | &lt;<span class="nt">--</span><span class="o">&gt;</span> | world |
++-------+      +-------+
+</pre></td></tr></tbody></table></code></pre></div></div>
 
-<div class="post-preview">
-    <a href="/2022/03/15/chroot/">
-        <h2 class="post-title">
-            chroot
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍chroot使用方法
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                chroot
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'[hello]&lt;-&gt;[world]-&gt;[OK]\n'</span> | graph-easy
++-------+      +-------+     +----+
+| hello | &lt;<span class="nt">--</span><span class="o">&gt;</span> | world | <span class="nt">--</span><span class="o">&gt;</span> | OK |
++-------+      +-------+     +----+
+</pre></td></tr></tbody></table></code></pre></div></div>
 
-1 什么是chroot
-
-chroot是在Unix和Linux系统的一个操作，针对正在运作的软件进程和子进程，改变其外显的根目录。由chroot设置根目录的程序是不能够对这个指定根目录之外的文件进行访问、读取、更改。
-
-2 实例
-
-这里，使用现成的busybox镜像来创建一个系统的基础文件目录，其中包含了一些常用的二进制文件。
-
-1
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
@@ -316,306 +297,150 @@ chroot是在Unix和Linux系统的一个操作，针对正在运作的软件进�
 6
 7
 8
-# 创建roo...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on March 15, 2022
-    </p>
-</div>
-<hr>
+9
+10
+11
+</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'[hello]&lt;-&gt;[world]-&gt;[OK]\n[good]-&gt;[world]'</span> | graph-easy
++------+     +-------+     +----+
+| good | <span class="nt">--</span><span class="o">&gt;</span> | world | <span class="nt">--</span><span class="o">&gt;</span> | OK |
++------+     +-------+     +----+
+               ^
+               |
+               |
+               v
+             +-------+
+             | hello |
+             +-------+
+</pre></td></tr></tbody></table></code></pre></div></div>
 
-<div class="post-preview">
-    <a href="/2022/02/11/latency-summary/">
-        <h2 class="post-title">
-            计算机系统各类延时概况
-        </h2>
-        
-        <div class="post-content-preview">
-            
-                计算机系统各类延时概况
+<h1 id="嵌入子图">嵌入子图</h1>
 
-
-  
-    
-      事件
-      延时
-      相对时间比例
-    
-  
-  
-    
-      1个CPU周期
-      0.3 ns
-      1 s
-    
-    
-      L1缓存访问
-      0.9 ns
-      3 s
-    
-    
-      L2缓存访问
-      2.8 ns
-      9 s...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on February 11, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2022/01/17/docker-component/">
-        <h2 class="post-title">
-            Docker组件架构
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍docker架构中的常见组成部分
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                docker组件
-
-总概
-
-
-  
-    
-      组件类别
-      组件
-      介绍
-    
-  
-  
-    
-      docker相关组件
-      docker
-      docker客户端，负责发送docker操作请求。
-    
-    
-      同上
-      dockerd
-      docker服务入口，负责接受客户端请求并返回请求结果。...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on January 17, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/12/05/dns/">
-        <h2 class="post-title">
-            DNS服务与配置
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍DNS相关概念和常用命令
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                nslookup、nsupdate用于查询和更新域名。
-
-其中nsupdate要配合bind服务器使用。
-
-1 bind域名服务器简易配置
-
-参考
-
-接下来，将说明如何在Ubuntu 20.04.1 LTS安装配置bind。
-
-1
-apt install -y bind9
-
-
-安装相关工具，
-
-1
-apt install -y dnsutils bind9-host
-
-
-配置/etc/bin...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on December 5, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/11/11/cgroup-v2/">
-        <h2 class="post-title">
-            Cgroup v2
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍Cgroup相关概念和常用命令
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                cgroup v2
-
-详细参考
-
-概况
-
-cgroup是一个目录树，每层目录下都可以创建子目录，子目录默认继承父目录的属性，具有层级结构。
-
-cgroup把一个cgroup目录中的资源划分给它的子目录，子目录可以把资源继续划分给它的子目录，子目录分配的资源之和不能超过父目录，进程或者线程可以使用的资源受到它们委身的目录中的资源的限制。
-
-cgroup v2和cgroup v1区别很大，这一点...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on November 11, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/11/04/linux-namespace/">
-        <h2 class="post-title">
-            Linux Namespace
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍Linux的几种常见Namespace
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                概况
-
-
-  
-    
-      名称
-      作用
-      版本
-    
-  
-  
-    
-      Mount (mnt)
-      隔离挂载点
-      2.4.19
-    
-    
-      Process ID (pid)
-      隔离进程ID
-      2.6.24
-    
-    
-      Network (net)
-      隔离网...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on November 4, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/10/14/cfssl/">
-        <h2 class="post-title">
-            数字证书与cfssl工具链
-        </h2>
-        
-        <h3 class="post-subtitle">
-            分析数字证书原理，记录cfssl常用命令。
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                1 什么是根证书？
-
-参考
-
-根证书是证书颁发机构(CA)的公钥证书，是在公开密钥基础建设中，信任链的起点。根证书没有上层机构再为其本身作数字签名，所以都是自签证书。
-
-2 X.509证书规范
-
-参考
-
-一般的，一个数字证书内容可能包括基本数据（版本、序列号）、所签名对象信息（签名算法类型、签发者信息、有效期、被签发人、签发的公开密钥）、CA 的数字签名等等。
-
-目前使用最广泛的标准为 IT...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on October 14, 2021
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2021/06/22/graph-easy/">
-        <h2 class="post-title">
-            Graph easy工具
-        </h2>
-        
-        <h3 class="post-subtitle">
-            Graph easy是一种用于在Cli下的绘图工具
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                基本语法
-graph-easy兼容graphviz语法
-
-1
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
-echo '[hello]&lt;-&gt;[world]' | graph-easy
-+-------+      +-------+
-| hello | &lt;--&gt; | world |
-+-------+      +-------+
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'(ns0-1: [veth1]) [veth0]&lt;-&gt;[veth1] [veth0]&lt;-&gt;[brt]'</span> | graph-easy
+  +-------+        +-----+
+  | veth0 |   &lt;<span class="nt">--</span><span class="o">&gt;</span> | brt |
+  +-------+        +-----+
+    ^
+    |
+    |
+    v
++ - - - - - +
+<span class="s1">' ns0-1:    '</span>
+<span class="s1">'           '</span>
+<span class="s1">' +-------+ '</span>
+<span class="s1">' | veth1 | '</span>
+<span class="s1">' +-------+ '</span>
+<span class="s1">'           '</span>
++ - - - - - +
+</pre></td></tr></tbody></table></code></pre></div></div>
 
+<h1 id="连接线加标签">连接线加标签</h1>
 
-1
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
 2
 3
 4
-echo '[hello]&lt;-&gt;[wo...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on June 22, 2021
-    </p>
-</div>
-<hr>
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'(ns0-1: [veth1]) [veth0]&lt;-&gt;{label:"pair"}[veth1] [veth0]&lt;-&gt;[brt]'</span> | graph-easy
+  +-------+        +-----+
+  | veth0 |   &lt;<span class="nt">--</span><span class="o">&gt;</span> | brt |
+  +-------+        +-----+
+    ^
+    |
+    | pair
+    v
++ - - - - - +
+<span class="s1">' ns0-1:    '</span>
+<span class="s1">'           '</span>
+<span class="s1">' +-------+ '</span>
+<span class="s1">' | veth1 | '</span>
+<span class="s1">' +-------+ '</span>
+<span class="s1">'           '</span>
++ - - - - - +
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 
-<!-- Pager -->
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2021/10/14/cfssl/" data-toggle="tooltip" data-placement="top" title="数字证书与cfssl工具链">
+                        Next<br>
+                        <span>数字证书与cfssl工具链</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <hr style="visibility: hidden;">
 
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
 
-    </div>
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
     <!-- Sidebar Container -->
-    <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12
-      col-xs-12 sidebar-container">
-      <!-- Featured Tags -->
-      
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
 
 
 <section>
+    
+        <hr class="hidden-sm hidden-xs">
     
     <h5><a href="/archive/">FEATURED TAGS</a></h5>
     <div class="tags">
@@ -653,87 +478,77 @@ echo '[hello]&lt;-&gt;[wo...
 </section>
 
 
-      <!-- Short About -->
-      <section class="visible-md visible-lg">
-  <hr>
-  <h5><a href="/about/">ABOUT ME</a></h5>
-  <div class="short-about">
-    
-    <img src="/img/cheney.jpg" />
-    
-    
-    <p>呆若MUJI</p>
-    
-    <!-- SNS Link -->
-    
-
-
-<ul class="list-inline">
-
-
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://www.zhihu.com/people/cheney-yin-77">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa  fa-stack-1x fa-inverse">知</i>
-      </span>
-    </a>
-  </li>
-  
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://github.com/CheneyYin">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-      </span>
-    </a>
-  </li>
-  
-  
-</ul>
-  </div>
-</section>
-
-      <!-- Friends Blog -->
-      
+                <!-- Friends Blog -->
+                
 <hr>
 <h5>FRIENDS</h5>
 <ul class="list-inline">
   
 </ul>
 
-
+            </div>
+        </div>
     </div>
-    
-  </div>
-</div>
+</article>
+
+<!-- add support for mathjax by voleking-->
 
 
-<!-- Add support for Mathjax by Voleking-->
-<!-- If you want to see formulars well in post preview, Maybe you should add this.-->
-<!-- However, most of the time formulars may not appear in the post preview, you can delete it.-->
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    TeX: {
-      equationNumbers: {
-        autoNumber: "AMS"
-      }
-    },
-    tex2jax: {
-      inlineMath: [ ['$','$'] ],
-      displayMath: [ ['$$','$$'] ],
-      processEscapes: true,
-    }
-  });
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "cheneyyin";
+    var disqus_identifier = "/2021/06/22/graph-easy";
+    var disqus_url = "https://cheneyyin.github.io/2021/06/22/graph-easy/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
 </script>
-<script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'right',
+          // icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
 

@@ -12,29 +12,40 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="Graph easy工具 - Cheney.Yin的博客 | Cheney Blog">
+        content="Docker组件架构 - Cheney.Yin的博客 | Cheney Blog">
     
     <meta property="og:type" content="article">
-    <meta property="og:description" content="基本语法
-graph-easy兼容graphviz语法
+    <meta property="og:description" content="docker组件
 ">
     
-    <meta property="article:published_time" content=" 2023-03-14T00:00:00Z">
+    <meta property="article:published_time" content=" 2022-01-17T00:00:00Z">
     
     
     <meta property="article:author" content="Cheney.Yin">
     
     
-    <meta property="article:tag" content="Cli">
+    <meta property="article:tag" content="Docker">
     
-    <meta property="article:tag" content="graphviz">
+    <meta property="article:tag" content="dockerd">
+    
+    <meta property="article:tag" content="docker-init">
+    
+    <meta property="article:tag" content="docker-proxy">
+    
+    <meta property="article:tag" content="containerd">
+    
+    <meta property="article:tag" content="containerd-shim">
+    
+    <meta property="article:tag" content="ctr">
+    
+    <meta property="article:tag" content="runc">
     
     
-    <meta property="og:image" content="http://localhost:4000/img/cheney.jpg">
-    <meta property="og:url" content="http://localhost:4000/2023/03/14/graph-easy/">
+    <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
+    <meta property="og:url" content="https://cheneyyin.github.io/2022/01/17/docker-component/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>Graph easy工具 - Cheney.Yin的博客 | Cheney Blog</title>
+    <title>Docker组件架构 - Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -43,7 +54,7 @@ graph-easy兼容graphviz语法
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2023/03/14/graph-easy/">
+    <link rel="canonical" href="https://cheneyyin.github.io/2022/01/17/docker-component/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -231,15 +242,27 @@ graph-easy兼容graphviz语法
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/archive/?tag=Cli" title="Cli">Cli</a>
+                        <a class="tag" href="/archive/?tag=Docker" title="Docker">Docker</a>
                         
-                        <a class="tag" href="/archive/?tag=graphviz" title="graphviz">graphviz</a>
+                        <a class="tag" href="/archive/?tag=dockerd" title="dockerd">dockerd</a>
+                        
+                        <a class="tag" href="/archive/?tag=docker-init" title="docker-init">docker-init</a>
+                        
+                        <a class="tag" href="/archive/?tag=docker-proxy" title="docker-proxy">docker-proxy</a>
+                        
+                        <a class="tag" href="/archive/?tag=containerd" title="containerd">containerd</a>
+                        
+                        <a class="tag" href="/archive/?tag=containerd-shim" title="containerd-shim">containerd-shim</a>
+                        
+                        <a class="tag" href="/archive/?tag=ctr" title="ctr">ctr</a>
+                        
+                        <a class="tag" href="/archive/?tag=runc" title="runc">runc</a>
                         
                     </div>
-                    <h1>Graph easy工具</h1>
+                    <h1>Docker组件架构</h1>
                     
-                    <h2 class="subheading">Graph easy是一种用于在Cli下的绘图工具</h2>
-                    <span class="meta">Posted by Cheney.Yin on March 14, 2023</span>
+                    <h2 class="subheading">介绍docker架构中的常见组成部分</h2>
+                    <span class="meta">Posted by Cheney.Yin on January 17, 2022</span>
                 </div>
             </div>
         </div>
@@ -266,131 +289,80 @@ graph-easy兼容graphviz语法
                 <!-- Multi-Lingual -->
                 
 
-				<h1 id="基本语法">基本语法</h1>
-<p><code class="language-plaintext highlighter-rouge">graph-easy</code>兼容graphviz语法</p>
+				<h1 id="docker组件">docker组件</h1>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'[hello]&lt;-&gt;[world]'</span> | graph-easy
-+-------+      +-------+
-| hello | &lt;<span class="nt">--</span><span class="o">&gt;</span> | world |
-+-------+      +-------+
-</pre></td></tr></tbody></table></code></pre></div></div>
+<h2 id="总概">总概</h2>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'[hello]&lt;-&gt;[world]-&gt;[OK]\n'</span> | graph-easy
-+-------+      +-------+     +----+
-| hello | &lt;<span class="nt">--</span><span class="o">&gt;</span> | world | <span class="nt">--</span><span class="o">&gt;</span> | OK |
-+-------+      +-------+     +----+
-</pre></td></tr></tbody></table></code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>组件类别</th>
+      <th>组件</th>
+      <th>介绍</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>docker相关组件</td>
+      <td>docker</td>
+      <td><strong>docker</strong>客户端，负责发送<strong>docker</strong>操作请求。</td>
+    </tr>
+    <tr>
+      <td>同上</td>
+      <td>dockerd</td>
+      <td><strong>docker</strong>服务入口，负责接受客户端请求并返回请求结果。</td>
+    </tr>
+    <tr>
+      <td>同上</td>
+      <td>docker-init</td>
+      <td>当业务主进程没有回收能力时，docker-init可以作为容器的1号进程，负责管理容器内的子进程。</td>
+    </tr>
+    <tr>
+      <td>同上</td>
+      <td>docker-proxy</td>
+      <td><strong>docker</strong>的网络实现，通过设置<code class="language-plaintext highlighter-rouge">iptables</code>规则使得访问主机的流量可以发送至容器内。</td>
+    </tr>
+    <tr>
+      <td>containerd相关</td>
+      <td>containerd</td>
+      <td>负责管理容器的生命周期， 通过接收dockerd的请求，执行启动或者销毁容器。</td>
+    </tr>
+    <tr>
+      <td>同上</td>
+      <td>contianerd-shim</td>
+      <td>将containerd和真正的容器进程解耦。使用containerd-shim作为容器的父进程，可以实现重启containerd而不影响已经启动的容器进程。</td>
+    </tr>
+    <tr>
+      <td>同上</td>
+      <td>ctr</td>
+      <td>containerd的客户端， 可以向containerd发送容器请求，主要用来调试开发。</td>
+    </tr>
+    <tr>
+      <td>容器运行时组件</td>
+      <td>runc</td>
+      <td>命令行工具，通过调用<strong>namespace</strong>、<strong>cgroup</strong>等系统接口，实现容器的创建和销毁。</td>
+    </tr>
+  </tbody>
+</table>
 
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'[hello]&lt;-&gt;[world]-&gt;[OK]\n[good]-&gt;[world]'</span> | graph-easy
-+------+     +-------+     +----+
-| good | <span class="nt">--</span><span class="o">&gt;</span> | world | <span class="nt">--</span><span class="o">&gt;</span> | OK |
-+------+     +-------+     +----+
-               ^
-               |
-               |
-               v
-             +-------+
-             | hello |
-             +-------+
-</pre></td></tr></tbody></table></code></pre></div></div>
-
-<h1 id="嵌入子图">嵌入子图</h1>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'(ns0-1: [veth1]) [veth0]&lt;-&gt;[veth1] [veth0]&lt;-&gt;[brt]'</span> | graph-easy
-  +-------+        +-----+
-  | veth0 |   &lt;<span class="nt">--</span><span class="o">&gt;</span> | brt |
-  +-------+        +-----+
-    ^
-    |
-    |
-    v
-+ - - - - - +
-<span class="s1">' ns0-1:    '</span>
-<span class="s1">'           '</span>
-<span class="s1">' +-------+ '</span>
-<span class="s1">' | veth1 | '</span>
-<span class="s1">' +-------+ '</span>
-<span class="s1">'           '</span>
-+ - - - - - +
-</pre></td></tr></tbody></table></code></pre></div></div>
-
-<h1 id="连接线加标签">连接线加标签</h1>
-
-<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-</pre></td><td class="rouge-code"><pre><span class="nb">echo</span> <span class="s1">'(ns0-1: [veth1]) [veth0]&lt;-&gt;{label:"pair"}[veth1] [veth0]&lt;-&gt;[brt]'</span> | graph-easy
-  +-------+        +-----+
-  | veth0 |   &lt;<span class="nt">--</span><span class="o">&gt;</span> | brt |
-  +-------+        +-----+
-    ^
-    |
-    | pair
-    v
-+ - - - - - +
-<span class="s1">' ns0-1:    '</span>
-<span class="s1">'           '</span>
-<span class="s1">' +-------+ '</span>
-<span class="s1">' | veth1 | '</span>
-<span class="s1">' +-------+ '</span>
-<span class="s1">'           '</span>
-+ - - - - - +
-</pre></td></tr></tbody></table></code></pre></div></div>
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="/img/resources/docker-arch.svg" width="75%" alt="" />
+    <br />
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">
+      图1 docker组建架构
+  	</div>
+</center>
 
 
                 <hr style="visibility: hidden;">
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2023/03/14/dns/" data-toggle="tooltip" data-placement="top" title="DNS服务与配置">
+                        <a href="/2021/12/05/dns/" data-toggle="tooltip" data-placement="top" title="DNS服务与配置">
                         Previous<br>
                         <span>DNS服务与配置</span>
                         </a>
@@ -398,7 +370,7 @@ graph-easy兼容graphviz语法
                     
                     
                     <li class="next">
-                        <a href="/2023/03/14/latency-summary/" data-toggle="tooltip" data-placement="top" title="计算机系统各类延时概况">
+                        <a href="/2022/02/11/latency-summary/" data-toggle="tooltip" data-placement="top" title="计算机系统各类延时概况">
                         Next<br>
                         <span>计算机系统各类延时概况</span>
                         </a>
@@ -456,6 +428,31 @@ graph-easy兼容graphviz语法
         
         
         
+        
+                <a data-sort="0006" 
+                    href="/archive/?tag=Linux"
+                    title="Linux"
+                    rel="3">Linux</a>
+        
+                <a data-sort="0007" 
+                    href="/archive/?tag=Docker"
+                    title="Docker"
+                    rel="2">Docker</a>
+        
+                <a data-sort="0007" 
+                    href="/archive/?tag=container"
+                    title="container"
+                    rel="2">container</a>
+        
+                <a data-sort="0007" 
+                    href="/archive/?tag=docker"
+                    title="docker"
+                    rel="2">docker</a>
+        
+                <a data-sort="0007" 
+                    href="/archive/?tag=nsenter"
+                    title="nsenter"
+                    rel="2">nsenter</a>
     </div>
 </section>
 
@@ -484,8 +481,8 @@ graph-easy兼容graphviz语法
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "cheneyyin";
-    var disqus_identifier = "/2023/03/14/graph-easy";
-    var disqus_url = "http://localhost:4000/2023/03/14/graph-easy/";
+    var disqus_identifier = "/2022/01/17/docker-component";
+    var disqus_url = "https://cheneyyin.github.io/2022/01/17/docker-component/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
