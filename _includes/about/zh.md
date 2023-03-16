@@ -1,4 +1,4 @@
-Hi， 我是闫成雨([📧Cheney.Yin](mailto:cheneyyin@hotmail.com))，一名软件从业人员。目前从事自由开发，工作内容和兴趣集中于数据开发、资源调度算法、分布式系统。
+Hi， 我是闫成雨([📧Cheney.Yin](mailto:cheneyyin@hotmail.com))，一名软件从业人员。目前从事自由开发，工作内容和兴趣集中于数据开发、机器学习、资源调度算法、分布式系统。
 
 ## Publication
 

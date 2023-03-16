@@ -3,10 +3,10 @@
   <channel>
     <title>Cheney.Yin Blog</title>
     <description>这里是 Cheney.Yin 的个人博客</description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 16 Mar 2023 12:13:21 +0800</pubDate>
-    <lastBuildDate>Thu, 16 Mar 2023 12:13:21 +0800</lastBuildDate>
+    <link>https://cheneyyin.github.io/</link>
+    <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Thu, 16 Mar 2023 12:19:02 +0800</pubDate>
+    <lastBuildDate>Thu, 16 Mar 2023 12:19:02 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -14,8 +14,8 @@
         <description>
 </description>
         <pubDate>Wed, 15 Feb 2023 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2023/02/15/metal/</link>
-        <guid isPermaLink="true">http://localhost:4000/2023/02/15/metal/</guid>
+        <link>https://cheneyyin.github.io/2023/02/15/metal/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2023/02/15/metal/</guid>
         
         <category>Spark</category>
         
@@ -147,8 +147,8 @@
 
 </description>
         <pubDate>Tue, 06 Sep 2022 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2022/09/06/spark-standalone-rest-api/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/09/06/spark-standalone-rest-api/</guid>
+        <link>https://cheneyyin.github.io/2022/09/06/spark-standalone-rest-api/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/09/06/spark-standalone-rest-api/</guid>
         
         <category>Spark</category>
         
@@ -204,8 +204,8 @@
 
 </description>
         <pubDate>Mon, 29 Aug 2022 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2022/08/29/spark-standalone-start-configure/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/08/29/spark-standalone-start-configure/</guid>
+        <link>https://cheneyyin.github.io/2022/08/29/spark-standalone-start-configure/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/29/spark-standalone-start-configure/</guid>
         
         <category>Spark</category>
         
@@ -851,8 +851,8 @@ java &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; ./target/starter-1.0.0-SN
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Sun, 07 Aug 2022 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2022/08/07/vertx-core-3-event-bus/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/08/07/vertx-core-3-event-bus/</guid>
+        <link>https://cheneyyin.github.io/2022/08/07/vertx-core-3-event-bus/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/07/vertx-core-3-event-bus/</guid>
         
         <category>Vert.x</category>
         
@@ -1401,8 +1401,8 @@ SomeScript.groovy // 将使用Groovy的Factory
 &lt;/blockquote&gt;
 </description>
         <pubDate>Fri, 05 Aug 2022 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2022/08/05/vertx-core-2-verticles/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/08/05/vertx-core-2-verticles/</guid>
+        <link>https://cheneyyin.github.io/2022/08/05/vertx-core-2-verticles/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/05/vertx-core-2-verticles/</guid>
         
         <category>Vert.x</category>
         
@@ -1776,8 +1776,8 @@ Exec create 1.
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Mon, 01 Aug 2022 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2022/08/01/vertx-core-1-fluent-api/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/08/01/vertx-core-1-fluent-api/</guid>
+        <link>https://cheneyyin.github.io/2022/08/01/vertx-core-1-fluent-api/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/01/vertx-core-1-fluent-api/</guid>
         
         <category>Vert.x</category>
         
@@ -1878,8 +1878,8 @@ Exec create 1.
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Sat, 30 Jul 2022 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2022/07/30/vertx-core-0-vertx-object/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/07/30/vertx-core-0-vertx-object/</guid>
+        <link>https://cheneyyin.github.io/2022/07/30/vertx-core-0-vertx-object/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/30/vertx-core-0-vertx-object/</guid>
         
         <category>Vert.x</category>
         
@@ -2246,8 +2246,8 @@ Exec create 1.
 
 </description>
         <pubDate>Tue, 12 Jul 2022 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2022/07/12/distrcmp-pas-2/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/07/12/distrcmp-pas-2/</guid>
+        <link>https://cheneyyin.github.io/2022/07/12/distrcmp-pas-2/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/12/distrcmp-pas-2/</guid>
         
         <category>《分布式计算--原理、算法与系统》</category>
         
@@ -2535,8 +2535,8 @@ e^x_i \to_{msg} e^y_j &amp;amp;or //进程间的消息传递\\\
 &lt;/div&gt;
 </description>
         <pubDate>Mon, 11 Jul 2022 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2022/07/11/distrcmp-pas-1/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/07/11/distrcmp-pas-1/</guid>
+        <link>https://cheneyyin.github.io/2022/07/11/distrcmp-pas-1/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/11/distrcmp-pas-1/</guid>
         
         <category>《分布式计算--原理、算法与系统》</category>
         
@@ -3024,8 +3024,8 @@ Exception &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;thread &lt;span class=
 &lt;p&gt;后续补充&lt;/p&gt;
 </description>
         <pubDate>Sat, 02 Jul 2022 00:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2022/07/02/out-of-memory-error/</link>
-        <guid isPermaLink="true">http://localhost:4000/2022/07/02/out-of-memory-error/</guid>
+        <link>https://cheneyyin.github.io/2022/07/02/out-of-memory-error/</link>
+        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/02/out-of-memory-error/</guid>
         
         <category>Java</category>
         
