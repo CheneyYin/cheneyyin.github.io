@@ -1,0 +1,50 @@
+---
+layout: default
+title: "Project"
+description: "「To explore or to exploite is a question.」"
+header-img: "img/home-bg-art.jpg"
+header-mask: 0.3
+multilingual: false
+comments: true
+---
+<!-- Page Header -->
+{% include intro-header.html type='page' short=true %}
+
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+			<!-- Article List -->
+			<div class="mini-post-list js-result">
+				{%- assign _sorted_list = site.posts -%}
+                {%- assign _sorted_list = _sorted_list | sort: 'date' -%}
+				{%- assign _sorted_list = _sorted_list | reverse -%}
+                
+				{%- for _article in _sorted_list -%}
+                {%- if _article.project -%}
+				{%- assign _currentdate = _article.date | date: '%Y' -%}
+				<section>
+					<span class="fa listing-seperator">
+						<span class="tag-text">{{ _currentdate }}</span>
+					</span>
+
+					<div class="post-preview item" data-tags="{{ _tags }}">
+						<a href="{{ _article.url | prepend: site.baseurl }}">
+							<h2 class="post-title">
+								{{ _article.title }}
+							</h2>
+							{% if _article.subtitle %}
+							<h3 class="post-subtitle">
+								{{ _article.subtitle }}
+							</h3>
+							{% endif %}
+						</a>
+						<hr>
+					</div>
+				</section>
+                {% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>

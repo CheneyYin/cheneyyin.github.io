@@ -3,11 +3,32 @@
   <channel>
     <title>Cheney.Yin Blog</title>
     <description>这里是 Cheney.Yin 的个人博客</description>
-    <link>https://cheneyyin.github.io/</link>
-    <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 16 Mar 2023 11:22:10 +0800</pubDate>
-    <lastBuildDate>Thu, 16 Mar 2023 11:22:10 +0800</lastBuildDate>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Thu, 16 Mar 2023 12:13:21 +0800</pubDate>
+    <lastBuildDate>Thu, 16 Mar 2023 12:13:21 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
+    
+      <item>
+        <title>Metal</title>
+        <description>
+</description>
+        <pubDate>Wed, 15 Feb 2023 00:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2023/02/15/metal/</link>
+        <guid isPermaLink="true">http://localhost:4000/2023/02/15/metal/</guid>
+        
+        <category>Spark</category>
+        
+        <category>Dataflow</category>
+        
+        <category>可视化</category>
+        
+        <category>ETL</category>
+        
+        <category>Metal</category>
+        
+        
+      </item>
     
       <item>
         <title>Spark Standalone集群隐藏的REST API</title>
@@ -126,8 +147,8 @@
 
 </description>
         <pubDate>Tue, 06 Sep 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/09/06/spark-standalone-rest-api/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/09/06/spark-standalone-rest-api/</guid>
+        <link>http://localhost:4000/2022/09/06/spark-standalone-rest-api/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/09/06/spark-standalone-rest-api/</guid>
         
         <category>Spark</category>
         
@@ -183,8 +204,8 @@
 
 </description>
         <pubDate>Mon, 29 Aug 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/08/29/spark-standalone-start-configure/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/29/spark-standalone-start-configure/</guid>
+        <link>http://localhost:4000/2022/08/29/spark-standalone-start-configure/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/08/29/spark-standalone-start-configure/</guid>
         
         <category>Spark</category>
         
@@ -830,8 +851,8 @@ java &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; ./target/starter-1.0.0-SN
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Sun, 07 Aug 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/08/07/vertx-core-3-event-bus/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/07/vertx-core-3-event-bus/</guid>
+        <link>http://localhost:4000/2022/08/07/vertx-core-3-event-bus/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/08/07/vertx-core-3-event-bus/</guid>
         
         <category>Vert.x</category>
         
@@ -1380,8 +1401,8 @@ SomeScript.groovy // 将使用Groovy的Factory
 &lt;/blockquote&gt;
 </description>
         <pubDate>Fri, 05 Aug 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/08/05/vertx-core-2-verticles/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/05/vertx-core-2-verticles/</guid>
+        <link>http://localhost:4000/2022/08/05/vertx-core-2-verticles/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/08/05/vertx-core-2-verticles/</guid>
         
         <category>Vert.x</category>
         
@@ -1755,8 +1776,8 @@ Exec create 1.
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Mon, 01 Aug 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/08/01/vertx-core-1-fluent-api/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/01/vertx-core-1-fluent-api/</guid>
+        <link>http://localhost:4000/2022/08/01/vertx-core-1-fluent-api/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/08/01/vertx-core-1-fluent-api/</guid>
         
         <category>Vert.x</category>
         
@@ -1857,8 +1878,8 @@ Exec create 1.
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
         <pubDate>Sat, 30 Jul 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/07/30/vertx-core-0-vertx-object/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/30/vertx-core-0-vertx-object/</guid>
+        <link>http://localhost:4000/2022/07/30/vertx-core-0-vertx-object/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/07/30/vertx-core-0-vertx-object/</guid>
         
         <category>Vert.x</category>
         
@@ -2225,8 +2246,8 @@ Exec create 1.
 
 </description>
         <pubDate>Tue, 12 Jul 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/07/12/distrcmp-pas-2/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/12/distrcmp-pas-2/</guid>
+        <link>http://localhost:4000/2022/07/12/distrcmp-pas-2/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/07/12/distrcmp-pas-2/</guid>
         
         <category>《分布式计算--原理、算法与系统》</category>
         
@@ -2514,8 +2535,8 @@ e^x_i \to_{msg} e^y_j &amp;amp;or //进程间的消息传递\\\
 &lt;/div&gt;
 </description>
         <pubDate>Mon, 11 Jul 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/07/11/distrcmp-pas-1/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/11/distrcmp-pas-1/</guid>
+        <link>http://localhost:4000/2022/07/11/distrcmp-pas-1/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/07/11/distrcmp-pas-1/</guid>
         
         <category>《分布式计算--原理、算法与系统》</category>
         
@@ -3003,8 +3024,8 @@ Exception &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;thread &lt;span class=
 &lt;p&gt;后续补充&lt;/p&gt;
 </description>
         <pubDate>Sat, 02 Jul 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/07/02/out-of-memory-error/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/02/out-of-memory-error/</guid>
+        <link>http://localhost:4000/2022/07/02/out-of-memory-error/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/07/02/out-of-memory-error/</guid>
         
         <category>Java</category>
         
@@ -3023,66 +3044,6 @@ Exception &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;thread &lt;span class=
         <category>常量池</category>
         
         <category>Direct内存</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>sudo和wheel用户组</title>
-        <description>&lt;h1 id=&quot;sudo-和-wheel组&quot;&gt;sudo 和 wheel组&lt;/h1&gt;
-
-&lt;p&gt;查看&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker&lt;/code&gt;用户信息，&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;id &lt;/span&gt;docker
-&lt;span class=&quot;nv&quot;&gt;uid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1001&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;docker&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1001&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;docker&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1001&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;docker&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker&lt;/code&gt;用户没有加入&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/sudoers&lt;/code&gt;，因此&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sudo&lt;/code&gt;命令失败。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;docker@cheney-hp etc]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip addr
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;docker:
-docker is not &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the sudoers file.  This incident will be reported.
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;解决该问题有两种方式，一种是把&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker&lt;/code&gt;加入&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/sudoers&lt;/code&gt;，例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;echo &apos;docker ALL=(ALL) ALL&apos; &amp;gt;&amp;gt; /etc/sudoers&lt;/code&gt;，另一种方式是把&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;docker&lt;/code&gt;加入&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;wheel&lt;/code&gt;用户组。&lt;/p&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;gpasswd &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; docker wheel
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
-2
-3
-4
-5
-6
-7
-8
-&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;docker@cheney-hp etc]&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;ip addr
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; password &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;docker:
-1: lo: &amp;lt;LOOPBACK,UP,LOWER_UP&amp;gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    &lt;span class=&quot;nb&quot;&gt;link&lt;/span&gt;/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-    inet6 ::1/128 scope host
-       valid_lft forever preferred_lft forever
-&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-</description>
-        <pubDate>Sat, 25 Jun 2022 00:00:00 +0800</pubDate>
-        <link>https://cheneyyin.github.io/2022/06/25/sudo-and-wheel-group/</link>
-        <guid isPermaLink="true">https://cheneyyin.github.io/2022/06/25/sudo-and-wheel-group/</guid>
-        
-        <category>Linux</category>
-        
-        <category>sudo</category>
-        
-        <category>wheel用户组</category>
         
         
       </item>

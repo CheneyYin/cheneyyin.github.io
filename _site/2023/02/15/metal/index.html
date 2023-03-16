@@ -12,13 +12,13 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="Spark Standalone集群启动配置 - Cheney.Yin的博客 | Cheney Blog">
+        content="Metal - Cheney.Yin的博客 | Cheney Blog">
     
     <meta property="og:type" content="article">
-    <meta property="og:description" content="Spark Standalone集群启动配置
+    <meta property="og:description" content="
 ">
     
-    <meta property="article:published_time" content=" 2022-08-29T00:00:00Z">
+    <meta property="article:published_time" content=" 2023-02-15T00:00:00Z">
     
     
     <meta property="article:author" content="Cheney.Yin">
@@ -26,14 +26,20 @@
     
     <meta property="article:tag" content="Spark">
     
-    <meta property="article:tag" content="Spark Standalone">
+    <meta property="article:tag" content="Dataflow">
+    
+    <meta property="article:tag" content="可视化">
+    
+    <meta property="article:tag" content="ETL">
+    
+    <meta property="article:tag" content="Metal">
     
     
     <meta property="og:image" content="http://localhost:4000/img/cheney.jpg">
-    <meta property="og:url" content="http://localhost:4000/2022/08/29/spark-standalone-start-configure/">
+    <meta property="og:url" content="http://localhost:4000/2023/02/15/metal/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
-    <title>Spark Standalone集群启动配置 - Cheney.Yin的博客 | Cheney Blog</title>
+    <title>Metal - Cheney.Yin的博客 | Cheney Blog</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -42,7 +48,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2022/08/29/spark-standalone-start-configure/">
+    <link rel="canonical" href="http://localhost:4000/2023/02/15/metal/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -244,13 +250,19 @@
                         
                         <a class="tag" href="/archive/?tag=Spark" title="Spark">Spark</a>
                         
-                        <a class="tag" href="/archive/?tag=Spark+Standalone" title="Spark Standalone">Spark Standalone</a>
+                        <a class="tag" href="/archive/?tag=Dataflow" title="Dataflow">Dataflow</a>
+                        
+                        <a class="tag" href="/archive/?tag=%E5%8F%AF%E8%A7%86%E5%8C%96" title="可视化">可视化</a>
+                        
+                        <a class="tag" href="/archive/?tag=ETL" title="ETL">ETL</a>
+                        
+                        <a class="tag" href="/archive/?tag=Metal" title="Metal">Metal</a>
                         
                     </div>
-                    <h1>Spark Standalone集群启动配置</h1>
+                    <h1>Metal</h1>
                     
-                    <h2 class="subheading">介绍Spark Standalone集群启动的常用配置项目</h2>
-                    <span class="meta">Posted by Cheney.Yin on August 29, 2022</span>
+                    <h2 class="subheading">介绍自研项目Metal的设计思路和效果</h2>
+                    <span class="meta">Posted by Cheney.Yin on February 15, 2023</span>
                 </div>
             </div>
         </div>
@@ -277,66 +289,19 @@
                 <!-- Multi-Lingual -->
                 
 
-				<h1 id="spark-standalone集群启动配置">Spark Standalone集群启动配置</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>配置项</th>
-      <th>含义</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">-h HOST</code>, <code class="language-plaintext highlighter-rouge">--host HOST</code></td>
-      <td>监听Host Name</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">-p PORT</code>,<code class="language-plaintext highlighter-rouge">--port PORT</code></td>
-      <td>监听端口（默认：Master使用7077，worker随机设置端口）</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">--webui-port PORT</code></td>
-      <td>Web UI的端口（默认：Master使用8080，worker使用8081）</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">-c CORES</code>，<code class="language-plaintext highlighter-rouge">--cores CORES</code></td>
-      <td><strong>Worker专属配置</strong>，可分配给Spark应用使用的CPU总数量。（默认：主机上的全部CPU均可以使用。）</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">-m MEM</code>，<code class="language-plaintext highlighter-rouge">--memory MEM</code></td>
-      <td><strong>Worker专属配置</strong>，可分配给Spark应用使用的内存量，例如配置为<code class="language-plaintext highlighter-rouge">1000M</code>或<code class="language-plaintext highlighter-rouge">2G</code>。（默认：主机的全部内存，最小为1GiB。）</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">-d DIR</code>，<code class="language-plaintext highlighter-rouge">--work-dir DIR</code></td>
-      <td><strong>Worker专属配置</strong>，暂存空间和Job输出日志目录。（默认：<code class="language-plaintext highlighter-rouge">SPARK_HOME/work</code>。）</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">--properties-file FILE</code></td>
-      <td>Spark配置文件路径。（默认：<code class="language-plaintext highlighter-rouge">conf/spark-defaults.conf</code>）</td>
-    </tr>
-  </tbody>
-</table>
-
+				
 
 
                 <hr style="visibility: hidden;">
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2022/08/07/vertx-core-3-event-bus/" data-toggle="tooltip" data-placement="top" title="Vert.x core 3 --- Event Bus">
-                        Previous<br>
-                        <span>Vert.x core 3 --- Event Bus</span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="next">
                         <a href="/2022/09/06/spark-standalone-rest-api/" data-toggle="tooltip" data-placement="top" title="Spark Standalone集群隐藏的REST API">
-                        Next<br>
+                        Previous<br>
                         <span>Spark Standalone集群隐藏的REST API</span>
                         </a>
                     </li>
+                    
                     
                 </ul>
                 <hr style="visibility: hidden;">
@@ -513,8 +478,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "cheneyyin";
-    var disqus_identifier = "/2022/08/29/spark-standalone-start-configure";
-    var disqus_url = "http://localhost:4000/2022/08/29/spark-standalone-start-configure/";
+    var disqus_identifier = "/2023/02/15/metal";
+    var disqus_url = "http://localhost:4000/2023/02/15/metal/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

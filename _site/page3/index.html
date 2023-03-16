@@ -18,8 +18,8 @@
     <meta property="og:description"
         content="「To explore or to exploite is a question.」">
     
-    <meta property="og:image" content="https://cheneyyin.github.io/img/cheney.jpg">
-    <meta property="og:url" content="https://cheneyyin.github.io/page3/">
+    <meta property="og:image" content="http://localhost:4000/img/cheney.jpg">
+    <meta property="og:url" content="http://localhost:4000/page3/">
     <meta property="og:site_name" content="Cheney.Yin的博客 | Cheney Blog">
 
     <title>Cheney.Yin的博客 | Cheney Blog</title>
@@ -31,7 +31,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://cheneyyin.github.io/page3/">
+    <link rel="canonical" href="http://localhost:4000/page3/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -104,6 +104,12 @@
                         
                         
                         
+                        
+                        
+                        
+                        <li>
+                            <a href="/project/">Project</a>
+                        </li>
                         
                         
                         
@@ -246,6 +252,49 @@
     <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
       col-xs-12 postlist-container">
       
+<div class="post-preview">
+    <a href="/2022/01/17/docker-component/">
+        <h2 class="post-title">
+            Docker组件架构
+        </h2>
+        
+        <h3 class="post-subtitle">
+            介绍docker架构中的常见组成部分
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                Docker组件架构
+
+总概
+
+
+  
+    
+      组件类别
+      组件
+      介绍
+    
+  
+  
+    
+      docker相关组件
+      docker
+      docker客户端，负责发送docker操作请求。
+    
+    
+      同上
+      dockerd
+      docker服务入口，负责接受客户端请求并返回请求结...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Cheney.Yin on January 17, 2022
+    </p>
+</div>
+<hr>
+
 <div class="post-preview">
     <a href="/2021/12/22/debug-hotspot/">
         <h2 class="post-title">
@@ -558,34 +607,6 @@ Spark Streaming是Spark Core API的扩展，它支持弹性的、高吞吐、容
 </div>
 <hr>
 
-<div class="post-preview">
-    <a href="/2020/01/22/spark-scheduler/">
-        <h2 class="post-title">
-            Spark资源调度
-        </h2>
-        
-        <h3 class="post-subtitle">
-            介绍Spark跨应用调度和应用内调度的相关概念和配置
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                概况
-
-spark 具备几种计算资源的调度机制。首先，在集群模式下，每个Spark应用(SparkContext的实例)运行在一组独立的执行器(executor)进程中。Spark集群管理器提供了跨应用的调度机制。其次，在每个Spark应用中，如果多个job(Spark actions)被不同的线程提交，它们能够并发执行。
-
-跨应用调度
-
-运行在spark集群的应用，可以获得一组独立的exe...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Cheney.Yin on January 22, 2020
-    </p>
-</div>
-<hr>
-
 
 <!-- Pager -->
 
@@ -624,94 +645,94 @@ spark 具备几种计算资源的调度机制。首先，在集群模式下，�
                 <a data-sort="0025" 
                     href="/archive/?tag=Spark"
                     title="Spark"
-                    rel="9">Spark</a>
+                    rel="10">Spark</a>
         
-                <a data-sort="0024" 
+                <a data-sort="0025" 
                     href="/archive/?tag=Docker"
                     title="Docker"
                     rel="10">Docker</a>
         
-                <a data-sort="0030" 
+                <a data-sort="0031" 
                     href="/archive/?tag=Linux"
                     title="Linux"
                     rel="4">Linux</a>
         
-                <a data-sort="0030" 
+                <a data-sort="0031" 
                     href="/archive/?tag=RDD"
                     title="RDD"
                     rel="4">RDD</a>
         
-                <a data-sort="0030" 
+                <a data-sort="0031" 
                     href="/archive/?tag=Vert.x"
                     title="Vert.x"
                     rel="4">Vert.x</a>
         
-                <a data-sort="0030" 
+                <a data-sort="0031" 
                     href="/archive/?tag=vertx-core"
                     title="vertx-core"
                     rel="4">vertx-core</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=%E3%80%8A%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97--%E5%8E%9F%E7%90%86%E3%80%81%E7%AE%97%E6%B3%95%E4%B8%8E%E7%B3%BB%E7%BB%9F%E3%80%8B"
                     title="《分布式计算--原理、算法与系统》"
                     rel="2">《分布式计算--原理、算法与系统》</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=%E5%85%AC%E5%B9%B3%E8%B0%83%E5%BA%A6"
                     title="公平调度"
                     rel="2">公平调度</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97"
                     title="分布式计算"
                     rel="2">分布式计算</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=%E7%B4%AF%E5%8A%A0%E5%99%A8"
                     title="累加器"
                     rel="2">累加器</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=FIFO%E8%B0%83%E5%BA%A6"
                     title="FIFO调度"
                     rel="2">FIFO调度</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=JVM"
                     title="JVM"
                     rel="2">JVM</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=Java"
                     title="Java"
                     rel="2">Java</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=Spark+Standalone"
                     title="Spark Standalone"
                     rel="2">Spark Standalone</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=Spark+Streaming"
                     title="Spark Streaming"
                     rel="2">Spark Streaming</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=container"
                     title="container"
                     rel="2">container</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=docker+image"
                     title="docker image"
                     rel="2">docker image</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=nsenter"
                     title="nsenter"
                     rel="2">nsenter</a>
         
-                <a data-sort="0032" 
+                <a data-sort="0033" 
                     href="/archive/?tag=sudo"
                     title="sudo"
                     rel="2">sudo</a>

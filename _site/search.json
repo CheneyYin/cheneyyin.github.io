@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "Metal",
+      "subtitle" : "介绍自研项目Metal的设计思路和效果",
+      "tags"     : "Spark, Dataflow, 可视化, ETL, Metal",
+      "url"      : "/2023/02/15/metal/",
+      "date"     : "2023-02-15 00:00:00 +0800"
+    } ,
+  
+    {
       "title"    : "Spark Standalone集群隐藏的REST API",
       "subtitle" : "介绍如何使用Spark Standalone隐藏的REST API",
       "tags"     : "Spark, Spark Standalone, REST API",
