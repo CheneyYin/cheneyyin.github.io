@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "Distribute Pipeline EX",
+      "subtitle" : "一种分布式交互管道设计",
+      "tags"     : "Linux, Cli, pipeline, 分布式",
+      "url"      : "/2023/03/17/distribute-pipeline-ex/",
+      "date"     : "2023-03-17 00:00:00 +0800"
+    } ,
+  
+    {
       "title"    : "Metal",
       "subtitle" : "介绍自研项目Metal的设计思路和效果",
       "tags"     : "Spark, Dataflow, 可视化, ETL, Metal",
