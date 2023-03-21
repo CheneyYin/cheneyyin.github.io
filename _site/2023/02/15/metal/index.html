@@ -346,7 +346,7 @@
 
 <center>
     <img style="border-radius: 0.3125em;
-    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="/img/resources/metal-plugin-class.svg" width="75%" alt="" />
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="/img/resources/metal-plugin-class.svg" width="95%" alt="" />
     <br />
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -355,6 +355,15 @@
       数据流算子类型
   	</div>
 </center>
+
+<p>从上图可以看出，所有算子/操作的最终父类为<code class="language-plaintext highlighter-rouge">Metal</code>，所有继承<code class="language-plaintext highlighter-rouge">Metal</code>的子类都有<code class="language-plaintext highlighter-rouge">id</code>、<code class="language-plaintext highlighter-rouge">name</code>以及配置属性<code class="language-plaintext highlighter-rouge">props</code>。其中，<code class="language-plaintext highlighter-rouge">props</code>用于为算子注入配置。<code class="language-plaintext highlighter-rouge">metal-core</code>下的Metal抽象算子是平台无关的。目前，Metal仅支持将Spark作为后端执行引擎。
+上图中<code class="language-plaintext highlighter-rouge">MSource</code>、<code class="language-plaintext highlighter-rouge">MMapper</code>、<code class="language-plaintext highlighter-rouge">MFusion</code>和<code class="language-plaintext highlighter-rouge">MSink</code>定义了数据流的四种基本处理逻辑。</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">MSource</code>: 用于获取数据，没有数据输入，有输出。例如<code class="language-plaintext highlighter-rouge">JsonFileSource</code>是<code class="language-plaintext highlighter-rouge">MSource</code>在Spark上的一种实现。<code class="language-plaintext highlighter-rouge">JsonFileSource</code>用从文件中加载JSON格式的数据，返回一个带有模式的DataFrame。</li>
+  <li><code class="language-plaintext highlighter-rouge">MMapper</code>：用于处理数据，拥有一个输入，并且有输出。例如<code class="language-plaintext highlighter-rouge">SqlMMapper</code>是<code class="language-plaintext highlighter-rouge">MMapper</code>在Spark上的一种实现，能够让用户把输入的DataFrame作为一张表，编写SQL处理输入的DataFrame处理得到新的DataFrame。</li>
+  <li><code class="language-plaintext highlighter-rouge">MFusion</code>：和<code class="language-plaintext highlighter-rouge">MMapper</code>类似都是用于处理数据，但是<code class="language-plaintext highlighter-rouge">MFusion</code>必须有两个及以上的输入。例如<code class="language-plaintext highlighter-rouge">SqlMFusion</code>，它的功能和<code class="language-plaintext highlighter-rouge">SqlMMapper</code>类似，但是必须输入两张及以上的DataFrame。</li>
+  <li><code class="language-plaintext highlighter-rouge">MSink</code>：用于下沉数据（写入文件、消息队列等），拥有一个输入，没有输出。例如<code class="language-plaintext highlighter-rouge">ConsoleMSink</code>是<code class="language-plaintext highlighter-rouge">MSink</code>在Spark上一种实现，能够把输入的DataFrame输出在控制台上，常用于调试。</li>
+</ul>
 
 <h1 id="open-source-plan">Open Source Plan</h1>
 

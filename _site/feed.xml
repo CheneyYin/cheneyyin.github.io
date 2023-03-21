@@ -5,8 +5,8 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 21 Mar 2023 12:26:19 +0800</pubDate>
-    <lastBuildDate>Tue, 21 Mar 2023 12:26:19 +0800</lastBuildDate>
+    <pubDate>Tue, 21 Mar 2023 13:59:53 +0800</pubDate>
+    <lastBuildDate>Tue, 21 Mar 2023 13:59:53 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -101,7 +101,7 @@
 
 &lt;center&gt;
     &lt;img style=&quot;border-radius: 0.3125em;
-    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/metal-plugin-class.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/metal-plugin-class.svg&quot; width=&quot;95%&quot; alt=&quot;&quot; /&gt;
     &lt;br /&gt;
     &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -110,6 +110,15 @@
       数据流算子类型
   	&lt;/div&gt;
 &lt;/center&gt;
+
+&lt;p&gt;从上图可以看出，所有算子/操作的最终父类为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Metal&lt;/code&gt;，所有继承&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Metal&lt;/code&gt;的子类都有&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;name&lt;/code&gt;以及配置属性&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;props&lt;/code&gt;。其中，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;props&lt;/code&gt;用于为算子注入配置。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-core&lt;/code&gt;下的Metal抽象算子是平台无关的。目前，Metal仅支持将Spark作为后端执行引擎。
+上图中&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MSource&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MMapper&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MFusion&lt;/code&gt;和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MSink&lt;/code&gt;定义了数据流的四种基本处理逻辑。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MSource&lt;/code&gt;: 用于获取数据，没有数据输入，有输出。例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;JsonFileSource&lt;/code&gt;是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MSource&lt;/code&gt;在Spark上的一种实现。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;JsonFileSource&lt;/code&gt;用从文件中加载JSON格式的数据，返回一个带有模式的DataFrame。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MMapper&lt;/code&gt;：用于处理数据，拥有一个输入，并且有输出。例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SqlMMapper&lt;/code&gt;是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MMapper&lt;/code&gt;在Spark上的一种实现，能够让用户把输入的DataFrame作为一张表，编写SQL处理输入的DataFrame处理得到新的DataFrame。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MFusion&lt;/code&gt;：和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MMapper&lt;/code&gt;类似都是用于处理数据，但是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MFusion&lt;/code&gt;必须有两个及以上的输入。例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SqlMFusion&lt;/code&gt;，它的功能和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SqlMMapper&lt;/code&gt;类似，但是必须输入两张及以上的DataFrame。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MSink&lt;/code&gt;：用于下沉数据（写入文件、消息队列等），拥有一个输入，没有输出。例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ConsoleMSink&lt;/code&gt;是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MSink&lt;/code&gt;在Spark上一种实现，能够把输入的DataFrame输出在控制台上，常用于调试。&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h1 id=&quot;open-source-plan&quot;&gt;Open Source Plan&lt;/h1&gt;
 
