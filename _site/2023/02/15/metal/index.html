@@ -15,7 +15,7 @@
         content="Metal - Cheney.Yin的博客 | Cheney Blog">
     
     <meta property="og:type" content="article">
-    <meta property="og:description" content="
+    <meta property="og:description" content="What is Metal?
 ">
     
     <meta property="article:published_time" content=" 2023-02-15T00:00:00Z">
@@ -289,7 +289,75 @@
                 <!-- Multi-Lingual -->
                 
 
-				
+				<h1 id="what-is-metal">What is Metal?</h1>
+
+<p>Metal是一款数据流建模软件，通过Metal可以管理数据流处理算子、可视化建模、批处理任务执行。</p>
+
+<h1 id="what-metal-can-do-for-me">What Metal can do for me?</h1>
+
+<p>如果你经常使用Spark SQL开发ETL Pipeline，积累了大量的DTD(Dataframe To Dataframe)的算子/操作，你可以按照Metal的插件规范改造你的算子/操作，使用Metal来管理这些插件。</p>
+
+<p>如果你使用Metal，你可以很方便地复用这些插件。Metal提供了两种方式来构建数据流，数据流是由插件组合而成的。</p>
+
+<ul>
+  <li>第一种构建方式是Cli风格，你需要编写spec文件来配置数据流的结构以及数据处理算子的参数。</li>
+  <li>第二方式是可视化风格，Metal提供了用于数据流设计的Web UI即metal-ui。metal-ui是一个简易的数据流集成开发环境，相比于Cli风格，metal-ui降低了配置数据流的难度。metal-ui以Project的概念管理每个数据流。你可以在metal-ui中，创建Project、配置Project、绘制数据流、跟踪数据处理任务、管理算子插件等。</li>
+</ul>
+
+<h1 id="features">Features</h1>
+
+<h1 id="architecture">Architecture</h1>
+
+<p>Metal项目目前包括如下几个组件，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="rouge-code"><pre><span class="nb">.</span>
+├── metal-backend
+├── metal-backend-api
+├── metal-core
+├── metal-maven-plugin
+├── metal-on-spark
+├── metal-on-spark-extensions
+├── metal-parent
+├── metal-server
+├── metal-test
+└── metal-ui
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>各个组件概况如下：</p>
+
+<h2 id="metal-core">metal-core</h2>
+
+<p><code class="language-plaintext highlighter-rouge">metal-core</code>是Metal的核心，它定义了Metal数据流处理算子类型、数据流分析检查以及执行。</p>
+
+<h3 id="数据流处理算子">数据流处理算子</h3>
+
+<p>Metal数据流处理算子包括四种，分别为Source、Mapper、Fusion和Sink。</p>
+
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="/img/resources/metal-plugin-class.svg" width="75%" alt="" />
+    <br />
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">
+      数据流算子类型
+  	</div>
+</center>
+
+<h1 id="open-source-plan">Open Source Plan</h1>
+
 
 
                 <hr style="visibility: hidden;">

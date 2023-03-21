@@ -5,8 +5,8 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 17 Mar 2023 11:53:37 +0800</pubDate>
-    <lastBuildDate>Fri, 17 Mar 2023 11:53:37 +0800</lastBuildDate>
+    <pubDate>Tue, 21 Mar 2023 12:26:19 +0800</pubDate>
+    <lastBuildDate>Tue, 21 Mar 2023 12:26:19 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -17,7 +17,7 @@
 
 &lt;center&gt;
     &lt;img style=&quot;border-radius: 0.3125em;
-    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/distributed_pipeline.drawio.svg&quot; width=&quot;85%&quot; alt=&quot;&quot; /&gt;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/distributed_pipeline.drawio.svg&quot; width=&quot;95%&quot; alt=&quot;&quot; /&gt;
     &lt;br /&gt;
     &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -44,7 +44,75 @@
     
       <item>
         <title>Metal</title>
-        <description>
+        <description>&lt;h1 id=&quot;what-is-metal&quot;&gt;What is Metal?&lt;/h1&gt;
+
+&lt;p&gt;Metal是一款数据流建模软件，通过Metal可以管理数据流处理算子、可视化建模、批处理任务执行。&lt;/p&gt;
+
+&lt;h1 id=&quot;what-metal-can-do-for-me&quot;&gt;What Metal can do for me?&lt;/h1&gt;
+
+&lt;p&gt;如果你经常使用Spark SQL开发ETL Pipeline，积累了大量的DTD(Dataframe To Dataframe)的算子/操作，你可以按照Metal的插件规范改造你的算子/操作，使用Metal来管理这些插件。&lt;/p&gt;
+
+&lt;p&gt;如果你使用Metal，你可以很方便地复用这些插件。Metal提供了两种方式来构建数据流，数据流是由插件组合而成的。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;第一种构建方式是Cli风格，你需要编写spec文件来配置数据流的结构以及数据处理算子的参数。&lt;/li&gt;
+  &lt;li&gt;第二方式是可视化风格，Metal提供了用于数据流设计的Web UI即metal-ui。metal-ui是一个简易的数据流集成开发环境，相比于Cli风格，metal-ui降低了配置数据流的难度。metal-ui以Project的概念管理每个数据流。你可以在metal-ui中，创建Project、配置Project、绘制数据流、跟踪数据处理任务、管理算子插件等。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;features&quot;&gt;Features&lt;/h1&gt;
+
+&lt;h1 id=&quot;architecture&quot;&gt;Architecture&lt;/h1&gt;
+
+&lt;p&gt;Metal项目目前包括如下几个组件，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+├── metal-backend
+├── metal-backend-api
+├── metal-core
+├── metal-maven-plugin
+├── metal-on-spark
+├── metal-on-spark-extensions
+├── metal-parent
+├── metal-server
+├── metal-test
+└── metal-ui
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;各个组件概况如下：&lt;/p&gt;
+
+&lt;h2 id=&quot;metal-core&quot;&gt;metal-core&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-core&lt;/code&gt;是Metal的核心，它定义了Metal数据流处理算子类型、数据流分析检查以及执行。&lt;/p&gt;
+
+&lt;h3 id=&quot;数据流处理算子&quot;&gt;数据流处理算子&lt;/h3&gt;
+
+&lt;p&gt;Metal数据流处理算子包括四种，分别为Source、Mapper、Fusion和Sink。&lt;/p&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/metal-plugin-class.svg&quot; width=&quot;75%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      数据流算子类型
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;h1 id=&quot;open-source-plan&quot;&gt;Open Source Plan&lt;/h1&gt;
+
 </description>
         <pubDate>Wed, 15 Feb 2023 00:00:00 +0800</pubDate>
         <link>https://cheneyyin.github.io/2023/02/15/metal/</link>
