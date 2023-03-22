@@ -5,8 +5,8 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 22 Mar 2023 14:18:03 +0800</pubDate>
-    <lastBuildDate>Wed, 22 Mar 2023 14:18:03 +0800</lastBuildDate>
+    <pubDate>Wed, 22 Mar 2023 15:24:53 +0800</pubDate>
+    <lastBuildDate>Wed, 22 Mar 2023 15:24:53 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -341,10 +341,88 @@
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IBackendTryAPI&lt;/code&gt;中定义的接口为非阻塞接口。&lt;/p&gt;
 
 &lt;h3 id=&quot;运行模式&quot;&gt;运行模式&lt;/h3&gt;
-
 &lt;h4 id=&quot;命令行模式&quot;&gt;命令行模式&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;实现了命令行模式，你可在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;spark-submit&lt;/code&gt;提交任务时配置数据流。例如，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nv&quot;&gt;$SPARK_HOME&lt;/span&gt;/bin/spark-submit &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--class&lt;/span&gt; org.metal.backend.BackendLauncher &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--master&lt;/span&gt; spark://STANDALONE_MASTER_HOST:PORT &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--jars&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$METAL_JARS&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--conf&lt;/span&gt; spark.executor.userClassPathFirst&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--conf&lt;/span&gt; spark.driver.userClassPathFirst&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nv&quot;&gt;$METAL&lt;/span&gt;/metal-backend-1.0-SNAPSHOT.jar &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--conf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;appName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Test &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--cmd-mode&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--spec-file&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$METAL_SPEC&lt;/span&gt;/spec.json
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--cmd-mode&lt;/code&gt;表示开启命令行模式。 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--spec-file&lt;/code&gt;表示定义的数据流Spec的URI，该URI需要Spark driver能够访问到。另外，你也可以使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--spec&lt;/code&gt;，在命令行中直接配置嵌入Spec的内容，例如，&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;nv&quot;&gt;$SPARK_HOME&lt;/span&gt;/bin/spark-submit &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	...
+	&lt;span class=&quot;nv&quot;&gt;$METAL&lt;/span&gt;/metal-backend-1.0-SNAPSHOT.jar &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	...
+	&lt;span class=&quot;nt&quot;&gt;--spec&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;{&apos;version&apos;:&apos;1.0&apos;, &apos;metals&apos;:[...], &apos;edges&apos;:[...], &apos;waitFor&apos;:[...]}&quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;数据流Spec中使用的算子所属的Jar文件也需要指明，你可将Jar文件的路径配置在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--jars&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;目前，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;仅在Spark Standalone集群中测试过，Yarn和K8S还未进行过验证。&lt;/em&gt;&lt;/p&gt;
 
 &lt;h4 id=&quot;交互模式&quot;&gt;交互模式&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;实现了交互模式，当开了交互模式，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;会启动REST服务和Vert.x RPC服务。例如：&lt;/p&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;table class=&quot;rouge-table&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;rouge-gutter gl&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;rouge-code&quot;&gt;&lt;pre&gt;./spark-submit &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--class&lt;/span&gt; org.metal.backend.BackendLauncher &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--master&lt;/span&gt; spark://STANDALONE_MASTER_HOST:PORT &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--jars&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$METAL_JAR&lt;/span&gt;  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--conf&lt;/span&gt; spark.executor.userClassPathFirst&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--conf&lt;/span&gt; spark.driver.userClassPathFirst&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nv&quot;&gt;$METAL&lt;/span&gt;/metal-backend-1.0-SNAPSHOT.jar &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--conf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;appName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Test &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--interactive-mode&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--deploy-id&lt;/span&gt; 35c0dbd3-0700-493f-a071-343bc0300bc9 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--deploy-epoch&lt;/span&gt; 0 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--report-service-address&lt;/span&gt; report.metal.org &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+	&lt;span class=&quot;nt&quot;&gt;--rest-api-port&lt;/span&gt; 18000
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--interactive-mode&lt;/code&gt;表示开启交互模式。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--deploy-id&lt;/code&gt;为部署id，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--deploy-epoch&lt;/code&gt;为部署纪元。部署id用于和&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;通信，它能够关联到&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;的一个Project；部署纪元则是为了提供了高可用而设计的，在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;为Project部署Backend时，会下发类似于上述示例的命令，来启动一个开启交互模式的 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;，为了防止网络异常或启动异常带来的影响，每次为同一个Project部署Backend时，部署纪元都会增加。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--report-service-address&lt;/code&gt;是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;提供的追踪Backend状态的RPC服务地址。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--rest-api-port&lt;/code&gt;是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;启动的REST API端口。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;除了开发调试时，几乎不会手动编写交互模式的命令，正常情况下是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;根据你的Project配置来自动下发部署Backend。&lt;/p&gt;
 
 &lt;h2 id=&quot;metal-server和metal-ui&quot;&gt;metal-server和metal-ui&lt;/h2&gt;
 

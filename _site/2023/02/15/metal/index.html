@@ -586,10 +586,88 @@
 <p><code class="language-plaintext highlighter-rouge">IBackendTryAPI</code>中定义的接口为非阻塞接口。</p>
 
 <h3 id="运行模式">运行模式</h3>
-
 <h4 id="命令行模式">命令行模式</h4>
+<p><code class="language-plaintext highlighter-rouge">metal-backend</code>实现了命令行模式，你可在<code class="language-plaintext highlighter-rouge">spark-submit</code>提交任务时配置数据流。例如，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="nv">$SPARK_HOME</span>/bin/spark-submit <span class="se">\</span>
+	<span class="nt">--class</span> org.metal.backend.BackendLauncher <span class="se">\</span>
+	<span class="nt">--master</span> spark://STANDALONE_MASTER_HOST:PORT <span class="se">\</span>
+	<span class="nt">--jars</span> <span class="nv">$METAL_JARS</span> <span class="se">\</span>
+	<span class="nt">--conf</span> spark.executor.userClassPathFirst<span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+	<span class="nt">--conf</span> spark.driver.userClassPathFirst<span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+	<span class="nv">$METAL</span>/metal-backend-1.0-SNAPSHOT.jar <span class="se">\</span>
+	<span class="nt">--conf</span> <span class="nv">appName</span><span class="o">=</span>Test <span class="se">\</span>
+	<span class="nt">--cmd-mode</span> <span class="se">\</span>
+	<span class="nt">--spec-file</span> <span class="nv">$METAL_SPEC</span>/spec.json
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">--cmd-mode</code>表示开启命令行模式。 <code class="language-plaintext highlighter-rouge">--spec-file</code>表示定义的数据流Spec的URI，该URI需要Spark driver能够访问到。另外，你也可以使用<code class="language-plaintext highlighter-rouge">--spec</code>，在命令行中直接配置嵌入Spec的内容，例如，</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="nv">$SPARK_HOME</span>/bin/spark-submit <span class="se">\</span>
+	...
+	<span class="nv">$METAL</span>/metal-backend-1.0-SNAPSHOT.jar <span class="se">\</span>
+	...
+	<span class="nt">--spec</span> <span class="s2">"{'version':'1.0', 'metals':[...], 'edges':[...], 'waitFor':[...]}"</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>数据流Spec中使用的算子所属的Jar文件也需要指明，你可将Jar文件的路径配置在<code class="language-plaintext highlighter-rouge">--jars</code>。</p>
+
+<p><em>目前，<code class="language-plaintext highlighter-rouge">metal-backend</code>仅在Spark Standalone集群中测试过，Yarn和K8S还未进行过验证。</em></p>
 
 <h4 id="交互模式">交互模式</h4>
+
+<p><code class="language-plaintext highlighter-rouge">metal-backend</code>实现了交互模式，当开了交互模式，<code class="language-plaintext highlighter-rouge">metal-backend</code>会启动REST服务和Vert.x RPC服务。例如：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre>./spark-submit <span class="se">\</span>
+	<span class="nt">--class</span> org.metal.backend.BackendLauncher <span class="se">\</span>
+	<span class="nt">--master</span> spark://STANDALONE_MASTER_HOST:PORT <span class="se">\</span>
+	<span class="nt">--jars</span> <span class="nv">$METAL_JAR</span>  <span class="se">\</span>
+	<span class="nt">--conf</span> spark.executor.userClassPathFirst<span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+	<span class="nt">--conf</span> spark.driver.userClassPathFirst<span class="o">=</span><span class="nb">true</span> <span class="se">\</span>
+	<span class="nv">$METAL</span>/metal-backend-1.0-SNAPSHOT.jar <span class="se">\</span>
+	<span class="nt">--conf</span> <span class="nv">appName</span><span class="o">=</span>Test <span class="se">\</span>
+	<span class="nt">--interactive-mode</span> <span class="se">\</span>
+	<span class="nt">--deploy-id</span> 35c0dbd3-0700-493f-a071-343bc0300bc9 <span class="se">\</span>
+	<span class="nt">--deploy-epoch</span> 0 <span class="se">\</span>
+	<span class="nt">--report-service-address</span> report.metal.org <span class="se">\</span>
+	<span class="nt">--rest-api-port</span> 18000
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">--interactive-mode</code>表示开启交互模式。</li>
+  <li><code class="language-plaintext highlighter-rouge">--deploy-id</code>为部署id，<code class="language-plaintext highlighter-rouge">--deploy-epoch</code>为部署纪元。部署id用于和<code class="language-plaintext highlighter-rouge">metal-server</code>通信，它能够关联到<code class="language-plaintext highlighter-rouge">metal-server</code>的一个Project；部署纪元则是为了提供了高可用而设计的，在<code class="language-plaintext highlighter-rouge">metal-server</code>为Project部署Backend时，会下发类似于上述示例的命令，来启动一个开启交互模式的 <code class="language-plaintext highlighter-rouge">metal-backend</code>，为了防止网络异常或启动异常带来的影响，每次为同一个Project部署Backend时，部署纪元都会增加。</li>
+  <li><code class="language-plaintext highlighter-rouge">--report-service-address</code>是<code class="language-plaintext highlighter-rouge">metal-server</code>提供的追踪Backend状态的RPC服务地址。</li>
+  <li><code class="language-plaintext highlighter-rouge">--rest-api-port</code>是<code class="language-plaintext highlighter-rouge">metal-backend</code>启动的REST API端口。</li>
+</ul>
+
+<p>除了开发调试时，几乎不会手动编写交互模式的命令，正常情况下是<code class="language-plaintext highlighter-rouge">metal-server</code>根据你的Project配置来自动下发部署Backend。</p>
 
 <h2 id="metal-server和metal-ui">metal-server和metal-ui</h2>
 
