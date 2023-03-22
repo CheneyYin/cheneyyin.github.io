@@ -5,8 +5,8 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 22 Mar 2023 12:24:51 +0800</pubDate>
-    <lastBuildDate>Wed, 22 Mar 2023 12:24:51 +0800</lastBuildDate>
+    <pubDate>Wed, 22 Mar 2023 14:18:03 +0800</pubDate>
+    <lastBuildDate>Wed, 22 Mar 2023 14:18:03 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -48,7 +48,7 @@
 
 &lt;p&gt;Metal是一款数据流建模软件，通过Metal可以管理数据流处理算子、可视化建模、批处理任务执行。&lt;/p&gt;
 
-&lt;h1 id=&quot;what-metal-can-do-for-me&quot;&gt;What Metal can do for me?&lt;/h1&gt;
+&lt;h1 id=&quot;what-metal-can-do-for-you&quot;&gt;What Metal can do for you?&lt;/h1&gt;
 
 &lt;p&gt;如果你经常使用Spark SQL开发ETL Pipeline，积累了大量的DTD(Dataframe To Dataframe)的算子/操作，你可以按照Metal的插件规范改造你的算子/操作，使用Metal来管理这些插件。&lt;/p&gt;
 
@@ -58,6 +58,12 @@
   &lt;li&gt;第一种构建方式是Cli风格，你需要编写spec文件来配置数据流的结构以及数据处理算子的参数。&lt;/li&gt;
   &lt;li&gt;第二方式是可视化风格，Metal提供了用于数据流设计的Web UI即metal-ui。metal-ui是一个简易的数据流集成开发环境，相比于Cli风格，metal-ui降低了配置数据流的难度。metal-ui以Project的概念管理每个数据流。你可以在metal-ui中，创建Project、配置Project、绘制数据流、跟踪数据处理任务、管理算子插件等。&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h1 id=&quot;quick-start&quot;&gt;Quick Start&lt;/h1&gt;
+
+&lt;h2 id=&quot;命令行&quot;&gt;命令行&lt;/h2&gt;
+
+&lt;h3 id=&quot;web-ui&quot;&gt;Web UI&lt;/h3&gt;
 
 &lt;h1 id=&quot;features&quot;&gt;Features&lt;/h1&gt;
 
@@ -260,7 +266,65 @@
 
 &lt;h2 id=&quot;metal-backend&quot;&gt;metal-backend&lt;/h2&gt;
 
+&lt;h3 id=&quot;接口设计&quot;&gt;接口设计&lt;/h3&gt;
+
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;定义了metal的几种操作接口（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;analyse&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;schema&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;heart&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;status&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;exec&lt;/code&gt;等），并且实现了命令行模式和交互模式。&lt;/p&gt;
+
+&lt;p&gt;在交互模式下，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;进程会启动REST服务和Vert.x RPC与&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;通信。关于这几个接口，要做一些说明，&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;analyse&lt;/code&gt;： 接收数据流Spec，检查规范性。然后将Spec构建成Spark DataFrame组成的DAG。为了优化性能，Spec中没有发生变化的处理算子会直接复用。这些变化包括算子配置的变化、输入的变化（算子名称的变化不会影响复用）。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;schema&lt;/code&gt;：获取算子输出DataFrame的模式。Metal中统一用Arrow Schema表示。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;exec&lt;/code&gt;：执行基于Spec构建的DAG。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;heart&lt;/code&gt;：发送心跳。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;status&lt;/code&gt;：访问服务状态。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;交互模型下，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;要处理并发请求，上述接口操作大部分是可以并发访问的，一部分只能串行访问。heart、可以并发访问，analyse、schema、status和exec需要做并发控制。并发控制关系如下，&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt; &lt;/th&gt;
+      &lt;th&gt;analyse&lt;/th&gt;
+      &lt;th&gt;schema&lt;/th&gt;
+      &lt;th&gt;status&lt;/th&gt;
+      &lt;th&gt;exec&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;[prev] analyse&lt;/td&gt;
+      &lt;td&gt;不并发&lt;/td&gt;
+      &lt;td&gt;不并发&lt;/td&gt;
+      &lt;td&gt;不并发&lt;/td&gt;
+      &lt;td&gt;==不并发==&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;[prev] schema&lt;/td&gt;
+      &lt;td&gt;不并发&lt;/td&gt;
+      &lt;td&gt;并发&lt;/td&gt;
+      &lt;td&gt;并发&lt;/td&gt;
+      &lt;td&gt;并发&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;[prev] status&lt;/td&gt;
+      &lt;td&gt;不并发&lt;/td&gt;
+      &lt;td&gt;并发&lt;/td&gt;
+      &lt;td&gt;并发&lt;/td&gt;
+      &lt;td&gt;并发&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;[prev] exec&lt;/td&gt;
+      &lt;td&gt;不并发&lt;/td&gt;
+      &lt;td&gt;并发&lt;/td&gt;
+      &lt;td&gt;并发&lt;/td&gt;
+      &lt;td&gt;不并发&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;第1行第4列&amp;lt;analyse, exec&amp;gt;为不并发，这表示当analyse执行时，exec请求会被阻塞等待执行或直接方法。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;定了&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IBackendAPI&lt;/code&gt;实现了这种并发控制，具体的设计图如下。&lt;/p&gt;
 
 &lt;center&gt;
     &lt;img style=&quot;border-radius: 0.3125em;
@@ -273,6 +337,14 @@
       IBackendAPI类图
   	&lt;/div&gt;
 &lt;/center&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IBackendTryAPI&lt;/code&gt;中定义的接口为非阻塞接口。&lt;/p&gt;
+
+&lt;h3 id=&quot;运行模式&quot;&gt;运行模式&lt;/h3&gt;
+
+&lt;h4 id=&quot;命令行模式&quot;&gt;命令行模式&lt;/h4&gt;
+
+&lt;h4 id=&quot;交互模式&quot;&gt;交互模式&lt;/h4&gt;
 
 &lt;h2 id=&quot;metal-server和metal-ui&quot;&gt;metal-server和metal-ui&lt;/h2&gt;
 
