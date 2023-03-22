@@ -342,7 +342,7 @@
 
 <h3 id="数据流处理算子">数据流处理算子</h3>
 
-<h3 id="类型">类型</h3>
+<h4 id="类型">类型</h4>
 
 <p>Metal数据流处理算子包括四种，分别为Source、Mapper、Fusion和Sink。</p>
 
@@ -368,7 +368,7 @@
   <li><code class="language-plaintext highlighter-rouge">MSink</code>：用于下沉数据（写入文件、消息队列等），拥有一个输入，没有输出。例如<code class="language-plaintext highlighter-rouge">ConsoleMSink</code>是<code class="language-plaintext highlighter-rouge">MSink</code>在Spark上一种实现，能够把输入的DataFrame输出在控制台上，常用于调试。</li>
 </ul>
 
-<h3 id="扩展">扩展</h3>
+<h4 id="扩展">扩展</h4>
 
 <p>Metal提供了算子扩展能力，你需要按照如下步骤实现新的<code class="language-plaintext highlighter-rouge">Metal</code>子类，然后打包注册即可。</p>
 
@@ -378,7 +378,7 @@
   <li>最后，你需要在你的工程中配置<code class="language-plaintext highlighter-rouge">metal-maven-plugin</code>或者直接使用<code class="language-plaintext highlighter-rouge">metal-maven-plugin</code>命令行来生成注册清单<code class="language-plaintext highlighter-rouge">manifest.json</code>。向Metal提交注册清单即可完成注册。</li>
 </ul>
 
-<h2 id="数据流spec">数据流Spec</h2>
+<h3 id="数据流spec">数据流Spec</h3>
 
 <p>数据流处理结构和算子配置定义在数据流Spec。数据流Spec包括<code class="language-plaintext highlighter-rouge">version</code>、<code class="language-plaintext highlighter-rouge">metals</code>、<code class="language-plaintext highlighter-rouge">edges</code>、<code class="language-plaintext highlighter-rouge">waitFor</code>四个部分。</p>
 
@@ -501,7 +501,25 @@
   	</div>
 </center>
 
-<p>在示例中，source-00会从<code class="language-plaintext highlighter-rouge">src/test/resources/test.json</code>获取JSON数据，mapper-00将source-00作为输入并且筛选出<code class="language-plaintext highlighter-rouge">id != "0001"</code>的记录，sink-00将mapper-00过滤出的数据打印在控制台。sink-00会直接将source-00的数据打印在控制台。</p>
+<p>在示例中，source-00会从<code class="language-plaintext highlighter-rouge">src/test/resources/test.json</code>获取JSON数据，mapper-00将source-00作为输入并且筛选出<code class="language-plaintext highlighter-rouge">id != "0001"</code>的记录，sink-00将mapper-00过滤出的数据打印在控制台。sink-00会直接将source-00的数据打印在控制台。sink-00会先于sink-01被调度执行。</p>
+
+<h2 id="metal-backend">metal-backend</h2>
+
+<p><code class="language-plaintext highlighter-rouge">metal-backend</code>定义了metal的几种操作接口（<code class="language-plaintext highlighter-rouge">analyse</code>、<code class="language-plaintext highlighter-rouge">schema</code>、<code class="language-plaintext highlighter-rouge">heart</code>、<code class="language-plaintext highlighter-rouge">status</code>、<code class="language-plaintext highlighter-rouge">exec</code>等），并且实现了命令行模式和交互模式。</p>
+
+<center>
+    <img style="border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="/img/resources/metal-IBackendAPI.svg" width="95%" alt="" />
+    <br />
+    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;">
+      IBackendAPI类图
+  	</div>
+</center>
+
+<h2 id="metal-server和metal-ui">metal-server和metal-ui</h2>
 
 <h1 id="open-source-plan">Open Source Plan</h1>
 

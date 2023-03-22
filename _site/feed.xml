@@ -5,8 +5,8 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 22 Mar 2023 11:45:43 +0800</pubDate>
-    <lastBuildDate>Wed, 22 Mar 2023 11:45:43 +0800</lastBuildDate>
+    <pubDate>Wed, 22 Mar 2023 12:24:51 +0800</pubDate>
+    <lastBuildDate>Wed, 22 Mar 2023 12:24:51 +0800</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -97,7 +97,7 @@
 
 &lt;h3 id=&quot;数据流处理算子&quot;&gt;数据流处理算子&lt;/h3&gt;
 
-&lt;h3 id=&quot;类型&quot;&gt;类型&lt;/h3&gt;
+&lt;h4 id=&quot;类型&quot;&gt;类型&lt;/h4&gt;
 
 &lt;p&gt;Metal数据流处理算子包括四种，分别为Source、Mapper、Fusion和Sink。&lt;/p&gt;
 
@@ -123,7 +123,7 @@
   &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MSink&lt;/code&gt;：用于下沉数据（写入文件、消息队列等），拥有一个输入，没有输出。例如&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ConsoleMSink&lt;/code&gt;是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;MSink&lt;/code&gt;在Spark上一种实现，能够把输入的DataFrame输出在控制台上，常用于调试。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;扩展&quot;&gt;扩展&lt;/h3&gt;
+&lt;h4 id=&quot;扩展&quot;&gt;扩展&lt;/h4&gt;
 
 &lt;p&gt;Metal提供了算子扩展能力，你需要按照如下步骤实现新的&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Metal&lt;/code&gt;子类，然后打包注册即可。&lt;/p&gt;
 
@@ -133,7 +133,7 @@
   &lt;li&gt;最后，你需要在你的工程中配置&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-maven-plugin&lt;/code&gt;或者直接使用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-maven-plugin&lt;/code&gt;命令行来生成注册清单&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;manifest.json&lt;/code&gt;。向Metal提交注册清单即可完成注册。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;数据流spec&quot;&gt;数据流Spec&lt;/h2&gt;
+&lt;h3 id=&quot;数据流spec&quot;&gt;数据流Spec&lt;/h3&gt;
 
 &lt;p&gt;数据流处理结构和算子配置定义在数据流Spec。数据流Spec包括&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;version&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metals&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;edges&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;waitFor&lt;/code&gt;四个部分。&lt;/p&gt;
 
@@ -256,7 +256,25 @@
   	&lt;/div&gt;
 &lt;/center&gt;
 
-&lt;p&gt;在示例中，source-00会从&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;src/test/resources/test.json&lt;/code&gt;获取JSON数据，mapper-00将source-00作为输入并且筛选出&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id != &quot;0001&quot;&lt;/code&gt;的记录，sink-00将mapper-00过滤出的数据打印在控制台。sink-00会直接将source-00的数据打印在控制台。&lt;/p&gt;
+&lt;p&gt;在示例中，source-00会从&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;src/test/resources/test.json&lt;/code&gt;获取JSON数据，mapper-00将source-00作为输入并且筛选出&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id != &quot;0001&quot;&lt;/code&gt;的记录，sink-00将mapper-00过滤出的数据打印在控制台。sink-00会直接将source-00的数据打印在控制台。sink-00会先于sink-01被调度执行。&lt;/p&gt;
+
+&lt;h2 id=&quot;metal-backend&quot;&gt;metal-backend&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;定义了metal的几种操作接口（&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;analyse&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;schema&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;heart&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;status&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;exec&lt;/code&gt;等），并且实现了命令行模式和交互模式。&lt;/p&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/metal-IBackendAPI.svg&quot; width=&quot;95%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      IBackendAPI类图
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;h2 id=&quot;metal-server和metal-ui&quot;&gt;metal-server和metal-ui&lt;/h2&gt;
 
 &lt;h1 id=&quot;open-source-plan&quot;&gt;Open Source Plan&lt;/h1&gt;
 
