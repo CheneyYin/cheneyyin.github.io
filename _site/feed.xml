@@ -5,8 +5,8 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 23 Mar 2023 06:42:06 +0000</pubDate>
-    <lastBuildDate>Thu, 23 Mar 2023 06:42:06 +0000</lastBuildDate>
+    <pubDate>Thu, 23 Mar 2023 07:10:25 +0000</pubDate>
+    <lastBuildDate>Thu, 23 Mar 2023 07:10:25 +0000</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -427,7 +427,6 @@
 &lt;h2 id=&quot;metal-server和metal-ui&quot;&gt;metal-server和metal-ui&lt;/h2&gt;
 &lt;h3 id=&quot;metal-server&quot;&gt;metal-server&lt;/h3&gt;
 &lt;h4 id=&quot;模型&quot;&gt;模型&lt;/h4&gt;
-
 &lt;center&gt;
     &lt;img style=&quot;border-radius: 0.3125em;
     box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/metal-server-model.svg&quot; width=&quot;95%&quot; alt=&quot;&quot; /&gt;
@@ -439,10 +438,18 @@
       metal-server领域实体关系图
   	&lt;/div&gt;
 &lt;/center&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;建立了Project的概念来管理数据流以及相关配置。你可以在Project中选择需要的Metal算子，并且定义数据流。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;会根据配置部署执行后端，下发执行数据流，跟踪后端状态和数据流执行状态。&lt;/p&gt;
 
 &lt;h4 id=&quot;服务&quot;&gt;服务&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;实现了Vert.x RPC和REST-API服务。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Report服务：用于接收&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-backend&lt;/code&gt;上报的后端状态和任务执行状态。&lt;/li&gt;
+  &lt;li&gt;Failure Detector服务：追踪后端故障的检测服务，会将超时离线、进程关闭、延时过高的执行后端做下线处理。&lt;/li&gt;
+  &lt;li&gt;REST-API服务：为&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-ui&lt;/code&gt;提供的服务，包括创建Project、配置Project、保存数据流Spec、部署后端、执行数据流以及追踪后端状态等。&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h3 id=&quot;metal-ui&quot;&gt;metal-ui&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;为Metal的领域模型提供了实现&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-ui&lt;/code&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;open-source-plan&quot;&gt;Open Source Plan&lt;/h1&gt;
 

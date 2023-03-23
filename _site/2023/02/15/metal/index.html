@@ -672,7 +672,6 @@
 <h2 id="metal-server和metal-ui">metal-server和metal-ui</h2>
 <h3 id="metal-server">metal-server</h3>
 <h4 id="模型">模型</h4>
-
 <center>
     <img style="border-radius: 0.3125em;
     box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" src="/img/resources/metal-server-model.svg" width="95%" alt="" />
@@ -684,10 +683,18 @@
       metal-server领域实体关系图
   	</div>
 </center>
+<p><code class="language-plaintext highlighter-rouge">metal-server</code>建立了Project的概念来管理数据流以及相关配置。你可以在Project中选择需要的Metal算子，并且定义数据流。<code class="language-plaintext highlighter-rouge">metal-server</code>会根据配置部署执行后端，下发执行数据流，跟踪后端状态和数据流执行状态。</p>
 
 <h4 id="服务">服务</h4>
+<p><code class="language-plaintext highlighter-rouge">metal-server</code>实现了Vert.x RPC和REST-API服务。</p>
+<ul>
+  <li>Report服务：用于接收<code class="language-plaintext highlighter-rouge">metal-backend</code>上报的后端状态和任务执行状态。</li>
+  <li>Failure Detector服务：追踪后端故障的检测服务，会将超时离线、进程关闭、延时过高的执行后端做下线处理。</li>
+  <li>REST-API服务：为<code class="language-plaintext highlighter-rouge">metal-ui</code>提供的服务，包括创建Project、配置Project、保存数据流Spec、部署后端、执行数据流以及追踪后端状态等。</li>
+</ul>
+
 <h3 id="metal-ui">metal-ui</h3>
-<p><code class="language-plaintext highlighter-rouge">metal-server</code>为Metal的领域模型提供了实现</p>
+<p><code class="language-plaintext highlighter-rouge">metal-ui</code></p>
 
 <h1 id="open-source-plan">Open Source Plan</h1>
 
