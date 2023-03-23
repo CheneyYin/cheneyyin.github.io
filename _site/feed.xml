@@ -5,8 +5,8 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 22 Mar 2023 15:24:53 +0800</pubDate>
-    <lastBuildDate>Wed, 22 Mar 2023 15:24:53 +0800</lastBuildDate>
+    <pubDate>Thu, 23 Mar 2023 06:42:06 +0000</pubDate>
+    <lastBuildDate>Thu, 23 Mar 2023 06:42:06 +0000</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -27,7 +27,7 @@
   	&lt;/div&gt;
 &lt;/center&gt;
 </description>
-        <pubDate>Fri, 17 Mar 2023 00:00:00 +0800</pubDate>
+        <pubDate>Fri, 17 Mar 2023 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2023/03/17/distribute-pipeline-ex/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2023/03/17/distribute-pipeline-ex/</guid>
         
@@ -425,11 +425,29 @@
 &lt;p&gt;除了开发调试时，几乎不会手动编写交互模式的命令，正常情况下是&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;根据你的Project配置来自动下发部署Backend。&lt;/p&gt;
 
 &lt;h2 id=&quot;metal-server和metal-ui&quot;&gt;metal-server和metal-ui&lt;/h2&gt;
+&lt;h3 id=&quot;metal-server&quot;&gt;metal-server&lt;/h3&gt;
+&lt;h4 id=&quot;模型&quot;&gt;模型&lt;/h4&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/metal-server-model.svg&quot; width=&quot;95%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      metal-server领域实体关系图
+  	&lt;/div&gt;
+&lt;/center&gt;
+
+&lt;h4 id=&quot;服务&quot;&gt;服务&lt;/h4&gt;
+&lt;h3 id=&quot;metal-ui&quot;&gt;metal-ui&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;为Metal的领域模型提供了实现&lt;/p&gt;
 
 &lt;h1 id=&quot;open-source-plan&quot;&gt;Open Source Plan&lt;/h1&gt;
 
 </description>
-        <pubDate>Wed, 15 Feb 2023 00:00:00 +0800</pubDate>
+        <pubDate>Wed, 15 Feb 2023 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2023/02/15/metal/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2023/02/15/metal/</guid>
         
@@ -562,7 +580,7 @@
 &lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 </description>
-        <pubDate>Tue, 06 Sep 2022 00:00:00 +0800</pubDate>
+        <pubDate>Tue, 06 Sep 2022 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2022/09/06/spark-standalone-rest-api/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2022/09/06/spark-standalone-rest-api/</guid>
         
@@ -619,7 +637,7 @@
 &lt;/table&gt;
 
 </description>
-        <pubDate>Mon, 29 Aug 2022 00:00:00 +0800</pubDate>
+        <pubDate>Mon, 29 Aug 2022 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2022/08/29/spark-standalone-start-configure/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/29/spark-standalone-start-configure/</guid>
         
@@ -1266,7 +1284,7 @@ java &lt;span class=&quot;nt&quot;&gt;-cp&lt;/span&gt; ./target/starter-1.0.0-SN
     &lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
-        <pubDate>Sun, 07 Aug 2022 00:00:00 +0800</pubDate>
+        <pubDate>Sun, 07 Aug 2022 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2022/08/07/vertx-core-3-event-bus/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/07/vertx-core-3-event-bus/</guid>
         
@@ -1816,7 +1834,7 @@ SomeScript.groovy // 将使用Groovy的Factory
   &lt;p&gt;当Verticle被撤销时，计数器会被自动关闭。&lt;/p&gt;
 &lt;/blockquote&gt;
 </description>
-        <pubDate>Fri, 05 Aug 2022 00:00:00 +0800</pubDate>
+        <pubDate>Fri, 05 Aug 2022 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2022/08/05/vertx-core-2-verticles/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/05/vertx-core-2-verticles/</guid>
         
@@ -2191,7 +2209,7 @@ Exec create 1.
    &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
-        <pubDate>Mon, 01 Aug 2022 00:00:00 +0800</pubDate>
+        <pubDate>Mon, 01 Aug 2022 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2022/08/01/vertx-core-1-fluent-api/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2022/08/01/vertx-core-1-fluent-api/</guid>
         
@@ -2293,7 +2311,7 @@ Exec create 1.
 &lt;span class=&quot;o&quot;&gt;});&lt;/span&gt;
 &lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
-        <pubDate>Sat, 30 Jul 2022 00:00:00 +0800</pubDate>
+        <pubDate>Sat, 30 Jul 2022 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2022/07/30/vertx-core-0-vertx-object/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/30/vertx-core-0-vertx-object/</guid>
         
@@ -2661,7 +2679,7 @@ Exec create 1.
 &lt;p&gt;使用这样技术能够实质性地减少大规模分布式系统中维护向量时钟的开销，尤其是进程相互作用表现出&lt;strong&gt;瞬时性和空间局部性时&lt;/strong&gt;。&lt;/p&gt;
 
 </description>
-        <pubDate>Tue, 12 Jul 2022 00:00:00 +0800</pubDate>
+        <pubDate>Tue, 12 Jul 2022 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2022/07/12/distrcmp-pas-2/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/12/distrcmp-pas-2/</guid>
         
@@ -2950,7 +2968,7 @@ e^x_i \to_{msg} e^y_j &amp;amp;or //进程间的消息传递\\\
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-        <pubDate>Mon, 11 Jul 2022 00:00:00 +0800</pubDate>
+        <pubDate>Mon, 11 Jul 2022 00:00:00 +0000</pubDate>
         <link>https://cheneyyin.github.io/2022/07/11/distrcmp-pas-1/</link>
         <guid isPermaLink="true">https://cheneyyin.github.io/2022/07/11/distrcmp-pas-1/</guid>
         
