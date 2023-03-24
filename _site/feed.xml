@@ -5,8 +5,8 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 23 Mar 2023 07:10:25 +0000</pubDate>
-    <lastBuildDate>Thu, 23 Mar 2023 07:10:25 +0000</lastBuildDate>
+    <pubDate>Fri, 24 Mar 2023 02:16:37 +0000</pubDate>
+    <lastBuildDate>Fri, 24 Mar 2023 02:16:37 +0000</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -449,7 +449,8 @@
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;metal-ui&quot;&gt;metal-ui&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-ui&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-ui&lt;/code&gt;实现了Metal的前端Web UI。你可以在&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-ui&lt;/code&gt;中便捷地创建Project，选择算子包，绘制数据流，检查数据流，提交执行数据流，发布新的处理算子包，管理算子包等。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-ui&lt;/code&gt;是一个简易的数据流IDE，&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-ui&lt;/code&gt;会调用&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;metal-server&lt;/code&gt;提供的REST-API完成操作&lt;/p&gt;
 
 &lt;h1 id=&quot;open-source-plan&quot;&gt;Open Source Plan&lt;/h1&gt;
 
