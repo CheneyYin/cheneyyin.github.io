@@ -5,8 +5,8 @@
     <description>这里是 Cheney.Yin 的个人博客</description>
     <link>https://cheneyyin.github.io/</link>
     <atom:link href="https://cheneyyin.github.io/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 24 Mar 2023 07:43:06 +0000</pubDate>
-    <lastBuildDate>Fri, 24 Mar 2023 07:43:06 +0000</lastBuildDate>
+    <pubDate>Fri, 24 Mar 2023 08:49:10 +0000</pubDate>
+    <lastBuildDate>Fri, 24 Mar 2023 08:49:10 +0000</lastBuildDate>
     <generator>Jekyll v4.3.2</generator>
     
       <item>
@@ -68,6 +68,18 @@
 &lt;h1 id=&quot;features&quot;&gt;Features&lt;/h1&gt;
 
 &lt;h1 id=&quot;architecture&quot;&gt;Architecture&lt;/h1&gt;
+
+&lt;center&gt;
+    &lt;img style=&quot;border-radius: 0.3125em;
+    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);&quot; src=&quot;/img/resources/metal-arch.svg&quot; width=&quot;95%&quot; alt=&quot;&quot; /&gt;
+    &lt;br /&gt;
+    &lt;div style=&quot;color:orange; border-bottom: 1px solid #d9d9d9;
+    display: inline-block;
+    color: #999;
+    padding: 2px;&quot;&gt;
+      Metal架构
+  	&lt;/div&gt;
+&lt;/center&gt;
 
 &lt;p&gt;Metal项目目前包括如下几个组件，&lt;/p&gt;
 
