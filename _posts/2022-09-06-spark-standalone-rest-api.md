@@ -4,7 +4,7 @@ title: "Spark Standalone集群隐藏的REST API"
 subtitle: "介绍如何使用Spark Standalone隐藏的REST API"
 date: 2022-09-06
 author: "Cheney.Yin"
-header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
+header-img: "img/bg-material.jpg"
 tags:
  - Spark
  - Spark Standalone

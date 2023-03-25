@@ -4,7 +4,7 @@ title: "Linux Namespace"
 subtitle: "介绍Linux的几种常见Namespace"
 date: 2021-11-04
 author: "Cheney.Yin"
-header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
+header-img: "img/bg-material.jpg"
 tags: 
  - Linux
  - Linux Namespace

@@ -4,7 +4,7 @@ title: "Docker提权案例"
 subtitle: "介绍一种docker提权场景"
 date: 2022-06-21
 author: "Cheney.Yin"
-header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
+header-img: "img/bg-material.jpg"
 tags:
  - Docker
  - 提权

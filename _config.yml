@@ -1,7 +1,7 @@
 # Site settings
 title: Cheney.Yin Blog
 SEOTitle: Cheney.Yin的博客 | Cheney Blog
-header-img: "//i.328888.xyz/2023/03/25/iAD3C5.jpeg"
+header-img: img/home-bg.jpg
 email: cheneyyin@hotmail.com
 description: "这里是 Cheney.Yin 的个人博客"
 keyword: "CHeney.Yin Blog, 博客, 个人网站, 互联网, Web, JavaScript, Database, Hadoop, Spark, Docker, 设计"
@@ -71,7 +71,7 @@ ga_track_id: "G-KMZ19PZE4D"
 # Sidebar settings
 sidebar: true # whether or not using Sidebar.
 sidebar-about-description: "呆若MUJI"
-sidebar-avatar: //i.328888.xyz/2023/03/25/iAUHMJ.jpeg # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/cheney.jpg # use absolute URL, seeing it's used in both `/` and `/about/`
 
 # Featured Tags
 featured-tags: true # whether or not using Feature-Tags

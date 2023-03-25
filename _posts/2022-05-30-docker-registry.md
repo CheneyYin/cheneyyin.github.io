@@ -4,7 +4,7 @@ title: "简易Docker仓库"
 subtitle: "介绍常用的docker镜像仓库和使用方法"
 date: 2022-05-30
 author: "Cheney.Yin"
-header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
+header-img: "img/bg-material.jpg"
 tags:
  - Docker
  - docker registry

@@ -4,7 +4,7 @@ title: "常见的Out of Memory Error"
 subtitle: "介绍几种常见的导致OOM的场景"
 date: 2022-07-02
 author: "Cheney.Yin"
-header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
+header-img: "img/bg-material.jpg"
 tags: 
  - Java
  - JVM

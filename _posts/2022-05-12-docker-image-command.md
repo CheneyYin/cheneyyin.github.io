@@ -4,7 +4,7 @@ title: "Docker image常用命令"
 subtitle: "介绍与docker image相关的常用命令"
 date: 2022-05-12
 author: "Cheney.Yin"
-header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
+header-img: "img/bg-material.jpg"
 tags:
  - Docker
  - docker image

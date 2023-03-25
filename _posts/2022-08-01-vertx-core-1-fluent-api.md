@@ -4,7 +4,7 @@ title: "Vert.x core 1 --- Fluent API"
 subtitle: "介绍Vert.x流式Api的概念和使用"
 date: 2022-08-01
 author: "Cheney.Yin"
-header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
+header-img: "img/bg-material.jpg"
 tags:
     - Vert.x
     - vertx-core

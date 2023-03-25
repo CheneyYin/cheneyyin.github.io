@@ -4,7 +4,7 @@ title: "Spark Streaming乱序案例"
 subtitle: "分析因调度器配置引起的数据同步乱序"
 date: 2020-04-11
 author: "Cheney.Yin"
-header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
+header-img: "img/bg-material.jpg"
 tags:
  - Spark
  - Spark Streaming

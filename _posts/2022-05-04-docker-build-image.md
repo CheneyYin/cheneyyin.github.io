@@ -4,7 +4,7 @@ title: "Docker构建镜像"
 subtitle: "介绍如何构建一个简单的docker镜像"
 date: 2022-05-04
 author: "Cheney.Yin"
-header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
+header-img: "img/bg-material.jpg"
 tags:
  - Docker
  - docker image
