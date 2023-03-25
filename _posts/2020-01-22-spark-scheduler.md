@@ -4,7 +4,7 @@ title: "Spark资源调度"
 subtitle: "介绍Spark跨应用调度和应用内调度的相关概念和配置"
 date: 2020-01-22
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Spark
  - Scheduler

@@ -39,7 +39,7 @@ task :post do
     post.puts "subtitle: \"#{subtitle.gsub(/-/,' ')}\""
     post.puts "date: #{date}"
     post.puts "author: \"Cheney.Yin\""
-    post.puts "header-img: \"img/bg-material.jpg\""
+    post.puts "header-img: \"//imgloc.com/i/iADI63\""
     post.puts "tags: []"
     post.puts "---"
   end

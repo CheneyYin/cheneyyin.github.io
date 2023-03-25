@@ -4,7 +4,7 @@ title: "sudo和wheel用户组"
 subtitle: "介绍wheel用户组的用途"
 date: 2022-06-25
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Linux
  - sudo

@@ -4,7 +4,7 @@ title: "Spark RDD 1 --- 基础"
 subtitle: "介绍Spark RDD的相关概念和基本操作"
 date: 2019-12-06
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Spark
  - RDD

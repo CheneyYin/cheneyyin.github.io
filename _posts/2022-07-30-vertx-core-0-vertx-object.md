@@ -4,7 +4,7 @@ title: "Vert.x core 0 --- Vertx对象"
 subtitle: "vertx-core配置使用"
 date: 2022-07-30
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Vert.x
  - vertx-core

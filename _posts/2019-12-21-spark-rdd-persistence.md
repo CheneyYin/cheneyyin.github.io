@@ -4,7 +4,7 @@ title: "Spark RDD 3 --- 持久化"
 subtitle: "介绍RDD持久化的相关概念和配置"
 date: 2019-12-21
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Spark
  - RDD

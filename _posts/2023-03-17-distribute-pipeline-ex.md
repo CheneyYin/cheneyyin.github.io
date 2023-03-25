@@ -4,7 +4,7 @@ title: "Distribute Pipeline EX"
 subtitle: "一种分布式交互管道设计"
 date: 2023-03-17
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 project: true
 tags:
  - Linux

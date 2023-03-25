@@ -4,7 +4,7 @@ title: "Docker组件架构"
 subtitle: "介绍docker架构中的常见组成部分"
 date: 2022-01-17
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Docker
  - dockerd

@@ -4,7 +4,7 @@ title: "Vert.x core 3 --- Event Bus"
 subtitle: "介绍Event Bus相关概念和使用"
 date: 2022-08-07
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Vert.x
  - vertx-core

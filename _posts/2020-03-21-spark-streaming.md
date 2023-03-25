@@ -4,7 +4,7 @@ title: "Spark Streaming"
 subtitle: "介绍Spark Streaming的基本概念和使用"
 date: 2020-03-21
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Spark
  - Spark Streaming

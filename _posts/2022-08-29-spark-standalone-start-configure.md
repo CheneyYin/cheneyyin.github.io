@@ -4,7 +4,7 @@ title: "Spark Standalone集群启动配置"
 subtitle: "介绍Spark Standalone集群启动的常用配置项目"
 date: 2022-08-29
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Spark
  - Spark Standalone

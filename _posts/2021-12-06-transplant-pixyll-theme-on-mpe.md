@@ -4,7 +4,7 @@ title: "transplant pixyll theme on MPE"
 subtitle: "介绍pixyll移植方法"
 date: 2021-12-06
 author: "Cheney.Yin"
-header-img: "img/bg-material.jpg"
+header-img: "//imgloc.com/i/iADI63"
 tags:
  - Typora
  - Vscode

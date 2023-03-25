@@ -20,8 +20,8 @@ const PRECACHE_LIST = [
   "./js/hux-blog.min.js",
   "./js/snackbar.js",
   "./img/cheney.jpg",
-  "./img/home-bg.jpg",
-  "./img/404-bg.jpg",
+  "//imgloc.com/i/iAD3C5",
+  "//imgloc.com/i/iADjVU",
   "./css/hux-blog.min.css",
   "./css/bootstrap.min.css"
   // "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css",
@@ -30,6 +30,7 @@ const PRECACHE_LIST = [
 ]
 const HOSTNAME_WHITELIST = [
   self.location.hostname,
+  "imgloc.com",
   "disqus.com",
   "googletagmanager.com",
   "google.com",
