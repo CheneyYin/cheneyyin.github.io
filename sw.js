@@ -19,9 +19,9 @@ const PRECACHE_LIST = [
   "./js/bootstrap.min.js",
   "./js/hux-blog.min.js",
   "./js/snackbar.js",
- // "//i.328888.xyz/2023/03/25/iAUHMJ.jpeg",
- // "//i.328888.xyz/2023/03/25/iAD3C5.jpeg",
- // "//i.328888.xyz/2023/03/25/iADjVU.jpeg",
+  "//i.328888.xyz/2023/03/25/iAUHMJ.jpeg",
+  "//i.328888.xyz/2023/03/25/iAD3C5.jpeg",
+  "//i.328888.xyz/2023/03/25/iADjVU.jpeg",
   "./css/hux-blog.min.css",
   "./css/bootstrap.min.css"
   // "//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css",

@@ -1,7 +1,7 @@
 # Site settings
 title: Cheney.Yin Blog
 SEOTitle: Cheney.Yin的博客 | Cheney Blog
-header-img: //i.328888.xyz/2023/03/25/iAD3C5.jpeg
+header-img: "//i.328888.xyz/2023/03/25/iAD3C5.jpeg"
 email: cheneyyin@hotmail.com
 description: "这里是 Cheney.Yin 的个人博客"
 keyword: "CHeney.Yin Blog, 博客, 个人网站, 互联网, Web, JavaScript, Database, Hadoop, Spark, Docker, 设计"
