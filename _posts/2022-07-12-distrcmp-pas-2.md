@@ -4,7 +4,7 @@ title: "《分布式计算--原理、算法与系统》2 --- 逻辑时间"
 subtitle: "介绍与逻辑时间相关的原理、算法"
 date: 2022-07-12
 author: "Cheney.Yin"
-header-img: "//imgloc.com/i/iADI63"
+header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
 tags: 
  - 《分布式计算--原理、算法与系统》
  - 逻辑时间

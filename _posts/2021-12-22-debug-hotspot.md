@@ -4,7 +4,7 @@ title: "调试Hotspot"
 subtitle: "记录调试Hotspot的环境和过程"
 date: 2021-12-22
 author: "Cheney.Yin"
-header-img: "//imgloc.com/i/iADI63"
+header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
 tags: 
  - Java
  - JVM

@@ -4,7 +4,7 @@ title: "Make使用总结"
 subtitle: "简单介绍了Make的使用基本方法"
 date: 2022-04-09
 author: "Cheney.Yin"
-header-img: "//imgloc.com/i/iADI63"
+header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
 tags:
  - make
  - makefile

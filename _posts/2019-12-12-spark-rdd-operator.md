@@ -4,7 +4,7 @@ title: "Spark RDD 2 --- 操作"
 subtitle: "介绍RDD的Transformation、Action和Shuffle操作。"
 date: 2019-12-12
 author: "Cheney.Yin"
-header-img: "//imgloc.com/i/iADI63"
+header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
 tags:
  - Spark
  - RDD

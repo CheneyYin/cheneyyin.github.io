@@ -4,7 +4,7 @@ title: "Spark共享变量"
 subtitle: "介绍Spark共享变量的相关概念和使用方法"
 date: 2020-01-05
 author: "Cheney.Yin"
-header-img: "//imgloc.com/i/iADI63"
+header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
 tags:
  - Spark
  - 共享变量

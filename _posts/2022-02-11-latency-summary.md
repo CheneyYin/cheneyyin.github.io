@@ -3,7 +3,7 @@ layout: post
 title: "计算机系统各类延时概况"
 date: 2022-02-11
 author: "Cheney.Yin"
-header-img: "//imgloc.com/i/iADI63"
+header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
 tags:
  - latency
  - memory

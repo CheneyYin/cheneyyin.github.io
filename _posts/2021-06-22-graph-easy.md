@@ -4,7 +4,7 @@ title: "Graph easy工具"
 subtitle: "Graph easy是一种用于在Cli下的绘图工具"
 date: 2021-06-22
 author: "Cheney.Yin"
-header-img: "//imgloc.com/i/iADI63"
+header-img: "//i.328888.xyz/2023/03/25/iADI63.jpeg"
 tags:
  - Cli
  - graphviz
