@@ -31,6 +31,7 @@ const PRECACHE_LIST = [
 const HOSTNAME_WHITELIST = [
   self.location.hostname,
   "imgloc.com",
+  "i.328888.xyz",
   "disqus.com",
   "googletagmanager.com",
   "google.com",
