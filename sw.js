@@ -37,6 +37,7 @@ const HOSTNAME_WHITELIST = [
   "google.com",
   "github.com",
   "cheneyyin.github.io",
+  "cdn.jsdelivr.net",
   "cdnjs.cloudflare.com"
 ]
 const DEPRECATED_CACHES = ['precache-v1', 'runtime', 'main-precache-v1', 'main-runtime']

@@ -51,7 +51,7 @@ $$
 <center>
     <img style="border-radius: 0.3125em;
     box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
-    src="/img/resources/distrcmp_pas_1-1.svg" width = "75%" alt=""/>
+    src="https://cdn.jsdelivr.net/gh/cheneyyin/cheneyyin.github.io@latest/img/resources/distrcmp_pas_1-1.svg" width = "75%" alt=""/>
     <br>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -169,7 +169,7 @@ $$
 <center>
     <img style="border-radius: 0.3125em;
     box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
-    src="/img/resources/distrcmp_pas_1-2.svg" width = "75%" alt=""/>
+    src="https://cdn.jsdelivr.net/gh/cheneyyin/cheneyyin.github.io@latest/img/resources/distrcmp_pas_1-2.svg" width = "75%" alt=""/>
     <br>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -196,7 +196,7 @@ $$
 <center>
     <img style="border-radius: 0.3125em;
     box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
-    src="/img/resources/distrcmp_pas_1-3.svg" width = "75%" alt=""/>
+    src="https://cdn.jsdelivr.net/gh/cheneyyin/cheneyyin.github.io@latest/img/resources/distrcmp_pas_1-3.svg" width = "75%" alt=""/>
     <br>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
@@ -221,7 +221,7 @@ $$SC^{y_j,z_k}_{jk}$$的定义说明，任何信道中仅暂存发送的消息�
 <center>
     <img style="border-radius: 0.3125em;
     box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
-    src="/img/resources/distrcmp_pas_1-4.svg" width = "75%" alt=""/>
+    src="https://cdn.jsdelivr.net/gh/cheneyyin/cheneyyin.github.io@latest/img/resources/distrcmp_pas_1-4.svg" width = "75%" alt=""/>
     <br>
     <div style="color:orange; border-bottom: 1px solid #d9d9d9;
     display: inline-block;
