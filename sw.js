@@ -32,6 +32,8 @@ const HOSTNAME_WHITELIST = [
   self.location.hostname,
   "imgloc.com",
   "i.328888.xyz",
+  "wikipedia.org",
+  "gitbook.io",
   "disqus.com",
   "googletagmanager.com",
   "google.com",
