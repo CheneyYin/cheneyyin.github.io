@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Some tricks about shell script"
+title: "编写健壮Shell脚本的技巧"
 subtitle: "汇总了一些有助于提供shell脚本健壮性的技巧。"
 date: 2023-03-28
 author: "Cheney.Yin"
